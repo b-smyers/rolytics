@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roblox Analytics</title>
+    <script src="https://cdn.plot.ly/plotly-2.32.0.min.js" charset="utf-8"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        .flex-grid {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .graph {
+            border: 1px solid gray;
+            width: 49%;
+            height: 250px;
+        }
+    </style>
+</head>
+<body>
+    <div class="flex-grid">
+        <div id="fps-plot" class="graph"></div>
+        <div id="memory-usage-plot" class="graph"></div>
+        <div id="data-recieve-plot" class="graph"></div>
+        <div id="data-send-plot" class="graph"></div>
+        <div id="heartbeat-time-plot" class="graph"></div>
+        <div id="instance-count-plot" class="graph"></div>
+        <div id="primitives-count-plot" class="graph"></div>
+        <div id="moving-primitives-count-plot" class="graph"></div>
+        <div id="physics-recieve-plot" class="graph"></div>
+        <div id="physics-send-plot" class="graph"></div>
+        <div id="physics-step-time-plot" class="graph"></div>
+    </div>
+
+    <script>
+        const POLLING_RATE = .5 * 1000; // sec/req
+        const MAX_POINTS = 720; // Last two hours
+
+        function slicePlot(plotId) {
+            Plotly.restyle(plotId, {
+                x: [plotId.data[0].x.slice(-MAX_POINTS)],
+                y: [plotId.data[0].y.slice(-MAX_POINTS)]
+            }, [0]);
+        }
+
+        function createPlot(plotId, title) {
+            Plotly.newPlot(plotId, [{
+                x: [],
+                y: [],
+                mode: 'lines',
+                line: {color: '#FF00FF'}
+            }], {
+                title: title,
+                xaxis: { title: 'Time (HH:MM:SS)' }
+            });
+        }
+
+        // FPS Plot
+        fpsPlot = document.getElementById('fps-plot');
+        createPlot(fpsPlot, 'fps vs Time')
+
+        function updateFPSGraph(metrics, time) {
+            Plotly.extendTraces(fpsPlot, {
+                x: [[time]],
+                y: [[metrics.FPS.Value]]
+            }, [0]);
+
+            slicePlot(fpsPlot);
+        }
+
+        // Memory Usage Plot
+        memoryUsagePlot = document.getElementById('memory-usage-plot');
+        createPlot(memoryUsagePlot, 'memoryUsage vs Time')
+
+        function updateMemoryUsageGraph(metrics, time) {
+            Plotly.extendTraces(memoryUsagePlot, {
+                x: [[time]],
+                y: [[metrics.Total_Memory_Usage_Mb.Value]]
+            }, [0]);
+
+            slicePlot(memoryUsagePlot);
+        }
+
+        // Data Receive Plot
+        dataReceivePlot = document.getElementById('data-recieve-plot');
+        createPlot(dataReceivePlot, 'dataReceive vs Time')
+
+        function updateDataReceivePlot(metrics, time) {
+            Plotly.extendTraces(dataReceivePlot, {
+                x: [[time]],
+                y: [[metrics.Data_Receive_Kbps.Value]]
+            }, [0]);
+
+            slicePlot(dataReceivePlot);
+        }
+
+        // Data Send Plot
+        dataSendPlot = document.getElementById('data-send-plot');
+        createPlot(dataSendPlot, 'dataSend vs Time')
+
+        function updateDataSendPlot(metrics, time) {
+            Plotly.extendTraces(dataSendPlot, {
+                x: [[time]],
+                y: [[metrics.Data_Send_Kbps.Value]]
+            }, [0]);
+            
+            slicePlot(dataSendPlot);
+        }
+
+        // Heartbeat Time Plot
+        heartbeatTimePlot = document.getElementById('heartbeat-time-plot');
+        createPlot(heartbeatTimePlot, 'heartbeatTime vs Time')
+
+        function updateHeartbeatTimePlot(metrics, time) {
+            Plotly.extendTraces(heartbeatTimePlot, {
+                x: [[time]],
+                y: [[metrics.Heartbeat_Time.Value]]
+            }, [0]);
+            
+            slicePlot(heartbeatTimePlot);
+        }
+
+        // Instance Count Plot
+        instanceCountPlot = document.getElementById('instance-count-plot');
+        createPlot(instanceCountPlot, 'instanceCount vs Time')
+
+        function updateInstanceCountPlot(metrics, time) {
+            Plotly.extendTraces(instanceCountPlot, {
+                x: [[time]],
+                y: [[metrics.Instance_Count.Value]]
+            }, [0]);
+            
+            slicePlot(instanceCountPlot);
+        }
+
+        // Primitives Count Plot
+        primitivesCountPlot = document.getElementById('primitives-count-plot');
+        createPlot(primitivesCountPlot, 'primitivesCount vs Time')
+
+        function updatePrimitivesCountPlot(metrics, time) {
+            Plotly.extendTraces(primitivesCountPlot, {
+                x: [[time]],
+                y: [[metrics.Primitives_Count.Value]]
+            }, [0]);
+            
+            slicePlot(primitivesCountPlot);
+        }
+
+        // Moving Primitives Count Plot
+        movingPrimitivesCount = document.getElementById('moving-primitives-count-plot');
+        createPlot(movingPrimitivesCount, 'movingPrimitivesC vs Time')
+
+        function updateMovingPrimitivesCount(metrics, time) {
+            Plotly.extendTraces(movingPrimitivesCount, {
+                x: [[time]],
+                y: [[metrics.Moving_Primitives_Count.Value]]
+            }, [0]);
+            
+            slicePlot(movingPrimitivesCount);
+        }
+
+        // Physics Receive Plot
+        physicsReceivePlot = document.getElementById('physics-recieve-plot');
+        createPlot(physicsReceivePlot, 'physicsReceive vs Time')
+
+        function updatePhysicsReceivePlot(metrics, time) {
+            Plotly.extendTraces(physicsReceivePlot, {
+                x: [[time]],
+                y: [[metrics.Physics_Receive_Kbps.Value]]
+            }, [0]);
+            
+            slicePlot(physicsReceivePlot);
+        }
+
+        // Physics Send Plot
+        physicsSendPlot = document.getElementById('physics-send-plot');
+        createPlot(physicsSendPlot, 'physicsSend vs Time')
+
+        function updatePhysicsSendPlot(metrics, time) {
+            Plotly.extendTraces(physicsSendPlot, {
+                x: [[time]],
+                y: [[metrics.Physics_Send_Kbps.Value]]
+            }, [0]);
+            
+            slicePlot(physicsSendPlot);
+        }
+
+        // Physics Step Time Plot
+        physicsStepTimePlot = document.getElementById('physics-step-time-plot');
+        createPlot(physicsStepTimePlot, 'physicsStepTime vs Time')
+
+        function updatePhysicsStepTimePlot(metrics, time) {
+            Plotly.extendTraces(physicsStepTimePlot, {
+                x: [[time]],
+                y: [[metrics.Physics_Step_Time_Ms.Value]]
+            }, [0]);
+            
+            slicePlot(physicsStepTimePlot);
+        }
+
+        async function loadOldData() {
+            const response = await fetch('/data/old');
+            if (!response.ok) {
+                console.error('Error fetching data');
+                console.log(response);
+                debounce = false;
+                return;
+            }
+            const data = await response.json();
+
+            for (let i = 0; i < data.length; i++) {
+                const metrics = data[i].Metrics;
+                const date = new Date(data[i].Metadata.Timestamp * 1000);
+                
+                const time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+                updateFPSGraph(metrics, time);
+                updateMemoryUsageGraph(metrics, time);
+                updateDataReceivePlot(metrics, time);
+                updateDataSendPlot(metrics, time);
+                updateHeartbeatTimePlot(metrics, time);
+                updateInstanceCountPlot(metrics, time);
+                updatePrimitivesCountPlot(metrics, time);
+                updateMovingPrimitivesCount(metrics, time);
+                updatePhysicsReceivePlot(metrics, time);
+                updatePhysicsSendPlot(metrics, time);
+                updatePhysicsStepTimePlot(metrics, time);
+            }
+        }
+        loadOldData();
+
+        let debounce = false;
+        async function updateGraphs() {
+            if (debounce) { return; }
+            debounce = true;
+            try {
+                const response = await fetch('/data/new');
+                if (!response.ok) {
+                    console.error('Error fetching data');
+                    console.log(response);
+                    debounce = false;
+                    return;
+                }
+                const data = await response.json();
+
+                const metrics = data.Metrics;
+
+                const date = new Date(data.Metadata.Timestamp * 1000);
+                const time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+                updateFPSGraph(metrics, time);
+                updateMemoryUsageGraph(metrics, time);
+                updateDataReceivePlot(metrics, time);
+                updateDataSendPlot(metrics, time);
+                updateHeartbeatTimePlot(metrics, time);
+                updateInstanceCountPlot(metrics, time);
+                updatePrimitivesCountPlot(metrics, time);
+                updateMovingPrimitivesCount(metrics, time);
+                updatePhysicsReceivePlot(metrics, time);
+                updatePhysicsSendPlot(metrics, time);
+                updatePhysicsStepTimePlot(metrics, time);
+
+            } catch (error) { console.log(error); }
+            debounce = false;
+        }
+
+        updateGraphs();
+        var interval = setInterval(function() {
+            updateGraphs();
+        }, POLLING_RATE);
+    </script>
+</body>
+</html>
