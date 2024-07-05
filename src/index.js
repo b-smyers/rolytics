@@ -2,9 +2,8 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 
-// Services
-const networking = require('./networking');
-const tokens = require('./tokens');
+// Middlware
+const middleware = require('./middleware');
 
 const app = express();
 app.use(express.static(path.join(__dirname, 'public')));
@@ -14,44 +13,71 @@ const PORT = 8080
 const maxLogs = 720;
 const logs = [];
 
-// Basic saftey middleware
-function APIMiddleware(req, res, next) {
-    // Check Rate Limit
-    const clientIp = req.ip;
-    if (networking.isRateLimited(clientIp)) {
-        
-        return res.status(429).json({
-            message: "Rate Limit Reached",
-            retryAfter: networking.getRetryAfterTime(clientIp)
+function compressLogs(logs, newLength) {
+    if (logs.length < newLength) { return logs; }
+
+    const compressionInterval = Math.ceil(logs.length / newLength);
+    let count = compressionInterval;
+    let averages = {};
+    let compressedLogs = [];
+
+    // Initialize the averages object keys
+    Object.keys(logs[0].Metrics).forEach(point => {
+        averages[point] = 0;
+    });
+
+    for (let i = 0; i < logs.length; i++) {
+        const log = logs[i];
+
+        Object.keys(log.Metrics).forEach(point => {
+            averages[point] += log.Metrics[point].Value;
         });
+
+        if (count <= 1) {
+            let compressedLog = {
+                Metadata: { ...log.Metadata },
+                Metrics: {}
+            };
+
+            Object.keys(log.Metrics).forEach(point => {
+                compressedLog.Metrics[point] = {
+                    Value: averages[point] / compressionInterval,
+                    Unit: log.Metrics[point].Unit
+                };
+            });
+            compressedLogs.push(compressedLog);
+
+            Object.keys(averages).forEach(point => {
+                averages[point] = 0;
+            });
+
+            count = compressionInterval;
+        } else {
+            count--;
+        }
     }
 
-    // Check Token
-    const token = req.headers['x-token'];
-    if (!token) {
-        return res.status(401).json({ error: 'Unauthorized: Missing token' });
-    }
-
-    if (!tokens.validateToken(token)) {
-        return res.status(401).json({ error: 'Unauthorized: Invalid token' });
-    }
-
-    next();
+    return compressedLogs;
 }
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.get('/data/old', (req, res) => {
-    res.status(200).json(logs);
+app.use('/api', middleware.rateLimit);
+app.use('/api/post', middleware.requireToken);
+
+app.get('/api/get/log/old', (req, res) => {
+    const compressedLogs = compressLogs(logs, 30);
+    console.log(`${logs.length} -> ${compressedLogs.length}`);
+    res.status(200).json(compressedLogs);
 });
 
-app.get('/data/new', (req, res) => {
+app.get('/api/get/log/new', (req, res) => {
     res.status(200).json(logs[logs.length - 1]);
 });
 
-app.post('/log', APIMiddleware, (req, res) => {
+app.post('/api/post/log', (req, res) => {
     if (logs.push(req.body) > maxLogs) {
         logs.splice(0, 1);
     }
@@ -59,5 +85,5 @@ app.post('/log', APIMiddleware, (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`Server is running on http://silk.bot.nu:${PORT}`);
 });

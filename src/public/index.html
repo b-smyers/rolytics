@@ -27,221 +27,42 @@
 </head>
 <body>
     <div class="flex-grid">
-        <div id="fps-plot" class="graph"></div>
-        <div id="memory-usage-plot" class="graph"></div>
-        <div id="data-recieve-plot" class="graph"></div>
-        <div id="data-send-plot" class="graph"></div>
-        <div id="heartbeat-time-plot" class="graph"></div>
-        <div id="instance-count-plot" class="graph"></div>
-        <div id="primitives-count-plot" class="graph"></div>
-        <div id="moving-primitives-count-plot" class="graph"></div>
-        <div id="physics-recieve-plot" class="graph"></div>
-        <div id="physics-send-plot" class="graph"></div>
-        <div id="physics-step-time-plot" class="graph"></div>
+        <div id="FPS_Plot" class="graph"></div>
+        <div id="Total_Memory_Usage_Mb_Plot" class="graph"></div>
+        <div id="Data_Receive_Kbps_Plot" class="graph"></div>
+        <div id="Data_Send_Kbps_Plot" class="graph"></div>
+        <div id="Heartbeat_Time_Plot" class="graph"></div>
+        <div id="Instance_Count_Plot" class="graph"></div>
+        <div id="Moving_Primitives_Count_Plot" class="graph"></div>
+        <div id="Physics_Receive_Kbps_Plot" class="graph"></div>
+        <div id="Physics_Send_Kbps_Plot" class="graph"></div>
+        <div id="Physics_Step_Time_Ms_Plot" class="graph"></div>
+        <div id="Primitives_Count_Plot" class="graph"></div>
     </div>
 
     <script>
-        const POLLING_RATE = .5 * 1000; // sec/req
-        const MAX_POINTS = 720; // Last two hours
+        const POLLING_RATE = 10 * 1000; // sec/req
+        const MAX_POINTS = 30; // Last 5 minutes
 
-        function slicePlot(plotId) {
-            Plotly.restyle(plotId, {
-                x: [plotId.data[0].x.slice(-MAX_POINTS)],
-                y: [plotId.data[0].y.slice(-MAX_POINTS)]
-            }, [0]);
-        }
+        let loaded = false;
+        let debounce = false;
 
         function createPlot(plotId, title) {
             Plotly.newPlot(plotId, [{
                 x: [],
                 y: [],
                 mode: 'lines',
-                line: {color: '#FF00FF'}
+                line: { color: '#FF00FF' }
             }], {
                 title: title,
                 xaxis: { title: 'Time (HH:MM:SS)' }
             });
         }
 
-        // FPS Plot
-        fpsPlot = document.getElementById('fps-plot');
-        createPlot(fpsPlot, 'fps vs Time')
-
-        function updateFPSGraph(metrics, time) {
-            Plotly.extendTraces(fpsPlot, {
-                x: [[time]],
-                y: [[metrics.FPS.Value]]
-            }, [0]);
-
-            slicePlot(fpsPlot);
-        }
-
-        // Memory Usage Plot
-        memoryUsagePlot = document.getElementById('memory-usage-plot');
-        createPlot(memoryUsagePlot, 'memoryUsage vs Time')
-
-        function updateMemoryUsageGraph(metrics, time) {
-            Plotly.extendTraces(memoryUsagePlot, {
-                x: [[time]],
-                y: [[metrics.Total_Memory_Usage_Mb.Value]]
-            }, [0]);
-
-            slicePlot(memoryUsagePlot);
-        }
-
-        // Data Receive Plot
-        dataReceivePlot = document.getElementById('data-recieve-plot');
-        createPlot(dataReceivePlot, 'dataReceive vs Time')
-
-        function updateDataReceivePlot(metrics, time) {
-            Plotly.extendTraces(dataReceivePlot, {
-                x: [[time]],
-                y: [[metrics.Data_Receive_Kbps.Value]]
-            }, [0]);
-
-            slicePlot(dataReceivePlot);
-        }
-
-        // Data Send Plot
-        dataSendPlot = document.getElementById('data-send-plot');
-        createPlot(dataSendPlot, 'dataSend vs Time')
-
-        function updateDataSendPlot(metrics, time) {
-            Plotly.extendTraces(dataSendPlot, {
-                x: [[time]],
-                y: [[metrics.Data_Send_Kbps.Value]]
-            }, [0]);
-            
-            slicePlot(dataSendPlot);
-        }
-
-        // Heartbeat Time Plot
-        heartbeatTimePlot = document.getElementById('heartbeat-time-plot');
-        createPlot(heartbeatTimePlot, 'heartbeatTime vs Time')
-
-        function updateHeartbeatTimePlot(metrics, time) {
-            Plotly.extendTraces(heartbeatTimePlot, {
-                x: [[time]],
-                y: [[metrics.Heartbeat_Time.Value]]
-            }, [0]);
-            
-            slicePlot(heartbeatTimePlot);
-        }
-
-        // Instance Count Plot
-        instanceCountPlot = document.getElementById('instance-count-plot');
-        createPlot(instanceCountPlot, 'instanceCount vs Time')
-
-        function updateInstanceCountPlot(metrics, time) {
-            Plotly.extendTraces(instanceCountPlot, {
-                x: [[time]],
-                y: [[metrics.Instance_Count.Value]]
-            }, [0]);
-            
-            slicePlot(instanceCountPlot);
-        }
-
-        // Primitives Count Plot
-        primitivesCountPlot = document.getElementById('primitives-count-plot');
-        createPlot(primitivesCountPlot, 'primitivesCount vs Time')
-
-        function updatePrimitivesCountPlot(metrics, time) {
-            Plotly.extendTraces(primitivesCountPlot, {
-                x: [[time]],
-                y: [[metrics.Primitives_Count.Value]]
-            }, [0]);
-            
-            slicePlot(primitivesCountPlot);
-        }
-
-        // Moving Primitives Count Plot
-        movingPrimitivesCount = document.getElementById('moving-primitives-count-plot');
-        createPlot(movingPrimitivesCount, 'movingPrimitivesC vs Time')
-
-        function updateMovingPrimitivesCount(metrics, time) {
-            Plotly.extendTraces(movingPrimitivesCount, {
-                x: [[time]],
-                y: [[metrics.Moving_Primitives_Count.Value]]
-            }, [0]);
-            
-            slicePlot(movingPrimitivesCount);
-        }
-
-        // Physics Receive Plot
-        physicsReceivePlot = document.getElementById('physics-recieve-plot');
-        createPlot(physicsReceivePlot, 'physicsReceive vs Time')
-
-        function updatePhysicsReceivePlot(metrics, time) {
-            Plotly.extendTraces(physicsReceivePlot, {
-                x: [[time]],
-                y: [[metrics.Physics_Receive_Kbps.Value]]
-            }, [0]);
-            
-            slicePlot(physicsReceivePlot);
-        }
-
-        // Physics Send Plot
-        physicsSendPlot = document.getElementById('physics-send-plot');
-        createPlot(physicsSendPlot, 'physicsSend vs Time')
-
-        function updatePhysicsSendPlot(metrics, time) {
-            Plotly.extendTraces(physicsSendPlot, {
-                x: [[time]],
-                y: [[metrics.Physics_Send_Kbps.Value]]
-            }, [0]);
-            
-            slicePlot(physicsSendPlot);
-        }
-
-        // Physics Step Time Plot
-        physicsStepTimePlot = document.getElementById('physics-step-time-plot');
-        createPlot(physicsStepTimePlot, 'physicsStepTime vs Time')
-
-        function updatePhysicsStepTimePlot(metrics, time) {
-            Plotly.extendTraces(physicsStepTimePlot, {
-                x: [[time]],
-                y: [[metrics.Physics_Step_Time_Ms.Value]]
-            }, [0]);
-            
-            slicePlot(physicsStepTimePlot);
-        }
-
+        const fields = {};
         async function loadOldData() {
-            const response = await fetch('/data/old');
-            if (!response.ok) {
-                console.error('Error fetching data');
-                console.log(response);
-                debounce = false;
-                return;
-            }
-            const data = await response.json();
-
-            for (let i = 0; i < data.length; i++) {
-                const metrics = data[i].Metrics;
-                const date = new Date(data[i].Metadata.Timestamp * 1000);
-                
-                const time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
-                updateFPSGraph(metrics, time);
-                updateMemoryUsageGraph(metrics, time);
-                updateDataReceivePlot(metrics, time);
-                updateDataSendPlot(metrics, time);
-                updateHeartbeatTimePlot(metrics, time);
-                updateInstanceCountPlot(metrics, time);
-                updatePrimitivesCountPlot(metrics, time);
-                updateMovingPrimitivesCount(metrics, time);
-                updatePhysicsReceivePlot(metrics, time);
-                updatePhysicsSendPlot(metrics, time);
-                updatePhysicsStepTimePlot(metrics, time);
-            }
-        }
-        loadOldData();
-
-        let debounce = false;
-        async function updateGraphs() {
-            if (debounce) { return; }
-            debounce = true;
             try {
-                const response = await fetch('/data/new');
+                const response = await fetch('/api/get/log/old');
                 if (!response.ok) {
                     console.error('Error fetching data');
                     console.log(response);
@@ -250,27 +71,85 @@
                 }
                 const data = await response.json();
 
-                const metrics = data.Metrics;
+                // Populate saved data fields
+                Object.keys(data).forEach(index => {
+                    const log = data[index];
+                    const date = new Date(log.Metadata.Timestamp * 1000);
+                    const time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+                    Object.keys(log.Metrics).forEach(point => {
+                        const value = log.Metrics[point].Value;
 
+                        const plot = document.getElementById(`${point}_Plot`);
+                        if (!plot) { 
+                            console.warn(`${point}_Plot is missing`);
+                            return;
+                        }
+
+                        // Add value to field record
+                        if (!fields[point]) {
+                            fields[point] = { x: [], y: [] };
+                            createPlot(plot, `${point} vs Time`);
+                        }
+                        fields[point].x.push(time);
+                        fields[point].y.push(value);
+                    });
+                });
+            } catch (error) { console.log(error); }
+            console.log("LOADED");
+            loaded = true;
+            updateGraphs();
+        }
+        loadOldData();
+
+        async function updateGraphs() {
+            if (debounce) { return; }
+            if (!loaded) { return; }
+            debounce = true;
+            try {
+                const response = await fetch('/api/get/log/new');
+                if (!response.ok) {
+                    console.error('Error fetching data');
+                    console.log(response);
+                    debounce = false;
+                    return;
+                }
+                const data = await response.json();
                 const date = new Date(data.Metadata.Timestamp * 1000);
                 const time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
-                updateFPSGraph(metrics, time);
-                updateMemoryUsageGraph(metrics, time);
-                updateDataReceivePlot(metrics, time);
-                updateDataSendPlot(metrics, time);
-                updateHeartbeatTimePlot(metrics, time);
-                updateInstanceCountPlot(metrics, time);
-                updatePrimitivesCountPlot(metrics, time);
-                updateMovingPrimitivesCount(metrics, time);
-                updatePhysicsReceivePlot(metrics, time);
-                updatePhysicsSendPlot(metrics, time);
-                updatePhysicsStepTimePlot(metrics, time);
+
+                Object.keys(data.Metrics).forEach(point => {
+                    const value = data.Metrics[point].Value;
+                    // Get plot
+                    const plot = document.getElementById(`${point}_Plot`);
+                    if (!plot) { 
+                        console.warn(`${point}_Plot is missing`);
+                        debounce = false;
+                        return;
+                    }
+
+                    // Add value to field record
+                    fields[point].x.push(time);
+                    fields[point].y.push(value);
+
+                    Plotly.extendTraces(plot, {
+                        x: [[time]],
+                        y: [[value]]
+                    }, [0]);
+
+                     if (fields[point].x.length > MAX_POINTS) {
+                        fields[point].x = fields[point].x.slice(-MAX_POINTS);
+                        fields[point].y = fields[point].y.slice(-MAX_POINTS);
+                        Plotly.restyle(plot, {
+                            x: [fields[point].x],
+                            y: [fields[point].y]
+                        }, [0]);
+                    }
+                });
 
             } catch (error) { console.log(error); }
             debounce = false;
         }
 
-        updateGraphs();
         var interval = setInterval(function() {
             updateGraphs();
         }, POLLING_RATE);
