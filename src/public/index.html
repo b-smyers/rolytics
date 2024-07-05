@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roblox Analytics</title>
+    <meta name="description" content="Live Roblox analytics service"/>
     <script src="https://cdn.plot.ly/plotly-2.32.0.min.js" charset="utf-8"></script>
     <style>
         body {
@@ -42,7 +43,7 @@
 
     <script>
         const POLLING_RATE = 10 * 1000; // sec/req
-        const MAX_POINTS = 30; // Last 5 minutes
+        const MAX_POINTS = 720; // Last 5 minutes
 
         let loaded = false;
         let debounce = false;
@@ -52,7 +53,7 @@
                 x: [],
                 y: [],
                 mode: 'lines',
-                line: { color: '#FF00FF' }
+                line: { shape: 'linear', color: '#FF00FF' }
             }], {
                 title: title,
                 xaxis: { title: 'Time (HH:MM:SS)' }
@@ -131,19 +132,15 @@
                     fields[point].x.push(time);
                     fields[point].y.push(value);
 
-                    Plotly.extendTraces(plot, {
-                        x: [[time]],
-                        y: [[value]]
-                    }, [0]);
-
-                     if (fields[point].x.length > MAX_POINTS) {
+                    if (fields[point].x.length > MAX_POINTS) {
                         fields[point].x = fields[point].x.slice(-MAX_POINTS);
                         fields[point].y = fields[point].y.slice(-MAX_POINTS);
-                        Plotly.restyle(plot, {
-                            x: [fields[point].x],
-                            y: [fields[point].y]
-                        }, [0]);
                     }
+                    
+                    Plotly.update(plot, {
+                        x: [fields[point].x],
+                        y: [fields[point].y]
+                    }, [0]);
                 });
 
             } catch (error) { console.log(error); }
