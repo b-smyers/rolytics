@@ -68,9 +68,8 @@ app.use('/api', middleware.rateLimit);
 app.use('/api/post', middleware.requireToken);
 
 app.get('/api/get/log/old', (req, res) => {
-    const compressedLogs = compressLogs(logs, 30);
-    console.log(`${logs.length} -> ${compressedLogs.length}`);
-    res.status(200).json(compressedLogs);
+    const compressedLogs = compressLogs(logs, 50);
+    res.status(200).json(logs);
 });
 
 app.get('/api/get/log/new', (req, res) => {

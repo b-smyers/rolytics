@@ -1,7 +1,6 @@
 const requestCounts = {};
 
-const POLLING_RATE = .5; // sec/req
-const REQUESTS_PER_MINUTE = 60 / POLLING_RATE; // req/min
+const REQUESTS_PER_MINUTE = 100;
 const BUFFER_FACTOR = 1.1; // 10% buffer
 
 const RATE_LIMIT = Math.ceil(REQUESTS_PER_MINUTE * BUFFER_FACTOR);
