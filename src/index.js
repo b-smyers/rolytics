@@ -65,18 +65,17 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api', middleware.rateLimit);
-app.use('/api/post', middleware.requireToken);
 
-app.get('/api/get/log/old', (req, res) => {
+app.get('/api/logs/old', (req, res) => {
     const compressedLogs = compressLogs(logs, 50);
-    res.status(200).json(logs);
+    res.status(logs.length > 0 ? 200 : 204).json(logs);
 });
 
-app.get('/api/get/log/new', (req, res) => {
-    res.status(200).json(logs[logs.length - 1]);
+app.get('/api/logs/new', (req, res) => {
+    res.status(logs.length > 0 ? 200 : 204).json(logs[logs.length - 1]);
 });
 
-app.post('/api/post/log', (req, res) => {
+app.post('/api/logs', middleware.requireToken, (req, res) => {
     if (logs.push(req.body) > maxLogs) {
         logs.splice(0, 1);
     }

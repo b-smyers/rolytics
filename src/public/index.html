@@ -63,11 +63,13 @@
         const fields = {};
         async function loadOldData() {
             try {
-                const response = await fetch('/api/get/log/old');
+                const response = await fetch('/api/logs/old');
                 if (!response.ok) {
                     console.error('Error fetching data');
                     console.log(response);
-                    debounce = false;
+                    return;
+                } else if (response.status !== 200) {
+                    console.log(`${response.status}: ${response.statusText}`);
                     return;
                 }
                 const data = await response.json();
@@ -107,10 +109,14 @@
             if (!loaded) { return; }
             debounce = true;
             try {
-                const response = await fetch('/api/get/log/new');
+                const response = await fetch('/api/logs/new');
                 if (!response.ok) {
                     console.error('Error fetching data');
                     console.log(response);
+                    debounce = false;
+                    return;
+                } else if (response.status !== 200) {
+                    console.log(`${response.status}: ${response.statusText}`);
                     debounce = false;
                     return;
                 }
