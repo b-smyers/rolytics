@@ -17,7 +17,6 @@ async function executeSchemaFile(db, filePath) {
     try {
         const schema = await fs.readFile(filePath, 'utf-8');
         await db.exec(schema);
-        console.log(`Schema file ${filePath} executed successfully`);
     } catch (err) {
         console.error(`Error executing schema file ${filePath}:`, err);
     }
@@ -36,7 +35,6 @@ async function database() {
             await executeSchemaFile(db, filePath);
         }
 
-        console.log('All schema files executed');
         return db;
     } catch (err) {
         console.error('Error setting up database:', err);

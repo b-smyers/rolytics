@@ -12,6 +12,8 @@ const { rateLimit, authenticateToken } = require('./middlware/auth.middleware');
 
 app.use('/api', rateLimit);
 app.use('/api/users', authenticateToken);
+
+// Routes
 app.use('/api/auth', require('./routers/auth.routes'));
 
 app.get('/', (req, res) => {
