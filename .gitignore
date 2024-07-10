@@ -5,3 +5,6 @@ node_modules/
 
 # SSL Keys, Certs, & CSR
 *.pem
+
+# sqlite
+*.db
