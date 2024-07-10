@@ -10,7 +10,7 @@ async function login(req, res) {
         }
 
         // Generate JWT access token
-        const accessToken = jwt.sign({ userId: user.id }, process.env.JWT_ACCESS_SECRET, { expiresIn: '1hr' });
+        const accessToken = jwt.sign({ userId: user.id }, process.env.JWT_ACCESS_SECRET, { expiresIn: '1m' });
 
         // Generate JWT refresh token
         const refreshToken = jwt.sign({ userId: user.id }, process.env.JWT_REFRESH_SECRET, { expiresIn: '7d' });
@@ -18,8 +18,9 @@ async function login(req, res) {
         // Set refreshToken in secure browser cookie
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
-            secure: process.env.NODE_ENV == 'production' ? true : false,
-            sameSite: 'strict',
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'Lax',
+            path: '/api/auth/refresh',
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         });
 
@@ -57,18 +58,30 @@ function logout(req, res) {
 }
 
 function refresh(req, res) {
-    const refreshToken = req.cookies.refreshToken;
+    const cookieHeader = req.headers.cookie;
+    let refreshToken;
+
+    if (cookieHeader) {
+        const cookies = cookieHeader.split(';').map(cookie => cookie.trim());
+        const myCookie = cookies.find(cookie => cookie.startsWith('refreshToken='));
+
+        if (myCookie) {
+            refreshToken = myCookie.split('=')[1];
+        }
+    }
 
     if (!refreshToken) {
-      return res.status(401).json({ message: 'Refresh token not provided' });
+        console.log('Missing refresh token in refresh');
+        return res.status(401).json({ message: 'Refresh token not provided' });
     }
   
-    jwt.verify(refreshToken, JWT_REFRESH_SECRET, (err, decoded) => {
+    jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err, decoded) => {
         if (err) {
-          return res.status(403).json({ message: 'Invalid refresh token' });
+            console.log('Invalid refresh token in refresh');
+            return res.status(403).json({ message: 'Invalid refresh token' });
         }
     
-        const accessToken = jwt.sign({ userId: decoded.userId }, JWT_ACCESS_SECRET, { expiresIn: '1hr' });
+        const accessToken = jwt.sign({ userId: decoded.userId }, process.env.JWT_ACCESS_SECRET, { expiresIn: '1hr' });
     
         res.json({ accessToken });
     });
@@ -78,15 +91,16 @@ function verify(req, res) {
     const token = req.headers['authorization']?.split(' ')[1]; // Bearer <TOKEN>
 
     if (!token) {
-        return res.status(403);
+        return res.status(403).json({ message: 'Access token not provided' });
     }
 
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    jwt.verify(token, process.env.JWT_ACCESS_SECRET, (err, decoded) => {
         if (err) {
-            return res.status(401);
+            return res.status(401).json({ message: 'Invalid access token' });
         }
-        req.userId = decoded.id;
+        req.userId = decoded.userId;
     });
+    res.status(200);
 }
 
 module.exports = {

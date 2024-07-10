@@ -58,8 +58,8 @@
             if (!getAccessToken()) {
                 // Check for token
                 window.location.href = '/login';
+                return;
             }
-
             // Check if access token expired
             try {
                 const verifyResponse = await fetch('/api/auth/verify', {
@@ -69,7 +69,6 @@
                         'Authorization': `Bearer ${getAccessToken()}`
                     }
                 });
-
                 // Valid token, continue to rest of page
                 if (verifyResponse.ok) { return; }
 
@@ -81,9 +80,8 @@
                         'Content-Type': 'application/json'
                     }
                 });
-
                 if (!refreshResponse.ok) {
-                    throw new Error('Refresh token expired');
+                    throw new Error(refreshResponse.message || "Refresh token expired");
                 }
 
                 const data = refreshResponse.json();
@@ -95,8 +93,8 @@
         };
         
         document.addEventListener('DOMContentLoaded', () => {
-            onLoaded().catch(err => {
-                console.error('Initial load error:', err);
+            onLoaded().catch(error => {
+                console.error('Initial load error:', error);
                 window.location.href = '/login';
             });
         });
