@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roblox Analytics</title>
     <meta name="description" content="Live Roblox analytics service"/>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
     <script src="https://cdn.plot.ly/plotly-2.32.0.min.js" charset="utf-8"></script>
     <style>
         body {
@@ -42,6 +46,72 @@
     </div>
 
     <script>
+        function setAccessToken(token) {
+            sessionStorage.setItem('accessToken', token);
+        }
+
+        function getAccessToken() {
+            return sessionStorage.getItem('accessToken');
+        }
+
+        async function onLoaded() {
+            if (!getAccessToken()) {
+                // Check for token
+                window.location.href = '/login';
+            }
+
+            // Check if access token expired
+            try {
+                const verifyResponse = await fetch('/api/auth/verify', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${getAccessToken()}`
+                    }
+                });
+
+                // Valid token, continue to rest of page
+                if (verifyResponse.ok) { return; }
+
+                // Attempt to get new access token using refresh token
+                const refreshResponse = await fetch('/api/auth/refresh', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!refreshResponse.ok) {
+                    throw new Error('Refresh token expired');
+                }
+
+                const data = refreshResponse.json();
+                setAccessToken(data.accessToken);
+            } catch (error) {
+                console.error('Error:', error);
+                window.location.href = '/login';
+            }
+        };
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            onLoaded().catch(err => {
+                console.error('Initial load error:', err);
+                window.location.href = '/login';
+            });
+        });
+
+        function makeAuthenticatedRequest(url, options = {}) {
+            return fetch(url, 
+                {
+                    ...options,
+                    headers: {
+                    ...options.headers,
+                    'Authorization': `Bearer ${getAccessToken()}`
+                }
+            });
+        }
+
         const POLLING_RATE = 10 * 1000; // sec/req
         const MAX_POINTS = 720; // Last 5 minutes
 
