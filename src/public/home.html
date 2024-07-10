@@ -62,7 +62,7 @@
             }
             // Check if access token expired
             try {
-                const verifyResponse = await fetch('/api/auth/verify', {
+                const verifyResponse = await fetch('/api/v1/auth/verify', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -73,7 +73,7 @@
                 if (verifyResponse.ok) { return; }
 
                 // Attempt to get new access token using refresh token
-                const refreshResponse = await fetch('/api/auth/refresh', {
+                const refreshResponse = await fetch('/api/v1/auth/refresh', {
                     method: 'POST',
                     credentials: 'include',
                     headers: {
@@ -84,7 +84,7 @@
                     throw new Error(refreshResponse.message || "Refresh token expired");
                 }
 
-                const data = refreshResponse.json();
+                const data = await refreshResponse.json();
                 setAccessToken(data.accessToken);
             } catch (error) {
                 console.error('Error:', error);
@@ -110,120 +110,120 @@
             });
         }
 
-        const POLLING_RATE = 10 * 1000; // sec/req
-        const MAX_POINTS = 720; // Last 5 minutes
+        // const POLLING_RATE = 10 * 1000; // sec/req
+        // const MAX_POINTS = 720; // Last 5 minutes
 
-        let loaded = false;
-        let debounce = false;
+        // let loaded = false;
+        // let debounce = false;
 
-        function createPlot(plotId, title) {
-            Plotly.newPlot(plotId, [{
-                x: [],
-                y: [],
-                mode: 'lines',
-                line: { shape: 'linear', color: '#FF00FF' }
-            }], {
-                title: title,
-                xaxis: { title: 'Time (HH:MM:SS)' }
-            });
-        }
+        // function createPlot(plotId, title) {
+        //     Plotly.newPlot(plotId, [{
+        //         x: [],
+        //         y: [],
+        //         mode: 'lines',
+        //         line: { shape: 'linear', color: '#FF00FF' }
+        //     }], {
+        //         title: title,
+        //         xaxis: { title: 'Time (HH:MM:SS)' }
+        //     });
+        // }
 
-        const fields = {};
-        async function loadOldData() {
-            try {
-                const response = await fetch('/api/logs/old');
-                if (!response.ok) {
-                    console.error('Error fetching data');
-                    console.log(response);
-                    return;
-                } else if (response.status !== 200) {
-                    console.log(`${response.status}: ${response.statusText}`);
-                    return;
-                }
-                const data = await response.json();
+        // const fields = {};
+        // async function loadOldData() {
+        //     try {
+        //         const response = await fetch('/api/v1/logs/old');
+        //         if (!response.ok) {
+        //             console.error('Error fetching data');
+        //             console.log(response);
+        //             return;
+        //         } else if (response.status !== 200) {
+        //             console.log(`${response.status}: ${response.statusText}`);
+        //             return;
+        //         }
+        //         const data = await response.json();
 
-                // Populate saved data fields
-                Object.keys(data).forEach(index => {
-                    const log = data[index];
-                    const date = new Date(log.Metadata.Timestamp * 1000);
-                    const time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
-                    Object.keys(log.Metrics).forEach(point => {
-                        const value = log.Metrics[point].Value;
+        //         // Populate saved data fields
+        //         Object.keys(data).forEach(index => {
+        //             const log = data[index];
+        //             const date = new Date(log.Metadata.Timestamp * 1000);
+        //             const time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+        //             Object.keys(log.Metrics).forEach(point => {
+        //                 const value = log.Metrics[point].Value;
 
-                        const plot = document.getElementById(`${point}_Plot`);
-                        if (!plot) { 
-                            console.warn(`${point}_Plot is missing`);
-                            return;
-                        }
+        //                 const plot = document.getElementById(`${point}_Plot`);
+        //                 if (!plot) { 
+        //                     console.warn(`${point}_Plot is missing`);
+        //                     return;
+        //                 }
 
-                        // Add value to field record
-                        if (!fields[point]) {
-                            fields[point] = { x: [], y: [] };
-                            createPlot(plot, `${point} vs Time`);
-                        }
-                        fields[point].x.push(time);
-                        fields[point].y.push(value);
-                    });
-                });
-            } catch (error) { console.log(error); }
-            console.log("LOADED");
-            loaded = true;
-            updateGraphs();
-        }
-        loadOldData();
+        //                 // Add value to field record
+        //                 if (!fields[point]) {
+        //                     fields[point] = { x: [], y: [] };
+        //                     createPlot(plot, `${point} vs Time`);
+        //                 }
+        //                 fields[point].x.push(time);
+        //                 fields[point].y.push(value);
+        //             });
+        //         });
+        //     } catch (error) { console.log(error); }
+        //     console.log("LOADED");
+        //     loaded = true;
+        //     updateGraphs();
+        // }
+        // loadOldData();
 
-        async function updateGraphs() {
-            if (debounce) { return; }
-            if (!loaded) { return; }
-            debounce = true;
-            try {
-                const response = await fetch('/api/logs/new');
-                if (!response.ok) {
-                    console.error('Error fetching data');
-                    console.log(response);
-                    debounce = false;
-                    return;
-                } else if (response.status !== 200) {
-                    console.log(`${response.status}: ${response.statusText}`);
-                    debounce = false;
-                    return;
-                }
-                const data = await response.json();
-                const date = new Date(data.Metadata.Timestamp * 1000);
-                const time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+        // async function updateGraphs() {
+        //     if (debounce) { return; }
+        //     if (!loaded) { return; }
+        //     debounce = true;
+        //     try {
+        //         const response = await fetch('/api/v1/logs/new');
+        //         if (!response.ok) {
+        //             console.error('Error fetching data');
+        //             console.log(response);
+        //             debounce = false;
+        //             return;
+        //         } else if (response.status !== 200) {
+        //             console.log(`${response.status}: ${response.statusText}`);
+        //             debounce = false;
+        //             return;
+        //         }
+        //         const data = await response.json();
+        //         const date = new Date(data.Metadata.Timestamp * 1000);
+        //         const time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
 
-                Object.keys(data.Metrics).forEach(point => {
-                    const value = data.Metrics[point].Value;
-                    // Get plot
-                    const plot = document.getElementById(`${point}_Plot`);
-                    if (!plot) { 
-                        console.warn(`${point}_Plot is missing`);
-                        debounce = false;
-                        return;
-                    }
+        //         Object.keys(data.Metrics).forEach(point => {
+        //             const value = data.Metrics[point].Value;
+        //             // Get plot
+        //             const plot = document.getElementById(`${point}_Plot`);
+        //             if (!plot) { 
+        //                 console.warn(`${point}_Plot is missing`);
+        //                 debounce = false;
+        //                 return;
+        //             }
 
-                    // Add value to field record
-                    fields[point].x.push(time);
-                    fields[point].y.push(value);
+        //             // Add value to field record
+        //             fields[point].x.push(time);
+        //             fields[point].y.push(value);
 
-                    if (fields[point].x.length > MAX_POINTS) {
-                        fields[point].x = fields[point].x.slice(-MAX_POINTS);
-                        fields[point].y = fields[point].y.slice(-MAX_POINTS);
-                    }
+        //             if (fields[point].x.length > MAX_POINTS) {
+        //                 fields[point].x = fields[point].x.slice(-MAX_POINTS);
+        //                 fields[point].y = fields[point].y.slice(-MAX_POINTS);
+        //             }
                     
-                    Plotly.update(plot, {
-                        x: [fields[point].x],
-                        y: [fields[point].y]
-                    }, [0]);
-                });
+        //             Plotly.update(plot, {
+        //                 x: [fields[point].x],
+        //                 y: [fields[point].y]
+        //             }, [0]);
+        //         });
 
-            } catch (error) { console.log(error); }
-            debounce = false;
-        }
+        //     } catch (error) { console.log(error); }
+        //     debounce = false;
+        // }
 
-        var interval = setInterval(function() {
-            updateGraphs();
-        }, POLLING_RATE);
+        // var interval = setInterval(function() {
+        //     updateGraphs();
+        // }, POLLING_RATE);
     </script>
 </body>
 </html>

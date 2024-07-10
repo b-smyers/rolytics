@@ -52,7 +52,7 @@
             const jsonData = Object.fromEntries(formData.entries());
 
             try {
-                const registerResponse = await fetch('/api/auth/register', {
+                const registerResponse = await fetch('/api/v1/auth/register', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -65,7 +65,7 @@
                 }
                 console.log('Registration successful');
 
-                const loginResponse = await fetch('/api/auth/login', {
+                const loginResponse = await fetch('/api/v1/auth/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

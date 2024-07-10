@@ -11,10 +11,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 const { rateLimit, authenticateToken } = require('./middlware/auth.middleware');
 
 app.use('/api', rateLimit);
-app.use('/api/users', authenticateToken);
+app.use('/api/v1/users', authenticateToken);
 
 // Routes
-app.use('/api/auth', require('./routers/auth.routes'));
+app.use('/api/v1/auth', require('./routers/auth.routes'));
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '/public', 'landing.html'));

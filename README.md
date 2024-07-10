@@ -2,7 +2,7 @@
 Developing a roblox analytics service with accounts.
 
 ## API Layout
-- /api
+- /api/v1
     - /auth
         - /login
         - /register
@@ -36,25 +36,25 @@ Developing a roblox analytics service with accounts.
                 - /friend-requests
                 - /invites
             - /servers/<ID>
-            - /analytics
-                - /gameplay
-                - /engagement
-                - /retention
-            - /performance
-                - /fps
-                - /latency
-                - /uptime
-                - /load
-            - /players
-                - /active
-                - /new
-                - /returning
-                - /demographics
-            - /purchases
-                - /passes
-                - /developer-products
-                - /subscriptions
-            - /social
-                - /chats
-                - /friend-requests
-                - /invites
+                - /analytics
+                    - /gameplay
+                    - /engagement
+                    - /retention
+                - /performance
+                    - /fps
+                    - /latency
+                    - /uptime
+                    - /load
+                - /players
+                    - /active
+                    - /new
+                    - /returning
+                    - /demographics
+                - /purchases
+                    - /passes
+                    - /developer-products
+                    - /subscriptions
+                - /social
+                    - /chats
+                    - /friend-requests
+                    - /invites
