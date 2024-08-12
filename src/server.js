@@ -15,15 +15,15 @@ const credentials = { key: key, cert: cert };
 
 const httpsServer = https.createServer(credentials, app);
 
+httpsServer.listen(process.env.HTTPS_PORT, () => {
+    console.log(`HTTPS server listening: https://${domain}:${process.env.HTTPS_PORT}`);
+});
+
 // Setup http server to redirect traffic to https server
 const httpApp = express();
 httpApp.all('*', (req, res) => res.redirect(301, `https://${domain}:${process.env.HTTPS_PORT}${req.originalUrl}`));
 
 const httpServer = http.createServer(httpApp);
-
-httpsServer.listen(process.env.HTTPS_PORT, () => {
-    console.log(`HTTPS server listening: https://${domain}:${process.env.HTTPS_PORT}`);
-});
 
 httpServer.listen(process.env.HTTP_PORT, () => {
     console.log(`HTTP server listening: http://${domain}:${process.env.HTTP_PORT}`)

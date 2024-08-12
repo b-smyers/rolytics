@@ -11,9 +11,10 @@ async function registerUser(username, email, password) {
     const query = `INSERT INTO users (username, email, password) VALUES (?, ?, ?)`;
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
-        await db.run(query, [username, email, hashedPassword]);
+        const result = await db.run(query, [username, email, hashedPassword]);
+        const userId = result.lastID
         console.log('New user registered:', username);
-        return { username, email };
+        return { userId, username, email };
     } catch (error) {
         throw new Error(`Unable to register user: ${error.message}`);
     }
@@ -28,7 +29,7 @@ async function loginUser(username, password) {
         const isPasswordCorrect = await bcrypt.compare(password, row.password);
         if (isPasswordCorrect) {
             console.log('A user logged in:', username);
-            return { username: row.username, email: row.email };
+            return { id: row.id, username: row.username, email: row.email };
         } else {
             console.log('A user failed to login:', username);
             return false;
@@ -49,8 +50,19 @@ async function findExistingAccounts(username, email) {
     }
 }
 
+async function getUser(userId) {
+    const query = `SELECT * FROM users WHERE user_id = ?`;
+    try {
+        const row = await db.get(query, [userId]);
+        return row;
+    } catch (error) {
+        throw new Error(`Unable to get user: ${error.message}`);
+    }
+}
+
 module.exports = {
     registerUser,
     loginUser,
     findExistingAccounts,
+    getUser,
 };

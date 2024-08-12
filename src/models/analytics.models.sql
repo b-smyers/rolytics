@@ -4,5 +4,5 @@ CREATE TABLE IF NOT EXISTS analytics (
     timestamp DATETIME,
     metric_name TEXT,
     metric_value REAL,
-    FOREIGN KEY (server_id) REFERENCES servers(server_id)
+    FOREIGN KEY (server_id) REFERENCES servers(server_id) ON DELETE CASCADE
 );

@@ -11,6 +11,7 @@ const modelFiles = [
     path.join(__dirname, '../models', 'experiences.models.sql'),
     path.join(__dirname, '../models', 'servers.models.sql'),
     path.join(__dirname, '../models', 'analytics.models.sql'),
+    path.join(__dirname, '../models', 'user_settings.models.sql')
 ];
 
 async function executeSchemaFile(db, filePath) {

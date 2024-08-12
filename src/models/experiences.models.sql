@@ -4,5 +4,6 @@ CREATE TABLE IF NOT EXISTS experiences (
     experience_id TEXT UNIQUE,
     name TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    api_key TEXT UNIQUE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
