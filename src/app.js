@@ -20,14 +20,12 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Middleware
-const { isAuthenticated, rateLimit, authenticateTokenOrApiKey } = require('./middlware/auth.middleware');
+const { isAuthenticated, rateLimit } = require('./middlware/auth.middleware');
 
 app.use('/api', rateLimit);
-app.use('/api/v1/users', isAuthenticated);
 
 // Routes
-app.use('/api/v1/auth', require('./routers/auth.routes'));
-app.use('/api/v1/users', require('./routers/users.routes'));
+app.use('/api/v1', require('./routers/api.routes'));
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '/public', 'landing.html'));
