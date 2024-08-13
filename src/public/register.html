@@ -17,6 +17,7 @@
     </style>
 </head>
 <body>
+    <button onclick="window.location.href='/'">Home</button>
     <h2>Register</h2>
     <form id="registerForm">
         <label for="username">Username:</label><br>
@@ -32,14 +33,6 @@
     </form>
 
     <script>
-        function setAccessToken(token) {
-            sessionStorage.setItem('accessToken', token);
-        }
-
-        function getAccessToken() {
-            return sessionStorage.getItem('accessToken');
-        }
-        
         // Register Logic
         async function handleSubmit(e) {
             e.preventDefault(); // Prevent default form submission
@@ -80,12 +73,8 @@
                     throw new Error('Login failed');
                 }
 
-                const data = await loginResponse.json();
-
-                setAccessToken(data.accessToken);
-
                 console.log('Login successful');
-                window.location.href = '/home';
+                window.location.href = '/dashboard';
             } catch (error) {
                 console.error('Error:', error);
             } finally {

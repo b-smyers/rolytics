@@ -28,7 +28,7 @@ app.use('/api', rateLimit);
 app.use('/api/v1', require('./routers/api.routes'));
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '/public', 'landing.html'));
+    res.sendFile(path.join(__dirname, '/public', 'homepage.html'));
 });
 
 app.get('/register', (req, res) => {
@@ -39,12 +39,12 @@ app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, '/public', 'login.html'));
 });
 
-app.use('/home', isAuthenticated);
-app.get('/home', (req, res) => {
-    res.sendFile(path.join(__dirname, '/public', 'home.html'));
+app.use('/dashboard', isAuthenticated);
+app.get('/dashboard', (req, res) => {
+    res.sendFile(path.join(__dirname, '/public', 'dashboard.html'));
 });
 
-app.get('/home/settings', (req, res) => {
+app.get('/dashboard/settings', (req, res) => {
     res.sendFile(path.join(__dirname, '/public', 'settings.html'))
 });
 

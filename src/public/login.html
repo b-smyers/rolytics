@@ -17,6 +17,7 @@
     </style>
 </head>
 <body>
+    <button onclick="window.location.href='/'">Home</button>
     <h2>Login</h2>
     <form id="loginForm">
         <label for="username">Username:</label><br>
@@ -29,14 +30,6 @@
     </form>
 
     <script>
-        function setAccessToken(token) {
-            sessionStorage.setItem('accessToken', token);
-        }
-
-        function getAccessToken() {
-            return sessionStorage.getItem('accessToken');
-        }
-
         // Login Logic
         async function handleSubmit(element) {
             element.preventDefault(); // Prevent default form submission
@@ -54,19 +47,17 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(jsonData)
+                    body: JSON.stringify(jsonData),
+                    credentials: 'same-origin'
                 });
 
                 if (!response.ok) {
                     throw new Error('Login failed');
+                    alert('Login failed');
                 }
 
-                const data = await response.json();
-
-                setAccessToken(data.accessToken);
-
                 console.log('Login successful');
-                window.location.href = '/home';
+                window.location.href = '/dashboard';
             } catch (error) {
                 console.error('Error:', error);
             } finally {
