@@ -15,6 +15,35 @@ const isAuthenticated = (req, res, next) => {
     }
 };
 
+const jwtMiddlware = (req, res, next) => {
+    const token = req.headers['authorization']?.split(' ')[1]; // Extract token from 'Bearer <token>'
+
+    if (token) {
+        // Verify JWT token
+        jwt.verify(token, process.env.JWT_ACCESS_SECRET, (err, decoded) => {
+            if (err) {
+                return res.status(403); // Invalid Token
+            }
+            req.userId = decoded.userId;
+            next();
+        });
+    } else {
+        return res.status(401); // Missing token
+    }
+};
+
+const authenticate = (req, res, next) => {
+    if (req.headers['x-api-key']) {
+        // External request
+        jwtMiddlware(req, res, next);
+    } else if (req.session.user) {
+        // Internal request
+        isAuthenticated(req, res, next);
+    } else {
+        res.status(401).json({ message: "Unauthorized" });
+    }
+};
+
 const rateLimit = (req, res, next) => {
     const now = Date.now();
     const ip = req.headers['x-forwarded-for'] || req.ip;
@@ -42,35 +71,6 @@ const rateLimit = (req, res, next) => {
     }
 };
 
-const authenticateTokenOrApiKey = (req, res, next) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1]; // Extract token from 'Bearer <token>'
-    const apiKey = req.headers['x-api-key'];
-
-    if (token) {
-        // Verify JWT token
-        jwt.verify(token, process.env.JWT_ACCESS_SECRET, (err, decoded) => {
-            if (err) {
-                return res.status(403); // Invalid Token
-            }
-            req.userId = decoded.userId;
-            next();
-        });
-    } else if (apiKey) {
-        // Verify API key
-        jwt.verify(apiKey, process.env.JWT_API_KEY_SECRET, (err, decoded) => {
-            if (err) {
-                return res.status(403); // Invalid Token
-            }
-            req.userId = decoded.userId;
-            req.experienceId = decoded.experienceId;
-            next();
-        });
-    } else {
-        return res.status(401); // Missing Token or API Key
-    }
-};
-
 // Cleanup old ratelimit entries
 setInterval(() => {
     const now = Date.now();
@@ -82,7 +82,6 @@ setInterval(() => {
 }, 60 * 1000);
 
 module.exports = {
-    isAuthenticated,
+    authenticate,
     rateLimit,
-    authenticateTokenOrApiKey,
 };

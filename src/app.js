@@ -20,7 +20,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Middleware
-const { isAuthenticated, rateLimit } = require('./middlware/auth.middleware');
+const { authenticate, rateLimit } = require('./middlware/auth.middleware');
 
 app.use('/api', rateLimit);
 
@@ -39,7 +39,7 @@ app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, '/public', 'login.html'));
 });
 
-app.use('/dashboard', isAuthenticated);
+app.use('/dashboard', authenticate);
 app.get('/dashboard', (req, res) => {
     res.sendFile(path.join(__dirname, '/public', 'dashboard.html'));
 });
