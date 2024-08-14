@@ -1,4 +1,3 @@
-const jwt = require('jsonwebtoken');
 const usersdb = require('../services/users.services');
 
 async function login(req, res) {
