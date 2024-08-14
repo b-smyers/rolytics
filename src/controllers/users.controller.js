@@ -40,7 +40,7 @@ function validateSetting(key, value) {
 
 async function getSettings(req, res) {
     try {
-        const settings = await settingsdb.getSettings(req.session.user.id)
+        const settings = await settingsdb.getSettings(req.user?.id);
         res.status(200).json({ settings });
     } catch (error) {
         console.error('Error retrieving settings:', error);
@@ -69,7 +69,7 @@ async function updateSettings(req, res) {
 
     // Update settingsdb
     try {
-        await settingsdb.setSettings(req.session.user.id, updatedSettings);
+        await settingsdb.setSettings(req.user?.id, updatedSettings);
         res.status(200).json({ message: 'Settings updated successfully' });
     } catch (error) {
         console.error('Error updating settings:', error);
@@ -79,7 +79,7 @@ async function updateSettings(req, res) {
 
 async function getProfile(req, res) {
     try {
-        const profile = await usersdb.getUser(req.session.userId);
+        const profile = await usersdb.getUser(req.user?.id);
         res.status(200).json({ profile });
     } catch (error) {
         console.error('Error retrieving profile:', error);

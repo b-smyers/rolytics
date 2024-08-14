@@ -9,22 +9,23 @@ const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute (ms)
 
 const isAuthenticated = (req, res, next) => {
     if (req.session.user) {
+        req.user = req.session.user;
         next();
     } else {
         res.redirect("/login");
     }
 };
 
-const jwtMiddlware = (req, res, next) => {
+const checkJwtToken = (req, res, next) => {
     const token = req.headers['authorization']?.split(' ')[1]; // Extract token from 'Bearer <token>'
 
     if (token) {
         // Verify JWT token
-        jwt.verify(token, process.env.JWT_ACCESS_SECRET, (err, decoded) => {
+        jwt.verify(token, process.env.JWT_API_KEY_SECRET, (err, decoded) => {
             if (err) {
                 return res.status(403); // Invalid Token
             }
-            req.userId = decoded.userId;
+            req.user = decoded;
             next();
         });
     } else {
@@ -33,9 +34,9 @@ const jwtMiddlware = (req, res, next) => {
 };
 
 const authenticate = (req, res, next) => {
-    if (req.headers['x-api-key']) {
+    if (req.headers['authorization']) {
         // External request
-        jwtMiddlware(req, res, next);
+        checkJwtToken(req, res, next);
     } else if (req.session.user) {
         // Internal request
         isAuthenticated(req, res, next);
