@@ -5,7 +5,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 
 const app = express();
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '10kb' }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
     secret: process.env.SESSION_SECRET,
@@ -13,7 +13,9 @@ app.use(session({
     saveUninitialized: false,
     cookie: { 
         secure: process.env.NODE_ENV === 'production',
-        maxAge: 7 * 60 * 60 * 1000
+        maxAge: 7 * 60 * 60 * 1000,
+        httpOnly: true,
+        sameSite: 'strict'
     }
 }));
 app.use(cookieParser());

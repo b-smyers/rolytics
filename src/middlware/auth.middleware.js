@@ -17,19 +17,27 @@ const isAuthenticated = (req, res, next) => {
 };
 
 const checkJwtToken = (req, res, next) => {
-    const token = req.headers['authorization']?.split(' ')[1]; // Extract token from 'Bearer <token>'
+    const authHeader = req.headers['authorization'];
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+    const token = authHeader.split(' ')[1]; // Extract token from 'Bearer <token>'
 
     if (token) {
         // Verify JWT token
-        jwt.verify(token, process.env.JWT_API_KEY_SECRET, (err, decoded) => {
+        jwt.verify(token, process.env.JWT_API_KEY_SECRET, { algorithms: ['HS256'] }, (err, decoded) => {
             if (err) {
-                return res.status(403); // Invalid Token
+                if (err.name === 'TokenExpiredError') {
+                    return res.status(401).json({ message: "Token expired" });
+                }
+                return res.status(403).json({ message: "Invalid Token" });
             }
+            
             req.user = decoded;
             next();
         });
     } else {
-        return res.status(401); // Missing token
+        return res.status(401).json({ message: "Missing Token" }); // Missing token
     }
 };
 
@@ -48,25 +56,27 @@ const authenticate = (req, res, next) => {
 const rateLimit = (req, res, next) => {
     const now = Date.now();
     const ip = req.headers['x-forwarded-for'] || req.ip;
-    if (!requestCounts[ip]) {
-        requestCounts[ip] = {
+    // Rate limit based on JWT token if possible, because external actors can spoof ip addresses
+    const key = req.headers['authorization'] ? req.headers['authorization'] : ip;
+    if (!requestCounts[key]) {
+        requestCounts[key] = {
             count: 1,
             resetTime: now + RATE_LIMIT_WINDOW
         };
         return next();
     }
 
-    if (now > requestCounts[ip].resetTime) {
-        requestCounts[ip] = {
+    if (now > requestCounts[key].resetTime) {
+        requestCounts[key] = {
             count: 1,
             resetTime: now + RATE_LIMIT_WINDOW
         };
         return next();
     }
 
-    requestCounts[ip].count++;
-    if (requestCounts[ip].count > RATE_LIMIT) {
-        res.status(429).json({ message: 'Too many requests', retryafter: requestCounts[ip].resetTime - Date.now() });
+    requestCounts[key].count++;
+    if (requestCounts[key].count > RATE_LIMIT) {
+        res.status(429).json({ message: 'Too many requests', retryafter: requestCounts[key].resetTime - Date.now() });
     } else {
         next();
     }
@@ -75,9 +85,9 @@ const rateLimit = (req, res, next) => {
 // Cleanup old ratelimit entries
 setInterval(() => {
     const now = Date.now();
-    for (let ip in requestCounts) {
-        if (now > requestCounts[ip].resetTime) {
-            delete requestCounts[ip];
+    for (let key in requestCounts) {
+        if (now > requestCounts[key].resetTime) {
+            delete requestCounts[key];
         }
     }
 }, 60 * 1000);
