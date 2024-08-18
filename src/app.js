@@ -20,6 +20,7 @@ app.use(session({
 }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(require('./services/logTraffic.services'));
 
 // Middleware
 const { authenticate, rateLimit } = require('./middlware/auth.middleware');
@@ -56,8 +57,8 @@ app.get('/robots.txt', (req, res) => {
 });
 
 // Serve custom 404
-app.get('/*', (req, res) => {
-    res.sendFile(path.join(__dirname, '/public', '404.html'));
-})
+app.use((req, res) => {
+    res.status(404).sendFile(path.join(__dirname, '/public', '404.html'));
+});
 
 module.exports = app;
