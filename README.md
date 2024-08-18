@@ -11,7 +11,8 @@ openssl x509 -req -days 365 -in csr.pem -signkey key.pem -out cert.pem
 Fill out the `.env-sample` and rename it to `.env`
 You can generate your secure keys using openssl (ie. `openssl rand -base64 64`)
 ```txt
-PORT=<port>
+HTTPS_PORT=<port>
+HTTP_PORT=<port>
 NODE_ENV=<development or production>
 PRODUCTION_DOMAIN=<insert production domain>
 SESSION_SECRET=<insert session secret>
