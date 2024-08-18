@@ -20,15 +20,15 @@ app.use(session({
 }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(require('./services/logTraffic.services'));
+app.use(require('@services/logTraffic.services'));
 
 // Middleware
-const { authenticate, rateLimit } = require('./middlware/auth.middleware');
+const { authenticate, rateLimit } = require('@middleware/auth.middleware');
 
 app.use('/api', rateLimit);
 
 // Routes
-app.use('/api/v1', require('./routers/api.routes'));
+app.use('/api/v1', require('@routes/api.routes'));
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '/public', 'homepage.html'));

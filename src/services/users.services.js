@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const database = require('./sqlite.services');
+const database = require('@services/sqlite.services');
 
 let db;
 async function init() {

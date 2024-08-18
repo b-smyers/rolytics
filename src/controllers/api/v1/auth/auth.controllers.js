@@ -1,4 +1,4 @@
-const usersdb = require('../services/users.services');
+const usersdb = require('@services/users.services');
 
 async function login(req, res) {
     const { username, email, password } = req.body;

@@ -1,6 +1,6 @@
 const session = require('express-session');
-const settingsdb = require('../services/settings.services');
-const usersdb = require('../services/users.services');
+const settingsdb = require('@services/settings.services');
+const usersdb = require('@services/users.services');
 
 const settingsSchema = {
     theme: {
