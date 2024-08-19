@@ -15,7 +15,7 @@ function logTraffic(req, res, next) {
     const path = req.path;
     const userAgent = req.headers['user-agent'] || 'Unknown';
 
-    const logMessage = `[${timestamp} IP: ${clientIp} ${method} '${path}' User-Agent: ${userAgent}\n`;
+    const logMessage = `[${timestamp}] IP: ${clientIp} ${method} '${path}' User-Agent: ${userAgent}\n`;
 
     fs.appendFile(trafficLog, logMessage, (err) => {
         if (err) {
