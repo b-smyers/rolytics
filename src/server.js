@@ -20,6 +20,16 @@ httpsServer.listen(process.env.HTTPS_PORT, () => {
     console.log(`HTTPS server listening: https://${domain}:${process.env.HTTPS_PORT}`);
 });
 
+httpsServer.on('clientError', (error, socket) => {
+    console.error(error);
+
+    if (error) {
+        socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
+    } else {
+        socket.destroy(); // No memory leak today!
+    }
+});
+
 // Setup http server to redirect traffic to https server
 const httpApp = express();
 httpApp.all('*', (req, res) => res.redirect(301, `https://${domain}:${process.env.HTTPS_PORT}${req.originalUrl}`));
