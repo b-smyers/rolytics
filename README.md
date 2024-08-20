@@ -35,9 +35,10 @@ Portforward 443 traffic on your router to the port specified in the code
 If you are using WSL you will need to forward the traffic from windows to the WSL instance
 
 ## Site Layout
+- /      <--(Landing page)
 - /login
 - /register
-- /home
+- /dashboard
     - /settings
     - /experiences
         - /(Experience Name)
