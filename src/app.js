@@ -28,7 +28,7 @@ const { authenticate, rateLimit } = require('@middleware/auth.middleware');
 app.use('/api', rateLimit);
 
 // Routes
-app.use('/api/v1', require('@routes/api.routes'));
+app.use('/api/v1', require('@routes/v1/api.routes'));
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '/public', 'homepage.html'));
