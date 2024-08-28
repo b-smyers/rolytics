@@ -54,6 +54,7 @@
                 });
 
                 if (!registerResponse.ok) {
+                    alert('Registration failed');
                     throw new Error('Registration failed');
                 }
                 console.log('Registration successful');

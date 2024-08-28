@@ -52,8 +52,8 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error('Login failed');
                     alert('Login failed');
+                    throw new Error('Login failed');
                 }
 
                 console.log('Login successful');

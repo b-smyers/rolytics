@@ -92,7 +92,8 @@
                     alert('Settings saved successfully!');
                 } else {
                     const errorData = await response.json();
-                    alert(`Error saving settings: ${errorData.message}`);
+                    alert('Error saving settings');
+                    throw new Error(errorData.message);
                 }
             } catch (error) {
                 console.error('Error:', error);
