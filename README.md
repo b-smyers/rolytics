@@ -38,8 +38,13 @@ If you are using WSL you will need to forward the traffic from windows to the WS
 - /      <--(Landing page)
 - /login
 - /register
+- /about
+- /updates
+- /faq
 - /dashboard
+    - /account
     - /settings
+    - /feedback
     - /experiences
         - /(Experience Name)
             - /(Server ID)
