@@ -1,5 +1,7 @@
 # roblox-analytics
 Developing a roblox analytics service website.
+Currently the application is being developed as a Node.js Express app. The plan is to develop all the API and neccesarry authentication first, and then migrate the project front-end to Next.js or Vue.js.
+The webpage mockup can be found [Here](https://docs.google.com/presentation/d/116s5YVGM6NIPPU6NY0C7b-ReEaT_VP3GaT1PEz7PMvg/edit?usp=sharing)
 
 ## Basic Setup
 ### Enviroment Setup
