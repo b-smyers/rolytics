@@ -27,6 +27,7 @@ PM2, a process manager for Node.js that handles monitoring, scaling, and auto-re
 ```bash
 sudo npm install pm2 -g
 pm2 start npm --name "rolytics" --interpreter=authbind --interpreter-args="--deep node" -- start
+pm2 save
 ```
 Next setup PM2 to start automatically by pasting and running the produced command to finish setup.
 ```bash
