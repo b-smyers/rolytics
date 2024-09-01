@@ -1,14 +1,9 @@
 # roblox-analytics
-Developing a roblox analytics service with accounts.
+Developing a roblox analytics service website.
 
 ## Basic Setup
-Generate self signed SSL certificate
-```bash
-openssl genrsa -out key.pem 2048
-openssl req -new -key key.pem -out csr.pem
-openssl x509 -req -days 365 -in csr.pem -signkey key.pem -out cert.pem
-```
-Fill out the `.env-sample` and rename it to `.env`
+### Enviroment Setup
+Copy the `.env-sample` file to `.env` and fill in the required values.
 You can generate your secure keys using openssl (ie. `openssl rand -base64 64`)
 ```txt
 HTTPS_PORT=<port>
@@ -20,13 +15,67 @@ JWT_ACCESS_SECRET=<insert access secret>
 JWT_REFRESH_SECRET=<insert refresh secret>
 JWT_API_KEY_SECRET=<insert api key secret>
 ```
-Install dependencies
+
+### Install Dependencies
 ```bash
 npm install
 ```
-Run the server
+
+### Install Production Dependencies
+#### Setup PM2
+PM2, a process manager for Node.js that handles monitoring, scaling, and auto-restarts.
+```bash
+sudo npm install pm2 -g
+pm2 start npm --name "rolytics" --interpreter=authbind --interpreter-args="--deep node" -- start
+```
+Next setup PM2 to start automatically by pasting and running the produced command to finish setup.
+```bash
+pm2 startup systemd
+```
+
+<!-- #### Setup Certbot
+Certbot, a tool for automatically obtaining and renewing SSL/TLS certificates from Let's Encrypt.
+```bash
+sudo snap install --classic certbot
+sudo ln -s /snap/bin/certbot /usr/bin/certbot
+sudo certbot certonly --standalone
+``` -->
+
+#### Setup Authbind
+Authbind, a tool for allowing non-root processes to bind to privileged ports.
+```bash
+sudo apt-get install authbind
+sudo touch /etc/authbind/byport/80
+sudo chmod 500 /etc/authbind/byport/80
+sudo chown $(whoami) /etc/authbind/byport/80
+sudo touch /etc/authbind/byport/443
+sudo chmod 500 /etc/authbind/byport/443
+sudo chown $(whoami) /etc/authbind/byport/443
+```
+
+### Certificates
+<!-- #### Development -->
+Generate self signed SSL certificate
+```bash
+openssl genrsa -out localhost.key.pem 2048
+openssl req -new -key localhost.key.pem -out csr.pem
+openssl x509 -req -days 365 -in localhost.csr.pem -signkey localhost.key.pem -out localhost.cert.pem
+```
+<!-- #### Production
+Nothing to do!
+Certbot will automatically renew the certificates and the server will automatically hotswap them. -->
+
+### Startup
+#### Development
+Run the server using npm
 ```bash
 npm run start
+```
+
+#### Production
+Run the server using PM2
+```bash
+pm2 start rolytics
 ```
 
 *Still doesn't work?*
