@@ -4,7 +4,7 @@ Currently the application is being developed as a Node.js Express app. The plan 
 The webpage mockup can be found [Here](https://docs.google.com/presentation/d/116s5YVGM6NIPPU6NY0C7b-ReEaT_VP3GaT1PEz7PMvg/edit?usp=sharing)
 
 ## Basic Setup
-### Enviroment Setup
+### Environment Setup
 Copy the `.env-sample` file to `.env` and fill in the required values.
 You can generate your secure keys using openssl (ie. `openssl rand -base64 64`)
 ```txt
@@ -27,37 +27,46 @@ npm install
 PM2, a process manager for Node.js that handles monitoring, scaling, and auto-restarts.
 ```bash
 sudo npm install pm2 -g
-pm2 start npm --name "rolytics" --max-restarts 5 -- start
-pm2 save
+pm2 start npm --name "rolytics" --max-restarts 5 --no-autostart -- start
 ```
 Next setup PM2 to start automatically by pasting and running the produced command to finish setup.
 ```bash
 pm2 startup systemd
 ```
-
-<!-- #### Setup Certbot
-Certbot, a tool for automatically obtaining and renewing SSL/TLS certificates from Let's Encrypt.
+Lastly, save changes to pm2.
 ```bash
-sudo snap install --classic certbot
-sudo ln -s /snap/bin/certbot /usr/bin/certbot
-sudo certbot certonly --standalone
-``` -->
+pm2 save
+```
 
 #### Setup Nginx
 Nginx is a powerful reverse proxy server designed for scaling applications.
 ```bash
 sudo apt install nginx
 ```
-Next, copy the nginx config into `/etc/nginx/conf.d/`, and the error page into `/var/www/html`.
+Next, copy the nginx config into `/etc/nginx/conf.d/`, and the error page into `/var/www/html/`.
 ```bash
 sudo cp /path/to/rolytics.conf /etc/nginx/conf.d/
-sudo cp /path/to/50x_error_page.html /var/www/html/
+sudo cp /path/to/*.html /var/www/html/
+```
+Configure, test, and start Nginx.
+```bash
+sudo ufw allow 'Nginx Full'
+sudo nginx -t
+sudo systemctl start nginx
 ```
 
-### Certificates
-<!-- #### Production
-Nothing to do!
-Certbot will automatically renew the certificates and the server will automatically hotswap them. -->
+#### Setup Certbot
+Certbot, a tool for automatically obtaining and renewing SSL/TLS certificates from Let's Encrypt.
+```bash
+sudo snap install --classic certbot
+sudo ln -s /snap/bin/certbot /usr/bin/certbot
+sudo certbot certonly --nginx
+```
+
+You can also test your configuration this far using this command.
+```bash
+sudo certbot renew --dry-run
+```
 
 ### Startup
 #### Development
@@ -72,7 +81,7 @@ Run the server using PM2
 pm2 start rolytics
 ```
 
-*Still doesn't work?*
+## Troubleshooting
 Use freedns to route a free subdomain to your external IP on port 443 (https)
 Portforward 443 traffic on your router to the port specified in the code
 If you are using WSL you will need to forward the traffic from windows to the WSL instance
