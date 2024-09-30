@@ -8,8 +8,7 @@ The webpage mockup can be found [Here](https://docs.google.com/presentation/d/11
 Copy the `.env-sample` file to `.env` and fill in the required values.
 You can generate your secure keys using openssl (ie. `openssl rand -base64 64`)
 ```txt
-HTTPS_PORT=<port>
-HTTP_PORT=<port>
+HTTP_PORT=3000
 NODE_ENV=<development or production>
 PRODUCTION_DOMAIN=<insert production domain>
 SESSION_SECRET=<insert session secret>
@@ -28,7 +27,7 @@ npm install
 PM2, a process manager for Node.js that handles monitoring, scaling, and auto-restarts.
 ```bash
 sudo npm install pm2 -g
-pm2 start npm --name "rolytics" --interpreter=authbind --interpreter-args="--deep node" -- start
+pm2 start npm --name "rolytics" --max-restarts 5 -- start
 pm2 save
 ```
 Next setup PM2 to start automatically by pasting and running the produced command to finish setup.
@@ -44,26 +43,18 @@ sudo ln -s /snap/bin/certbot /usr/bin/certbot
 sudo certbot certonly --standalone
 ``` -->
 
-#### Setup Authbind
-Authbind, a tool for allowing non-root processes to bind to privileged ports.
+#### Setup Nginx
+Nginx is a powerful reverse proxy server designed for scaling applications.
 ```bash
-sudo apt-get install authbind
-sudo touch /etc/authbind/byport/80
-sudo chmod 500 /etc/authbind/byport/80
-sudo chown $(whoami) /etc/authbind/byport/80
-sudo touch /etc/authbind/byport/443
-sudo chmod 500 /etc/authbind/byport/443
-sudo chown $(whoami) /etc/authbind/byport/443
+sudo apt install nginx
+```
+Next, copy the nginx config into `/etc/nginx/conf.d/`, and the error page into `/var/www/html`.
+```bash
+sudo cp /path/to/rolytics.conf /etc/nginx/conf.d/
+sudo cp /path/to/50x_error_page.html /var/www/html/
 ```
 
 ### Certificates
-<!-- #### Development -->
-Generate self signed SSL certificate
-```bash
-openssl genrsa -out localhost.key.pem 2048
-openssl req -new -key localhost.key.pem -out csr.pem
-openssl x509 -req -days 365 -in localhost.csr.pem -signkey localhost.key.pem -out localhost.cert.pem
-```
 <!-- #### Production
 Nothing to do!
 Certbot will automatically renew the certificates and the server will automatically hotswap them. -->
