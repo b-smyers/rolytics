@@ -11,7 +11,9 @@ async function getFps(req, res) {
 }
 
 async function logFps(req, res) {
-    res.status(501).json({ message: 'Route not implemented' });
+    console.log(req.body);
+    res.status(200).json({ message: 'Data recieved' });
+    // res.status(501).json({ message: 'Route not implemented' });
 }
 
 async function getMemory(req, res) {
