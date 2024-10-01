@@ -114,63 +114,65 @@ If you are using WSL you will need to forward the traffic from windows to the WS
         - /settings
     - /experiences
         - /analytics
-            - /gameplay
-            - /engagement
-            - /retention
+            - gameplay
+            - engagement
+            - retention
         - /performance
-            - /uptime
-            - /fps
-            - /memory
-            - /data-receive
-            - /data-send
-            - /heartbeat
-            - /instances
-            - /primitives
-            - /moving-primitives
-            - /physics-receive
-            - /physics-send
-            - /physics-step
+            - uptime
+            - fps
+            - memory
+            - data-receive
+            - data-send
+            - heartbeat
+            - instances
+            - primitives
+            - moving-primitives
+            - physics-receive
+            - physics-send
+            - physics-step
         - /players
-            - /active
-            - /new
-            - /returning
-            - /demographics
+            - active
+            - new
+            - returning
+            - demographics
         - /purchases
-            - /passes
-            - /developer-products
-            - /subscriptions
+            - passes
+            - developer-products
+            - subscriptions
         - /social
-            - /chats
-            - /friend-requests
-            - /invites
+            - chats
+            - friend-requests
+            - invites
     - /servers
+        - /data
+            - logging endpoint
         - /analytics
-            - /gameplay
-            - /engagement
-            - /retention
+            - gameplay
+            - engagement
+            - retention
         - /performance
-            - /uptime
-            - /fps
-            - /memory
-            - /data-receive
-            - /data-send
-            - /heartbeat
-            - /instances
-            - /primitives
-            - /moving-primitives
-            - /physics-receive
-            - /physics-send
-            - /physics-step
+            - uptime
+            - fps
+            - memory
+            - data-receive
+            - data-send
+            - heartbeat
+            - instances
+            - primitives
+            - moving-primitives
+            - physics-receive
+            - physics-send
+            - physics-step
         - /players
-            - /active
-            - /new
-            - /returning
-            - /demographics
+            - active
+            - new
+            - returning
+            - demographics
         - /purchases
-            - /passes
-            - /developer-products
-            - /subscriptions
+            - passes
+            - developer-products
+            - subscriptions
         - /social
-            - /chats
-            - /friend-requests
-            - /invites
+            - chats
+            - friend-requests
+            - invites
