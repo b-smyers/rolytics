@@ -1,39 +1,41 @@
-const dataSchema = {
+const Ajv = require("ajv");
+
+const schema = {
     type: 'object',
     properties: {
-        analytics: {
-            type: 'object',
-            properties: {
-                
-            }
-        },
         purchases: {
             type: 'object',
             properties: {
-                
-            }
+                passes:             { type: 'integer' },
+                developer_products: { type: 'integer' },
+                subscriptions:      { type: 'integer' }
+            },
+            required: ['passes', 'developer_products', 'subscriptions']
         },
         performance: {
             type: 'object',
             properties: {
-                total_memory_usage_mb:   { type: 'number' },
-                data_send_kbps:          { type: 'number' },
-                physics_step_time_ms:    { type: 'number' },
-                fps:                     { type: 'number' },
-                physics_send_kbps:       { type: 'number' },
-                physics_receive_kbps:    { type: 'number' },
-                instance_count:          { type: 'integer' },
-                moving_primitives_count: { type: 'integer' },
-                heartbeat_time:          { type: 'number' },
-                primitives_count:        { type: 'integer' },
-                data_receive_kbps:       { type: 'number' }
-            }
+                memory:            { type: 'number' },
+                data_send:         { type: 'number' },
+                physics_step:      { type: 'number' },
+                fps:               { type: 'number' },
+                physics_send:      { type: 'number' },
+                physics_receive:   { type: 'number' },
+                instances:         { type: 'integer' },
+                moving_primitives: { type: 'integer' },
+                heartbeat:         { type: 'number' },
+                primitives:        { type: 'integer' },
+                data_receive:      { type: 'number' }
+            },
+            required: ['memory', 'data_send', 'physics_step', 'fps', 'physics_send', 'physics_receive', 'instances', 'moving_primitives', 'heartbeat', 'primitives', 'data_receive']
         },
         social: {
             type: 'object',
             properties: {
-                
-            }
+                friends_playing: { type: 'integer' },
+                chats:           { type: 'integer' }
+            },
+            required: ['friends_playing', 'chats']
         },
         players: {
             type: 'object',
@@ -42,14 +44,32 @@ const dataSchema = {
                 new:       { type: 'integer' },
                 returning: { type: 'integer' },
                 premium:   { type: 'integer' },
+                engagement: {
+                    type: 'object',
+                    properties: {
+                        // average_session_duration:   { type: 'number' },
+                        // daily_active_users:         { type: 'integer' },
+                        // average_daily_active_users: { type: 'number'}
+                    },
+                    required: ['average_session_duration', 'daily_active_users', 'average_daily_active_users']
+                },
+                retention: {
+                    type: 'object',
+                    properties: {
+                        
+                    },
+                    required: []
+                },
                 demographics: {
                     type: 'object',
                     properties: {
                         regions: { type: 'object' },
                         average_account_age: { type: 'number' }
-                    }
+                    },
+                    required: ['regions', 'average_account_age']
                 }
-            }
+            },
+            required: ['active', 'new', 'returning', 'premium', 'demographics']
         },
         metadata: {
             type: 'object',
@@ -81,7 +101,7 @@ const dataSchema = {
                 server: {
                     type: 'object',
                     properties: {
-                        id:   { type: 'integer' },
+                        id:   { type: 'string' },
                         type: { type: 'string' },
                         size: { type: 'integer' }
                     }
@@ -89,7 +109,14 @@ const dataSchema = {
                 geo: {
                     type: 'object',
                     properties: {
-                        user_agent:  { type: 'object' },
+                        user_agent:  {
+                            type: 'object',
+                            properties: {
+                                comment: { type: 'string' },
+                                product: { type: 'string' },
+                                raw_value: { type: 'string' }
+                            }
+                        },
                         longitude:   { type: 'number' },
                         asn_org:     { type: 'string' },
                         country:     { type: 'string' },
@@ -107,59 +134,15 @@ const dataSchema = {
                         country_iso: { type: 'string' }
                     }
                 }
-            }
+            },
+            required: ['geo', 'uptime', 'creator', 'place', 'timestamp', 'game', 'server']
         }
-    }
+    },
+    required: ['performance', 'players', 'metadata']
 }
 
-async function verifyType(schema, value) {
-    // Check if the type is an array
-    if (Array.isArray(value)) {
-        return propertySchema.type === 'array'; // Currently only supporting array type check
-    }
-
-    // Type check for other types
-    const type = typeof value;
-    if (propertySchema.type === 'integer') {
-        return Number.isInteger(value);
-    } else if (propertySchema.type === 'number') {
-        return type === 'number' && !Number.isNaN(value);
-    } else {
-        return type === propertySchema.type; // For string, boolean, object
-    }
-}
-
-async function verifyData(schema, json_data) {
-    if (typeof json_data !== 'object' || json_data === null) {
-        return false; // Must be an object
-    }
-
-    // Check if # child elements match # properties
-    if (Object.keys(json_data).length != Object.keys(schema.properties).length) {
-        return false;
-    }
-
-    // Loop through all children in current level
-    for (const key in schema.properties) {
-        const propertySchema = schema.properties[key];
-
-        const value = json_data[key];
-        const isValidType = verifyType(propertySchema, value);
-        if (!isValidType) {
-            return false; // Type mismatch
-        }
-
-        // Recurse deeping on objects
-        if (propertySchema.type === 'object') {
-            const result = await verifyData(propertySchema, value);
-            if (!result) {
-                return false; // Nested validation failed
-            }
-        }
-    }
-
-    return true; // All tests passed
-}
+const ajv = new Ajv();
+const validate = ajv.compile(schema);
 
 async function logAnalytics(analytics) {
 
@@ -189,8 +172,9 @@ async function logData(req, res) {
     }
 
     // Check data against schema - if it fails, send error code 400 Bad Request
-    const success = verifyData(dataSchema, data);
-    if (!success) {
+    const valid = validate(data);
+    if (!valid) {
+        console.log(validate.errors);
         return res.status(400).json({ message: 'Bad Data Types' });
     }
 

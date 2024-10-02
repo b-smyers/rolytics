@@ -146,10 +146,6 @@ If you are using WSL you will need to forward the traffic from windows to the WS
     - /servers
         - /data
             - logging endpoint
-        - /analytics
-            - gameplay
-            - engagement
-            - retention
         - /performance
             - uptime
             - fps
@@ -167,6 +163,8 @@ If you are using WSL you will need to forward the traffic from windows to the WS
             - active
             - new
             - returning
+            - engagement
+            - retention
             - demographics
         - /purchases
             - passes
