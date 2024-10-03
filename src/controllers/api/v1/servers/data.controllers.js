@@ -10,7 +10,8 @@ const schema = {
                 developer_products: { type: 'integer' },
                 subscriptions:      { type: 'integer' }
             },
-            required: ['passes', 'developer_products', 'subscriptions']
+            required: ['passes', 'developer_products', 'subscriptions'],
+            additionalProperties: false
         },
         performance: {
             type: 'object',
@@ -21,13 +22,14 @@ const schema = {
                 fps:               { type: 'number' },
                 physics_send:      { type: 'number' },
                 physics_receive:   { type: 'number' },
-                instances:         { type: 'integer' },
-                moving_primitives: { type: 'integer' },
+                instances:         { type: 'number' },
+                moving_primitives: { type: 'number' },
                 heartbeat:         { type: 'number' },
-                primitives:        { type: 'integer' },
+                primitives:        { type: 'number' },
                 data_receive:      { type: 'number' }
             },
-            required: ['memory', 'data_send', 'physics_step', 'fps', 'physics_send', 'physics_receive', 'instances', 'moving_primitives', 'heartbeat', 'primitives', 'data_receive']
+            required: ['memory', 'data_send', 'physics_step', 'fps', 'physics_send', 'physics_receive', 'instances', 'moving_primitives', 'heartbeat', 'primitives', 'data_receive'],
+            additionalProperties: false
         },
         social: {
             type: 'object',
@@ -35,7 +37,8 @@ const schema = {
                 friends_playing: { type: 'integer' },
                 chats:           { type: 'integer' }
             },
-            required: ['friends_playing', 'chats']
+            required: ['friends_playing', 'chats'],
+            additionalProperties: false
         },
         players: {
             type: 'object',
@@ -47,29 +50,31 @@ const schema = {
                 engagement: {
                     type: 'object',
                     properties: {
-                        // average_session_duration:   { type: 'number' },
-                        // daily_active_users:         { type: 'integer' },
-                        // average_daily_active_users: { type: 'number'}
+                        average_session_duration:   { type: 'number' }
                     },
-                    required: ['average_session_duration', 'daily_active_users', 'average_daily_active_users']
+                    required: ['average_session_duration'],
+                    additionalProperties: false
                 },
-                retention: {
-                    type: 'object',
-                    properties: {
+                // retention: {
+                //     type: 'object',
+                //     properties: {
                         
-                    },
-                    required: []
-                },
+                //     },
+                //     required: [],
+                //     additionalProperties: false
+                // },
                 demographics: {
                     type: 'object',
                     properties: {
                         regions: { type: 'object' },
                         average_account_age: { type: 'number' }
                     },
-                    required: ['regions', 'average_account_age']
+                    required: ['regions', 'average_account_age'],
+                    additionalProperties: false
                 }
             },
-            required: ['active', 'new', 'returning', 'premium', 'demographics']
+            required: ['active', 'new', 'returning', 'premium', 'demographics'],
+            additionalProperties: false
         },
         metadata: {
             type: 'object',
@@ -81,7 +86,9 @@ const schema = {
                     properties: {
                         id:   { type: 'integer' },
                         type: { type: 'string' }
-                    }
+                    },
+                    required: ['id', 'type'],
+                    additionalProperties: false
                 },
                 place: {
                     type: 'object',
@@ -89,14 +96,18 @@ const schema = {
                         id:      { type: 'integer' },
                         name:    { type: 'string' },
                         version: { type: 'integer' }
-                    }
+                    },
+                    required: ['id', 'name', 'version'],
+                    additionalProperties: false
                 },
                 game: {
                     type: 'object',
                     properties: {
                         id:   { type: 'integer' },
                         name: { type: 'string' }
-                    }
+                    },
+                    required: ['id', 'name'],
+                    additionalProperties: false
                 },
                 server: {
                     type: 'object',
@@ -104,7 +115,9 @@ const schema = {
                         id:   { type: 'string' },
                         type: { type: 'string' },
                         size: { type: 'integer' }
-                    }
+                    },
+                    required: ['id', 'type', 'size'],
+                    additionalProperties: false
                 },
                 geo: {
                     type: 'object',
@@ -115,7 +128,9 @@ const schema = {
                                 comment: { type: 'string' },
                                 product: { type: 'string' },
                                 raw_value: { type: 'string' }
-                            }
+                            },
+                            required: ['comment', 'product', 'raw_value'],
+                            additionalProperties: false
                         },
                         longitude:   { type: 'number' },
                         asn_org:     { type: 'string' },
@@ -132,13 +147,17 @@ const schema = {
                         country_eu:  { type: 'boolean' },
                         region_code: { type: 'string' },
                         country_iso: { type: 'string' }
-                    }
+                    },
+                    required: ['longitude', 'asn_org', 'country', 'time_zone', 'ip_decimal', 'metro_code', 'ip', 'asn', 'latitude', 'city', 'zip_code', 'region_name', 'country_eu', 'region_code', 'country_iso'],
+                    additionalProperties: false
                 }
             },
-            required: ['geo', 'uptime', 'creator', 'place', 'timestamp', 'game', 'server']
+            required: ['geo', 'uptime', 'creator', 'place', 'timestamp', 'game', 'server'],
+            additionalProperties: false
         }
     },
-    required: ['performance', 'players', 'metadata']
+    required: ['performance', 'players', 'metadata'],
+    additionalProperties: false
 }
 
 const ajv = new Ajv();
