@@ -47,22 +47,7 @@ const schema = {
                 new:       { type: 'integer' },
                 returning: { type: 'integer' },
                 premium:   { type: 'integer' },
-                engagement: {
-                    type: 'object',
-                    properties: {
-                        average_session_duration:   { type: 'number' }
-                    },
-                    required: ['average_session_duration'],
-                    additionalProperties: false
-                },
-                // retention: {
-                //     type: 'object',
-                //     properties: {
-                        
-                //     },
-                //     required: [],
-                //     additionalProperties: false
-                // },
+                average_session_duration: { type: 'number' },
                 demographics: {
                     type: 'object',
                     properties: {
@@ -73,7 +58,7 @@ const schema = {
                     additionalProperties: false
                 }
             },
-            required: ['active', 'new', 'returning', 'premium', 'demographics'],
+            required: ['active', 'new', 'returning', 'premium', 'average_session_duration', 'demographics'],
             additionalProperties: false
         },
         metadata: {
