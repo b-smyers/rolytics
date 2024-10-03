@@ -12,8 +12,6 @@ HTTP_PORT=3000
 NODE_ENV=<development or production>
 PRODUCTION_DOMAIN=<insert production domain>
 SESSION_SECRET=<insert session secret>
-JWT_ACCESS_SECRET=<insert access secret>
-JWT_REFRESH_SECRET=<insert refresh secret>
 JWT_API_KEY_SECRET=<insert api key secret>
 ```
 
