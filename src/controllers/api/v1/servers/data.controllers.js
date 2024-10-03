@@ -148,26 +148,6 @@ const schema = {
 const ajv = new Ajv();
 const validate = ajv.compile(schema);
 
-async function logAnalytics(analytics) {
-
-}
-
-async function logPurchases(purchases) {
-
-}
-
-async function logPerformance(performance) {
-
-}
-
-async function logSocial(social) {
-
-}
-
-async function logPlayers(players) {
-
-}
-
 async function logData(req, res) {
     // Check if the req.body exists
     const data = req.body;
@@ -179,18 +159,20 @@ async function logData(req, res) {
     const valid = validate(data);
     if (!valid) {
         console.log(validate.errors);
-        return res.status(400).json({ message: 'Bad Data Types' });
+        return res.status(400).json({ message: 'Invalid Data' });
     }
 
-    // Send the sections to be logged to the other functions
-    logAnalytics(data.analytics);
-    logPurchases(data.purchases);
-    logPerformance(data.performance);
-    logSocial(data.social);
-    logPlayers(data.players);
+    // Deconstruct JSON
+    const {
+        players,
+        performance,
+        social,
+        purchases,
+        metadata
+    } = data;
 
-    console.log(req.body);
-    res.status(200).json({ message: 'Data successfully recieved' });
+    console.log(data);
+    res.status(200).json({ message: 'Data Successfully Recieved' });
 }
 
 module.exports = {
