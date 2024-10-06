@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
 const app = express();
+app.set('trust proxy', '127.0.0.1');
 const limiter = rateLimit({
     windowMs: 5 * 60 * 1000,
     limit: 100,
