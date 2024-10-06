@@ -10,7 +10,6 @@ You can generate your secure keys using openssl (ie. `openssl rand -base64 64`)
 ```txt
 HTTP_PORT=3000
 NODE_ENV=<development or production>
-PRODUCTION_DOMAIN=<insert production domain>
 SESSION_SECRET=<insert session secret>
 JWT_API_KEY_SECRET=<insert api key secret>
 ```
