@@ -34,7 +34,12 @@ app.use('/api/v1', require('@routes/api/v1/api.routes'));
 
 // Serve custom 404
 app.use('/api', (req, res) => {
-    res.status(404).json({ messsage: 'Unknown endpoint' });
+    res.status(404).json({
+        status: 'error',
+        messsage: 'Unknown endpoint',
+        code: 404,
+        data: null
+    });
 });
 
 module.exports = app;
