@@ -4,8 +4,5 @@ logs/
 # Enviroment variables
 .env
 
-# SSL Keys, Certs, & CSR
-*.pem
-
 # sqlite
 *.db
