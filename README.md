@@ -1,4 +1,4 @@
-# roytics
+# Roytics
 Developing a Roblox analytics service website.
 The webpage mockup can be found [Here](https://docs.google.com/presentation/d/116s5YVGM6NIPPU6NY0C7b-ReEaT_VP3GaT1PEz7PMvg/edit?usp=sharing)
 
@@ -7,15 +7,15 @@ The webpage mockup can be found [Here](https://docs.google.com/presentation/d/11
 - Nginx
 
 ## Development
-### Shared Setup
-**PNPM**
+### 1) Shared Setup
+#### pnpm
 Install pnpm & the project packages.
 ```bash
 npm install -g pnpm
 pnpm install
 ```
 
-**NGINX**
+#### nginx
 Copy the development config into `/etc/nginx/conf.d/`, and the error page into `/var/www/html/`.
 ```bash
 sudo cp nginx/configs/dev.rolytics.conf /etc/nginx/conf.d/
@@ -28,28 +28,28 @@ sudo nginx -t
 sudo systemctl restart nginx
 ```
 
-### API Setup
+### 2) API Setup
 API development [Setup Instructions](packages/api/README.md#developement).
 
-### UI Setup
+### 3) UI Setup
 UI development [Setup Instructions](packages/ui/README.md#development).
 
-### Startup
+### 4) Startup
 Start the API and UI with:
 ```bash
 pnpm dev
 ```
 
 ## Production
-### Shared Setup
-**PNPM**
+### 1) Shared Setup
+#### PNPM
 Install pnpm & the project packages.
 ```bash
 npm install -g pnpm
 pnpm install
 ```
 
-**NGINX & CERTBOT**
+#### NGINX && Certbot
 Copy the production config into `/etc/nginx/conf.d/`, and the error page into `/var/www/html/`.
 ```bash
 sudo cp nginx/configs/rolytics.conf /etc/nginx/conf.d/
@@ -79,8 +79,8 @@ At this point you can test the configuration this far by using this command:
 sudo certbot renew --dry-run
 ```
 
-**PM2**
-PM2, a process manager for Node.js that handles monitoring, auto-scaling, and auto-restarts.
+#### PM2
+PM2 is a process manager for Node.js that handles monitoring, auto-scaling, and auto-restarts.
 ```bash
 sudo npm install pm2 -g
 ```
@@ -92,13 +92,13 @@ Lastly, save changes to pm2.
 ```bash
 pm2 save --force
 ```
-### API Setup
+### 2) API Setup
 API production [Setup Instructions](packages/api/README.md#production).
 
-### UI Setup
+### 3) UI Setup
 UI production [Setup Instructions](packages/ui/README.md#production).
 
-#### Production
+### 4) Startup
 Run the server using PM2
 ```bash
 pm2 start rolytics
