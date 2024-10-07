@@ -1,30 +1,91 @@
 # roblox-analytics
-Developing a roblox analytics service website.
-Currently the application is being developed as a Node.js Express app. The plan is to develop all the API and neccesarry authentication first, and then migrate the project front-end to Next.js or Vue.js.
+Developing a Roblox analytics service website.
 The webpage mockup can be found [Here](https://docs.google.com/presentation/d/116s5YVGM6NIPPU6NY0C7b-ReEaT_VP3GaT1PEz7PMvg/edit?usp=sharing)
 
-## Basic Setup
-### Environment Setup
-Copy the `.env-sample` file to `.env` and fill in the required values.
-You can generate your secure keys using openssl (ie. `openssl rand -base64 64`)
-```txt
-HTTP_PORT=5000
-NODE_ENV=<development or production>
-SESSION_SECRET=<insert session secret>
-JWT_API_KEY_SECRET=<insert api key secret>
-```
+## Prerequisites
+- Node.js
+- Nginx
 
-### Install Dependencies
+## Development
+***
+### Shared Setup
+**PNPM**
+Install pnpm & the project packages.
 ```bash
-npm install
+npm install -g pnpm
+pnpm install
 ```
 
-### Install Production Dependencies
-#### Setup PM2
-PM2, a process manager for Node.js that handles monitoring, scaling, and auto-restarts.
+**NGINX**
+Copy the development config into `/etc/nginx/conf.d/`, and the error page into `/var/www/html/`.
+```bash
+sudo cp nginx/configs/dev.rolytics.conf /etc/nginx/conf.d/
+sudo cp nginx/html/*.html /var/www/html/
+```
+Configure, test, and start Nginx.
+```bash
+sudo ufw allow 'Nginx Full'
+sudo nginx -t
+sudo systemctl restart nginx
+```
+
+### API Setup
+API development [Setup Instructions](packages/api/README.md#developement).
+
+### UI Setup
+UI development [Setup Instructions](packages/ui/README.md#development).
+
+### Startup
+Start the API and UI with:
+```bash
+pnpm dev
+```
+
+## Production
+***
+### Shared Setup
+**PNPM**
+Install pnpm & the project packages.
+```bash
+npm install -g pnpm
+pnpm install
+```
+
+**NGINX & CERTBOT**
+Copy the production config into `/etc/nginx/conf.d/`, and the error page into `/var/www/html/`.
+```bash
+sudo cp nginx/configs/rolytics.conf /etc/nginx/conf.d/
+sudo cp nginx/html/*.html /var/www/html/
+```
+Configure, test, and start Nginx.
+```bash
+sudo ufw allow 'Nginx Full'
+```
+Install Certbot
+```bash
+sudo snap install --classic certbot
+sudo ln -s /snap/bin/certbot /usr/bin/certbot
+```
+You might need a temporary certificate to run Nginx for the first time.
+```bash
+sudo certbot certonly --standalone -d rolytics.bot.nu
+```
+Test and run nginx, and enabled automatic renewal with certbot.
+```bash
+sudo nginx -t
+sudo systemctl restart nginx
+sudo certbot certonly --nginx
+```
+At this point you can test the configuration this far by using this command:
+```bash
+sudo certbot renew --dry-run
+```
+
+**PM2**
+PM2, a process manager for Node.js that handles monitoring, auto-scaling, and auto-restarts.
 ```bash
 sudo npm install pm2 -g
-pm2 start npm --name "rolytics" --max-restarts 5 --no-autostart -- start
+pm2 start pnpm --name "rolytics" --max-restarts 5 --no-autostart -- start
 ```
 Next setup PM2 to start automatically by pasting and running the produced command to finish setup.
 ```bash
@@ -34,43 +95,11 @@ Lastly, save changes to pm2.
 ```bash
 pm2 save
 ```
+### API Setup
+API production [Setup Instructions](packages/api/README.md#production).
 
-#### Setup Nginx
-Nginx is a powerful reverse proxy server designed for scaling applications.
-```bash
-sudo apt install nginx
-```
-Next, copy the nginx config into `/etc/nginx/conf.d/`, and the error page into `/var/www/html/`.
-```bash
-sudo cp /path/to/rolytics.conf /etc/nginx/conf.d/
-sudo cp /path/to/*.html /var/www/html/
-```
-Configure, test, and start Nginx.
-```bash
-sudo ufw allow 'Nginx Full'
-sudo nginx -t
-sudo systemctl start nginx
-```
-
-#### Setup Certbot
-Certbot, a tool for automatically obtaining and renewing SSL/TLS certificates from Let's Encrypt.
-```bash
-sudo snap install --classic certbot
-sudo ln -s /snap/bin/certbot /usr/bin/certbot
-sudo certbot certonly --nginx
-```
-
-You can also test your configuration this far using this command.
-```bash
-sudo certbot renew --dry-run
-```
-
-### Startup
-#### Development
-Run the server using npm
-```bash
-npm run start
-```
+### UI Setup
+UI production [Setup Instructions](packages/ui/README.md#production).
 
 #### Production
 Run the server using PM2
