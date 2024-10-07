@@ -31,8 +31,17 @@ SESSION_SECRET=<insert session secret>
 JWT_API_KEY_SECRET=<insert api key secret>
 ```
 
-### Startup
-To run just the production API you can run:
+Setup pm2 instance.
 ```bash
-pnpm start:api
+pm2 start pnpm --name "rolytics-api" --max-restarts 5 -- start:api
+pm2 save --force
+```
+
+### Startup
+The pm2 instance should start automatically.
+You can start, stop, and restart it with the following commands:
+```bash
+pm2 start rolytics-api
+pm2 stop rolytics-api
+pm2 restart rolytics-api
 ```

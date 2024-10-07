@@ -83,7 +83,6 @@ sudo certbot renew --dry-run
 PM2, a process manager for Node.js that handles monitoring, auto-scaling, and auto-restarts.
 ```bash
 sudo npm install pm2 -g
-pm2 start pnpm --name "rolytics" --max-restarts 5 --no-autostart -- start
 ```
 Next setup PM2 to start automatically by pasting and running the produced command to finish setup.
 ```bash
@@ -91,7 +90,7 @@ pm2 startup systemd
 ```
 Lastly, save changes to pm2.
 ```bash
-pm2 save
+pm2 save --force
 ```
 ### API Setup
 API production [Setup Instructions](packages/api/README.md#production).
