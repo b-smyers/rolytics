@@ -1,5 +1,11 @@
 # Roytics
-Developing a Roblox analytics service website.
+**Rolytics** is a powerful analytics and control tool designed specifically for Roblox developers. It provides deeper insights into **social interactions, player engagement, in-game purchases, and performance metrics** that go beyond the standard tools offered by Roblox. Developers can use Rolytics to optimize their experiences and better understand their player base.
+
+## Key Features
+- **A/B Testing**: Easily set up and monitor A/B testing campaigns to optimize gameplay elements and improve user experience.
+- **Command and Control Center**: The web interface acts as a centralized command hub, enabling remote execution of custom in-server functions for enhanced control and flexibility over your Roblox games.
+
+## Mockup
 The webpage mockup can be found [Here](https://docs.google.com/presentation/d/116s5YVGM6NIPPU6NY0C7b-ReEaT_VP3GaT1PEz7PMvg/edit?usp=sharing)
 
 ## Prerequisites
