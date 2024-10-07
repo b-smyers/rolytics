@@ -1,4 +1,4 @@
-# roblox-analytics
+# roytics
 Developing a Roblox analytics service website.
 The webpage mockup can be found [Here](https://docs.google.com/presentation/d/116s5YVGM6NIPPU6NY0C7b-ReEaT_VP3GaT1PEz7PMvg/edit?usp=sharing)
 
