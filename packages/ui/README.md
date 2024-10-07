@@ -2,7 +2,6 @@
 This is the frontend of the [Rolytics Project](https://rolytics.bot.nu).
 
 ## Developement
-***
 ### Setup
 No setup needed yet.
 
@@ -13,7 +12,6 @@ pnpm dev:ui
 ```
 
 ## Production
-***
 ### Setup
 No setup needed yet.
 

@@ -2,7 +2,6 @@
 This is the backend for the [Rolytics Project](https://rolytics.bot.nu).
 
 ## Developement
-***
 ### Setup
 **ENV**
 Copy the `.env-sample` file to `.env` and fill in the required values.
@@ -21,7 +20,6 @@ pnpm dev:api
 ```
 
 ## Production
-***
 ### Setup
 **ENV**
 Copy the `.env-sample` file to `.env` and fill in the required values.

@@ -7,7 +7,6 @@ The webpage mockup can be found [Here](https://docs.google.com/presentation/d/11
 - Nginx
 
 ## Development
-***
 ### Shared Setup
 **PNPM**
 Install pnpm & the project packages.
@@ -42,7 +41,6 @@ pnpm dev
 ```
 
 ## Production
-***
 ### Shared Setup
 **PNPM**
 Install pnpm & the project packages.
