@@ -1,6 +1,7 @@
 const usersdb = require('@services/users.services');
 
 async function login(req, res) {
+    // TODO: Login with email or username
     const { username, email, password } = req.body;
     try {
         const user = await usersdb.loginUser(username, password);
