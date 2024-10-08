@@ -1,0 +1,46 @@
+.background {
+    height: 100%;
+    width: 100%;
+    background: radial-gradient(circle at 50% 50%, #3A76F5, #001f3f, #000000);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+h1 {
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+.noselect {
+-webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+        -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                supported by Chrome, Edge, Opera and Firefox */
+}
+
+.ripple {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    pointer-events: none; 
+    animation: rippleEffect 0.6s ease-out;
+    transform: translate(-50%, -50%); 
+}
+
+@keyframes rippleEffect { /* animation */
+    0% {
+        width: 20px;
+        height: 20px;
+        opacity: 1;
+    }
+    100% {
+        width: 300px;
+        height: 300px;
+        opacity: 0;
+    }
+}
