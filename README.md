@@ -115,6 +115,9 @@ Use freedns to route a free subdomain to your external IP on port 443 (https)
 Portforward 443 traffic on your router to the port specified in the code
 If you are using WSL you will need to forward the traffic from windows to the WSL instance
 
+## TODO
+- [ ] Implement saving analytics to sqlite databse
+
 ## Site Layout
 - /      <--(Landing page)
 - /login
