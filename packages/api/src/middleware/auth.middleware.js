@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const isAuthenticated = (req, res, next) => {
+const checkSession = (req, res, next) => {
     if (req.session.user) {
         req.user = req.session.user;
         next();
@@ -14,7 +14,7 @@ const isAuthenticated = (req, res, next) => {
     }
 };
 
-const checkJwtToken = (req, res, next) => {
+const checkJWTToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return res.status(401).json({
@@ -62,10 +62,10 @@ const checkJwtToken = (req, res, next) => {
 const authenticate = (req, res, next) => {
     if (req.headers['authorization']) {
         // External request
-        checkJwtToken(req, res, next);
+        checkJWTToken(req, res, next);
     } else if (req.session.user) {
         // Internal request
-        isAuthenticated(req, res, next);
+        checkSession(req, res, next);
     } else {
         res.status(401).json({
             status: 'error',
