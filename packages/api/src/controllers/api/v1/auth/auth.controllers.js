@@ -15,7 +15,7 @@ async function login(req, res) {
         res.json({ success: true });
     } catch(error) {
         console.error('Error logging in user:', error);
-        res.status(500).json({ error: 'Registration failed' });
+        res.status(500).json({ error: 'Login failed' });
     }
 }
 
@@ -50,7 +50,7 @@ function logout(req, res) {
 
 function verify(req, res) {
     const message = req.body;
-    res.status(200).json(message);
+    res.status(200).json(Object.keys(message).length ? message : 'verified');
 }
 
 module.exports = {
