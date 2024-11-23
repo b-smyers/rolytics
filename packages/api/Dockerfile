@@ -6,7 +6,7 @@ WORKDIR /api-app
 
 EXPOSE 5000
 
-CMD ["pnpm", "start"]
+CMD ["pnpm", "--filter=api", "start"]
 
 COPY ./package.json ./packages/api/package.json
 COPY ../../pnpm-lock.yaml ./
