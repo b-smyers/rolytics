@@ -6,7 +6,7 @@ WORKDIR /ui-app
 
 EXPOSE 3000
 
-CMD ["pnpm", "start"]
+CMD ["pnpm", "--filter=ui", "start"]
 
 COPY ./package.json ./packages/ui/package.json
 COPY ../../pnpm-lock.yaml ./
