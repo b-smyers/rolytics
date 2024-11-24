@@ -1,26 +1,49 @@
-import { Outlet } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
 import './Layout.css';
+
+const SidbarButton = ({ icon, name, uri }) => {
+    const navigate = useNavigate();
+    const navigateURI = () => { navigate(`/${uri}`); };
+  
+    return (
+        <button
+            className="sidebar-nav-item"
+            onClick={navigateURI}
+            onKeyUp={(input) => {
+                if (input.key === 'Enter') navigateURI();
+            }}
+            tabIndex={0} // Makes the div focusable for accessibility
+            aria-label={name}>
+            {<img src={icon} alt={name} className="sidebar-icon" />}
+            {name && <span className="sidebar-name">{name}</span>}
+        </button>
+    )
+};
 
 function Layout() {
     const date = new Date();
     let year = date.getFullYear();
-    return (
-        <div>
-            <header className='header'>
-                <h1 className='title'>Rolytics</h1>
-                <nav className='navbar'>
-                    <a href="/">Home</a>
-                    <a href="/login">Login</a>
-                    <a href="/register">Register</a>
-                </nav>
-            </header>
-            <main>
-                <Outlet />
-            </main>
 
-            <footer className='footer'>
-                <p>© {year} Rolytics</p>
-            </footer>
+    return (
+        <div className="layout">
+            <aside className={"sidebar"}>
+                <div className="sidebar-top">
+                    <SidbarButton icon={"/icons/rolytics-android-chrome-512x512.png"} name={"Rolytics"} uri={""}/>
+                </div>
+                <div className="sidebar-bottom">
+                    <SidbarButton icon={null} name={"Register"} uri={"register"}/>
+                    <SidbarButton icon={null} name={"Login"} uri={"login"}/>
+                </div>
+            </aside>
+            <div className="main-content">
+                <div className='fill-page'>
+                    <Outlet />
+                </div>
+                <footer>
+                    <p>&copy;Rolytics {year}</p>
+                </footer>
+            </div>
         </div>
     );
 }
