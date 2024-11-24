@@ -5,7 +5,11 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  --primary-color: #3A76F5;
+  --secondary-color: #36a5ffff;
+  --theme-primary-color: #242424;
+  --theme-secondary-color: #333;
+  --text-color: #fff;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
