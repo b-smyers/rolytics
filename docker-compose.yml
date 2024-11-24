@@ -1,17 +1,16 @@
 services:
   nginx:
     image: nginx:latest
-    container_name: nginx-proxy
+    container_name: proxy
     build:
       context: ./nginx
       dockerfile: Dockerfile
     ports:
       - 80:80
-      - 443:433
+      - 443:443
     volumes:
       - type: bind
-        source: ./nginx/configs/dev.rolytics.conf
-        # source: ./nginx/configs/rolytics.conf
+        source: ./nginx/configs/rolytics.conf
         target: /etc/nginx/conf.d/default.conf
         read_only: true
       - type: bind
@@ -25,27 +24,37 @@ services:
       - rolytics
 
   api:
-    image: node:latest
     container_name: api
     build:
       context: .
-      dockerfile: ./packages/api/Dockerfile
+      dockerfile: Dockerfile
+      target: api
+      network: host
+    environment:
+      - NODE_ENV=production
+      - HTTP_PORT=5000
     ports:
       - 5000:5000
     networks:
       - rolytics
 
   ui:
-    image: node:latest
     container_name: ui
     build:
       context: .
-      dockerfile: ./packages/ui/Dockerfile
+      dockerfile: Dockerfile
+      target: ui
+      network: host
+    environment:
+      - NODE_ENV=production
     ports:
       - 3000:3000
+    depends_on:
+      - api
     networks:
       - rolytics
 
+# Allows containers to talk to each other
 networks:
-  rolytics:   # This defines the rolytics network
-    driver: bridge  # Optional, the default driver is bridge
+  rolytics:
+    driver: bridge

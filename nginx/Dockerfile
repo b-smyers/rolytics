@@ -18,4 +18,4 @@ COPY ./configs/rolytics.conf /etc/nginx/conf.d/default.conf
 COPY ./html /var/www/html
 
 # Add entrypoint script for initial Certbot setup and certificate renewal
-CMD [ "sh",  "-c",  "certbot certonly --nginx -d rolytics.bot.nu --agree-tos -m admin@rolytics.bot.nu --non-interactive && certbot renew --quiet --no-random-sleep-on-renew --post-hook 'nginx -s reload' && nginx -g 'daemon off;'"]
+CMD [ "sh",  "-c",  "certbot certonly --nginx --dry-run -d rolytics.bot.nu --agree-tos -m admin@rolytics.bot.nu --non-interactive && certbot renew --quiet --no-random-sleep-on-renew --post-hook 'nginx -s reload' && nginx -g 'daemon off;'"]

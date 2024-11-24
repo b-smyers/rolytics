@@ -1,0 +1,14 @@
+# Docker
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# Git
+.git
+.gitignore
+
+# NPM Packages
+node_modules
+
+# Misc. Non-code files
+*.md

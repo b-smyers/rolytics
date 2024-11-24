@@ -1,8 +1,2 @@
-Dockerfile
-.dockerignore
-.git
-.gitignore
-*.md
-node_modules
 logs
 database.db
