@@ -33,7 +33,7 @@ function Layout() {
                 </div>
                 <div className="sidebar-bottom">
                     <SidbarButton icon={null} name={"Register"} uri={"register"}/>
-                    <SidbarButton icon={null} name={"Login"} uri={"login"}/>
+                    <SidbarButton icon={"/icons/login.png"} name={"Login"} uri={"login"}/>
                 </div>
             </aside>
             <div className="main-content">
