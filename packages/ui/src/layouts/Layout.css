@@ -42,7 +42,7 @@
 
 .sidebar-name {
     font-size: 24px;
-    color: var(--text-color);
+    color: var(--text-color-primary);
     overflow: hidden;
 }
 
@@ -64,6 +64,5 @@ footer {
     width: 100%;
     text-align: center;
     background-color: var(--theme-secondary-color); 
-    color: var(--text-color);
-    padding: 5px 0;
+    color: var(--text-color-primary);
 }

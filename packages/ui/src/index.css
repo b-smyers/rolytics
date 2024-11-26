@@ -1,5 +1,5 @@
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'quicksand', Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -7,9 +7,11 @@
   color: rgba(255, 255, 255, 0.87);
   --primary-color: #3A76F5;
   --secondary-color: #36a5ffff;
-  --theme-primary-color: #242424;
-  --theme-secondary-color: #333;
-  --text-color: #fff;
+  --theme-primary-color: #111216;
+  --theme-secondary-color: #2d2e33;
+  --theme-tertiary-color: #969698;
+  --text-color-primary: #fff;
+  --text-color-secondary: #969698;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -17,13 +19,20 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+@font-face {
+  font-family: 'quicksand';
+  src: url('/fonts/quicksand.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 a {
   font-weight: 500;
-  color: #646cff;
+  color: var(--text-color-secondary);
   text-decoration: inherit;
 }
 a:hover {
-  color: #535bf2;
+  color: var(--primary-color);
 }
 
 body {
@@ -36,7 +45,7 @@ body {
 
 h1 {
   font-size: 3.2em;
-  line-height: 1.1;
+  line-height: 0;
 }
 
 button {
