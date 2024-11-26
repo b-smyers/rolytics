@@ -29,7 +29,7 @@ function Landing() {
 
   return (
     <>
-      <div className='background'>
+      <div className='background' id='radial-background'>
         <h1 className='noselect'>This website is a work in progress</h1>
       </div>
     </>

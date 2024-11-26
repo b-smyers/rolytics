@@ -13,7 +13,7 @@ function Register() {
   };
 
   return (
-    <div id='background'>
+    <div className='background'>
         <div id='stars'/>
         <div id='register-box'>
           <div id='form-box'>

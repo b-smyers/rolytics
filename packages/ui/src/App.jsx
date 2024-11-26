@@ -14,9 +14,10 @@ function App() {
             <Route index element={<Landing />}/>
             <Route path="login" element={<Login />}/>
             <Route path="register" element={<Register />}/>
+            
+            {/* Custom 404 Page */}
+            <Route path="*" element={<NotFound />} />
           </Route>
-          {/* Custom 404 Page */}
-          <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
     </>
