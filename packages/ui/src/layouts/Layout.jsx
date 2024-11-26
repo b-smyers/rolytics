@@ -29,7 +29,7 @@ function Layout() {
         <div className="layout">
             <aside className={"sidebar"}>
                 <div className="sidebar-top">
-                    <SidbarButton icon={"/icons/rolytics-android-chrome-512x512.png"} name={"Rolytics"} uri={""}/>
+                    <SidbarButton icon={"/logos/rolytics.svg"} name={"Rolytics"} uri={""}/>
                 </div>
                 <div className="sidebar-bottom">
                     <SidbarButton icon={null} name={"Register"} uri={"register"}/>

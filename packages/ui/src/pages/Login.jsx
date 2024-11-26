@@ -18,7 +18,7 @@ function Login() {
         <div id='form-box'>
           <div id='form-header'>
             <h1>Login</h1>
-            <img src="/icons/rolytics-android-chrome-192x192.png" alt="Rolytics Logo" />
+            <img src="/logos/rolytics.svg" alt="Rolytics Logo" />
           </div>
           <p>Welcome Back!</p>
           <form id='login-form' onSubmit={handleSubmit}>

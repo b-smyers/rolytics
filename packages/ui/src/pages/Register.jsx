@@ -19,7 +19,7 @@ function Register() {
           <div id='form-box'>
             <div id='form-header'>
               <h1>Register</h1>
-              <img src="/icons/rolytics-android-chrome-192x192.png" alt="Rolytics Logo" />
+              <img src="/logos/rolytics.svg" alt="Rolytics Logo" />
             </div>
             <p>Welcome to Rolytics!</p>
             <form id='register-form' onSubmit={handleSubmit}>
