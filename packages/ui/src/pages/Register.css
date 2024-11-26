@@ -10,20 +10,30 @@
     background-position: center;
     background-size: 50px 50px;
     transform: rotate(45deg);
-    filter: invert(100%) brightness(0.2);
+    filter: invert(100%) brightness(0.7);
+}
+
+@media (prefers-color-scheme: dark) {
+    #stars {
+        filter: invert(100%) brightness(0.2);
+    }
 }
 
 #register-box {
     z-index: 1;
     width: 400px;
     height: 600px;
-    background-color: var(--theme-secondary-color);
+    background-color: light-dark(var(--light-theme-secondary-color), var(--dark-theme-secondary-color));
     border-radius: 16px;
-    box-shadow: 5px 5px 15px var(--theme-secondary-color);
+    box-shadow: 5px 5px 15px light-dark(var(--light-theme-secondary-color), var(--dark-theme-secondary-color));
 }
 
 #form-box {
     padding: 30px 40px;
+
+    p {
+        color: light-dark(var(--light-text-color-primary), var(--dark-text-color-primary));
+    }
 }
 
 #form-header {
@@ -35,6 +45,7 @@
     h1 {
         font-size: 3.2em;
         line-height: 0;
+        color: light-dark(var(--light-text-color-primary), var(--dark-text-color-primary));
     }
 
     img {
@@ -57,9 +68,9 @@
         height: 40px;
         margin: 15px 0px;
         font-size: 1em;
-        background-color: var(--theme-secondary-color);
+        background-color: light-dark(var(--light-theme-secondary-color), var(--dark-theme-secondary-color));
         border: 0;
-        border-bottom: 1px solid var(--theme-tertiary-color);
+        border-bottom: 1px solid light-dark(var(--light-theme-tertiary-color), var(--dark-theme-tertiary-color));
     }
 
     input:focus {
@@ -67,7 +78,7 @@
     }
 
     ::placeholder {
-        color: var(--text-color-secondary);
+        color: light-dark(var(--light-text-color-secondary), var(--dark-text-color-secondary));
         font-family: 'quicksand';
     }
     
@@ -78,10 +89,11 @@
 
 #register-button {
     background-color: var(--primary-color);
+    color: light-dark(var(--light-text-color-primary), var(--dark-text-color-primary));
 }
 
 #password-requirements {
-    color: var(--text-color-secondary);
+    color: light-dark(var(--light-text-color-secondary), var(--dark-text-color-secondary));
     ul {
         padding-inline-start: 25px;
     }

@@ -1,14 +1,16 @@
 #radial-background {
     height: 100%;
     width: 100%;
-    background: radial-gradient(circle at 50% 50%, #3A76F5, #001f3f, #000000);
+    background: radial-gradient(circle at 50% 50%, var(--primary-color), 
+        light-dark(var(--light-theme-primary-color), var(--dark-theme-primary-color))
+    );
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 h1 {
-    color: var(--text-color-primary);
+    color: var(--dark-text-color-primary);
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
 }
 

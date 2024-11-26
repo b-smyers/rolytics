@@ -8,7 +8,7 @@
     z-index: -1;
     height: 100%;
     width: 100%;
-    background-color: var(--theme-primary-color);
+    background-color: light-dark(var(--light-theme-primary-color), var(--dark-theme-primary-color));
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -20,7 +20,7 @@
     z-index: 1;
     position: fixed;
     height: 100vh;
-    background-color: var(--theme-secondary-color);
+    background-color: light-dark(var(--light-theme-secondary-color), var(--dark-theme-secondary-color));
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -40,7 +40,7 @@
 .sidebar-nav-item {
     display: flex;
     padding: 0.5em;
-    background-color: var(--theme-secondary-color);
+    background-color: light-dark(var(--light-theme-secondary-color), var(--dark-theme-secondary-color));
     align-items: center; /* Vertical align */
     white-space: nowrap;
     cursor: pointer;
@@ -54,7 +54,7 @@
 
 .sidebar-name {
     font-size: 24px;
-    color: var(--text-color-primary);
+    color: light-dark(var(--light-text-color-primary), var(--dark-text-color-primary));
     overflow: hidden;
 }
 
@@ -76,6 +76,6 @@ footer {
     width: 100%;
     line-height: 2em;
     text-align: center;
-    background-color: var(--theme-secondary-color); 
-    color: var(--text-color-secondary);
+    background-color: light-dark(var(--light-theme-secondary-color), var(--dark-theme-secondary-color));
+    color: light-dark(var(--light-text-color-secondary), var(--dark-text-color-secondary));
 }

@@ -7,11 +7,18 @@
   color: rgba(255, 255, 255, 0.87);
   --primary-color: #3A76F5;
   --secondary-color: #36a5ffff;
-  --theme-primary-color: #111216;
-  --theme-secondary-color: #2d2e33;
-  --theme-tertiary-color: #969698;
-  --text-color-primary: #fff;
-  --text-color-secondary: #969698;
+  --dark-theme-primary-color: #111216;
+  --dark-theme-secondary-color: #2d2e33;
+  --dark-theme-tertiary-color: #969698;
+  --dark-text-color-primary: #ffffff;
+  --dark-text-color-secondary: #969698;
+
+  
+  --light-theme-primary-color: #ffffff;
+  --light-theme-secondary-color: #939494;
+  --light-theme-tertiary-color: #202020;
+  --light-text-color-primary: #171717;
+  --light-text-color-secondary: #3b3b3b;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -32,7 +39,7 @@ h1, h2, h3, h4, h5, h6, a, p, li, ul {
 
 a {
   font-weight: 500;
-  color: var(--text-color-secondary);
+  color: light-dark(var(--light-text-color-secondary), var(--dark-text-color-secondary));
   text-decoration: inherit;
 }
 a:hover {
