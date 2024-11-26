@@ -26,6 +26,10 @@
   font-style: normal;
 }
 
+h1, h2, h3, h4, h5, h6, a, p, li, ul {
+  margin: 0;
+}
+
 a {
   font-weight: 500;
   color: var(--text-color-secondary);
@@ -60,7 +64,7 @@ button {
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: var(--secondary-color);
 }
 button:focus,
 button:focus-visible {

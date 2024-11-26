@@ -62,7 +62,8 @@ footer {
     bottom: 0;
     position: sticky;
     width: 100%;
+    line-height: 2em;
     text-align: center;
     background-color: var(--theme-secondary-color); 
-    color: var(--text-color-primary);
+    color: var(--text-color-secondary);
 }

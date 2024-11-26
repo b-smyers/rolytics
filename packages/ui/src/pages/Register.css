@@ -24,10 +24,10 @@
     filter: invert(100%) brightness(0.2);
 }
 
-#login-box {
+#register-box {
     z-index: 1;
     width: 400px;
-    height: 480px;
+    height: 600px;
     background-color: var(--theme-secondary-color);
     border-radius: 16px;
     box-shadow: 5px 5px 15px var(--theme-secondary-color);
@@ -55,11 +55,11 @@
     flex-direction: column;
 }
 
-#login-form {
+#register-form {
     display: flex;
     flex-direction: column;
 
-    #username, #password {
+    #username, #password, #email {
         height: 40px;
         margin: 15px 0px;
         font-size: 1em;
@@ -78,10 +78,17 @@
     }
     
     button {
-        margin: 45px 0px 10px;
+        margin: 10px 0px 10px;
     }
 }
 
-#login-button {
+#register-button {
     background-color: var(--primary-color);
+}
+
+#password-requirements {
+    color: var(--text-color-secondary);
+    ul {
+        padding-inline-start: 25px;
+    }
 }
