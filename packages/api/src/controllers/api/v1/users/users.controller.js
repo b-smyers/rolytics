@@ -40,10 +40,23 @@ function validateSetting(key, value) {
 async function getSettings(req, res) {
     try {
         const settings = await settingsdb.getSettings(req.user?.id);
-        res.status(200).json({ settings });
+        res.status(200).json({
+            code: 200,
+            status: 'success',
+            data: {
+                message: 'Settings successfully retrieved',
+                settings: settings
+            }
+        });
     } catch (error) {
         console.error('Error retrieving settings:', error);
-        res.status(500).json({ message: 'Failed to retrieve settings' });
+        res.status(500).json({
+            code: 500,
+            status: 'error',
+            data: {
+                message: 'Failed to retrieve settings'
+            }
+        });
     }
 }
 
@@ -55,7 +68,13 @@ async function updateSettings(req, res) {
     for (const [key, value] of Object.entries(settings)) {
         const result = validateSetting(key, value);
         if (!result.valid) {
-            return res.status(400).json({ error: result.message });
+            return res.status(400).json({
+                code: 400,
+                status: 'error',
+                data: {
+                    message: result.message
+                }
+            });
         }
     }
 
@@ -69,20 +88,45 @@ async function updateSettings(req, res) {
     // Update settingsdb
     try {
         await settingsdb.setSettings(req.user?.id, updatedSettings);
-        res.status(200).json({ message: 'Settings updated successfully' });
+        res.status(200).json({
+            code: 200,
+            status: 'success',
+            data: {
+                message: 'Settings updated successfully'
+            }
+        });
     } catch (error) {
         console.error('Error updating settings:', error);
-        res.status(500).json({ message: 'Failed to update settings' });
+        res.status(500).json({
+            code: 500,
+            status: 'error',
+            data: {
+                message: 'Failed to update settings'
+            }
+        });
     }
 }
 
 async function getProfile(req, res) {
     try {
         const profile = await usersdb.getUser(req.user?.id);
-        res.status(200).json({ profile });
+        res.status(200).json({
+            code: 200,
+            status: 'success',
+            data: {
+                message: 'Profile retrieved successfully',
+                profile: profile
+            }
+        });
     } catch (error) {
         console.error('Error retrieving profile:', error);
-        res.status(500).json({ message: 'Failed to retrieve profile' });
+        res.status(500).json({
+            code: 500,
+            status: 'error',
+            data: {
+                message: 'Failed to retrieve profile'
+            }
+        });
     }
 }
 
