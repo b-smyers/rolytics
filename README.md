@@ -11,6 +11,7 @@ The webpage mockup can be found [Here](https://docs.google.com/presentation/d/11
 ## Prerequisites
 - Node.js
 - Nginx
+- Docker or docker-compose (production)
 
 ## Development
 ### 1) Shared Setup
@@ -47,73 +48,15 @@ pnpm dev
 ```
 
 ## Production
-### 1) Shared Setup
-#### PNPM
-Install pnpm & the project packages.
+Run the server using Docker Compose
 ```bash
-npm install -g pnpm
-pnpm install
-```
-
-#### NGINX && Certbot
-Copy the production config into `/etc/nginx/conf.d/`, and the error page into `/var/www/html/`.
-```bash
-sudo cp nginx/configs/rolytics.conf /etc/nginx/conf.d/
-sudo cp nginx/html/*.html /var/www/html/
-```
-Configure, test, and start Nginx.
-```bash
-sudo ufw allow 'Nginx Full'
-```
-Install Certbot
-```bash
-sudo snap install --classic certbot
-sudo ln -s /snap/bin/certbot /usr/bin/certbot
-```
-You might need a temporary certificate to run Nginx for the first time.
-```bash
-sudo certbot certonly --standalone -d rolytics.bot.nu
-```
-Test and run nginx, and enabled automatic renewal with certbot.
-```bash
-sudo nginx -t
-sudo systemctl restart nginx
-sudo certbot certonly --nginx
-```
-At this point you can test the configuration this far by using this command:
-```bash
-sudo certbot renew --dry-run
-```
-
-#### PM2
-PM2 is a process manager for Node.js that handles monitoring, auto-scaling, and auto-restarts.
-```bash
-sudo npm install pm2 -g
-```
-Next setup PM2 to start automatically by pasting and running the produced command to finish setup.
-```bash
-pm2 startup systemd
-```
-Lastly, save changes to pm2.
-```bash
-pm2 save --force
-```
-### 2) API Setup
-API production [Setup Instructions](packages/api/README.md#production).
-
-### 3) UI Setup
-UI production [Setup Instructions](packages/ui/README.md#production).
-
-### 4) Startup
-Run the server using PM2
-```bash
-pm2 start rolytics
+sudo docker-compose build
+sudo docker-compose up -d
 ```
 
 ## Troubleshooting
 Use freedns to route a free subdomain to your external IP on port 443 (https)
-Portforward 443 traffic on your router to the port specified in the code
-If you are using WSL you will need to forward the traffic from windows to the WSL instance
+Portforward 443 traffic on your router to your server.
 
 ## TODO
 - [ ] Implement saving analytics to sqlite databse
