@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
+import Protected from '../components/Protected';
 import './Layout.css';
 
 const SidbarButton = ({ icon, name, uri }) => {
@@ -30,6 +31,9 @@ function Layout() {
             <aside className={"sidebar"}>
                 <div className="sidebar-top">
                     <SidbarButton icon={"/logos/rolytics.svg"} name={"Rolytics"} uri={""}/>
+                    <Protected>
+                        <SidbarButton icon={"/icons/bullet-list.png"} name={"Experiences"} uri={"experiences"}/>
+                    </Protected>
                 </div>
                 <div className="sidebar-bottom">
                     <SidbarButton icon={"/icons/gear.png"} name={"Settings"} uri="settings"/>
