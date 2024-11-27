@@ -20,13 +20,8 @@
     "lint": "pnpm --filter api lint && pnpm --filter ui lint"
   },
   "devDependencies": {
-    "concurrently": "^9.0.1",
-    "eslint": "^9.11.1",
+    "concurrently": "^9.1.0",
+    "eslint": "^9.15.0",
     "eslint-plugin-node": "^11.1.0"
-  },
-  "pnpm": {
-    "overrides": {
-      "cookie@<0.7.0": ">=0.7.0"
-    }
   }
 }
