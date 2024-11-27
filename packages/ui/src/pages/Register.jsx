@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './Register.css';
 
 function Register() {
@@ -57,12 +58,27 @@ function Register() {
     setIsValidPass(valid);
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isFormValid) {
-      console.log("Valid form submitted");
-    } else {
-      console.log("Invalid form submitted");
+    if (!isFormValid) { return; }
+
+    try {
+      const response = await axios.post('/api/v1/auth/register', { 
+        username: username,
+        email: email,
+        password: password
+      });
+
+      if (response.status === 200) {
+        console.log(response.data.data.message);
+      }
+
+    } catch (error) {
+      if (error.response && error.response.data && error.response.data.data) {
+        console.log(error.response.data.data.message);
+      } else {
+        console.log('An unexpected error occurred');
+      }
     }
   };
 
