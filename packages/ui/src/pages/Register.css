@@ -22,7 +22,7 @@
 #register-box {
     z-index: 1;
     width: 400px;
-    height: 600px;
+    height: 620px;
     background-color: light-dark(var(--light-bg-secondary), var(--dark-bg-secondary));
     border-radius: 16px;
     box-shadow: 5px 5px 15px light-dark(var(--light-bg-secondary), var(--dark-bg-secondary));
@@ -87,14 +87,17 @@
     }
 }
 
-#register-button {
-    background-color: var(--color-primary);
-    color: light-dark(var(--light-text-primary), var(--dark-text-primary));
-}
-
 #password-requirements {
     color: light-dark(var(--light-text-secondary), var(--dark-text-secondary));
     ul {
         padding-inline-start: 25px;
     }
+}
+
+.req-pass {
+    color: green;
+}
+
+.req-fail {
+    color: red;
 }

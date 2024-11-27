@@ -1,14 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Login.css';
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  useEffect(() => {
+    setIsFormValid(
+      username.trim() !== '' &&
+      password.trim() !== ''
+    );
+  }, [username, password]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle login logic (API request, validation, etc.)
-    console.log('Login attempt with:', { username, password });
+    if (isFormValid) {
+      console.log("Valid form submitted");
+    } else {
+      console.log("Invalid form submitted");
+    }
   };
   
   return (
@@ -41,7 +52,7 @@ function Login() {
               required
             />
             <a href="/404">Forgot Password?</a>
-            <button id="login-button" type="submit">
+            <button id="login-button" type="submit" disabled={!isFormValid}>
               Login
             </button>
           </form>
