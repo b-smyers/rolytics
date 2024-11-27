@@ -152,14 +152,26 @@ async function logData(req, res) {
     // Check if the req.body exists
     const data = req.body;
     if (!data) {
-        return res.status(400).json({ message: 'Missing Data' });
+        return res.status(400).json({
+            code: 400,
+            status: 'error',
+            data: {
+                message: 'Missing data'
+            }
+        });
     }
 
     // Check data against schema - if it fails, send error code 400 Bad Request
     const valid = validate(data);
     if (!valid) {
         console.log(validate.errors);
-        return res.status(400).json({ message: 'Invalid Data' });
+        return res.status(400).json({
+            code: 400,
+            status: 'error',
+            data: {
+                message: 'Invalid data'
+            }
+        });
     }
 
     // Deconstruct JSON
@@ -172,7 +184,13 @@ async function logData(req, res) {
     } = data;
 
     console.log(data);
-    res.status(200).json({ message: 'Data Successfully Recieved' });
+    res.status(200).json({
+        code: 200,
+        status: 'success',
+        data: {
+            message: 'Data successfully recieved'
+        }
+    });
 }
 
 module.exports = {

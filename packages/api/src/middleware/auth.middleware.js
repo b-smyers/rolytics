@@ -6,10 +6,11 @@ const checkSession = (req, res, next) => {
         next();
     } else {
         res.status(401).json({
-            status: 'error',
-            message: 'Your session has expired.',
             code: 401,
-            data: null
+            status: 'error',
+            data: {
+                message: 'Session expired'
+            }
         });
     }
 };
@@ -18,10 +19,11 @@ const checkJWTToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return res.status(401).json({
-            status: 'error',
-            message: 'Missing Token',
             code: 401,
-            data: null    
+            status: 'error',
+            data: {
+                message: 'Missing token'
+            }
         });
     }
     const token = authHeader.split(' ')[1]; // Extract token from 'Bearer <token>'
@@ -32,17 +34,19 @@ const checkJWTToken = (req, res, next) => {
             if (err) {
                 if (err.name === 'TokenExpiredError') {
                     return res.status(401).json({
-                        status: 'error',
-                        message: 'Token Expired',
                         code: 401,
-                        data: null 
+                        status: 'error',
+                        data: {
+                            message: 'Token expired'
+                        }
                     });
                 }
                 return res.status(403).json({
-                    status: 'error',
-                    message: 'Token Invalid',
                     code: 403,
-                    data: null
+                    status: 'error',
+                    data: {
+                        message: 'Token invalid'
+                    }
                 });
             }
             
@@ -51,11 +55,12 @@ const checkJWTToken = (req, res, next) => {
         });
     } else {
         return res.status(401).json({
-            status: 'error',
-            message: 'Missing Token',
             code: 401,
-            data: null
-        }); // Missing token
+            status: 'error',
+            data: {
+                message: 'Token missing'
+            }
+        });
     }
 };
 
@@ -68,10 +73,11 @@ const authenticate = (req, res, next) => {
         checkSession(req, res, next);
     } else {
         res.status(401).json({
-            status: 'error',
-            message: 'Authentication failed',
             code: 401,
-            data: null
+            status: 'error',
+            data: {
+                message: 'Authentication failed'
+            }
         });
     }
 };
