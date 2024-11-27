@@ -5,19 +5,31 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
+
+  /* Site colors */
   --color-primary: #3A76F5;
   --color-secondary: #7b9de7;
+
+  /* Dark theme */
   --dark-bg-primary: #111216;
   --dark-bg-secondary: #2d2e33;
   --dark-bg-tertiary: #969698;
   --dark-text-primary: #ffffff;
   --dark-text-secondary: #969698;
 
+  /* Light theme */
   --light-bg-primary: #ffffff;
   --light-bg-secondary: #2d2e33;
   --light-bg-tertiary: #202020;
   --light-text-primary: #171717;
   --light-text-secondary: #3b3b3b;
+
+  /* Chose theme dynamically */
+  --theme-primary: light-dark(var(--light-bg-primary), var(--dark-bg-primary));
+  --theme-secondary: light-dark(var(--light-bg-secondary), var(--dark-bg-secondary));
+  --theme-tertiary: light-dark(var(--light-bg-tertiary), var(--dark-bg-tertiary));
+  --text-primary: light-dark(var(--light-text-primary), var(--dark-text-primary));
+  --text-secondary: light-dark(var(--light-text-secondary), var(--dark-text-secondary));
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -38,7 +50,7 @@ h1, h2, h3, h4, h5, h6, a, p, li, ul {
 
 a {
   font-weight: 500;
-  color: light-dark(var(--light-text-secondary), var(--dark-text-secondary));
+  color: var(--text-secondary);
   text-decoration: inherit;
 }
 a:hover {
@@ -55,7 +67,7 @@ body {
 
 button {
   background-color: var(--color-primary);
-  color: light-dark(var(--light-text-primary), var(--dark-text-primary));
+  color: var(--text-primary);;
   border-radius: 8px;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
