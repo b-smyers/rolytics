@@ -5,20 +5,19 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  --primary-color: #3A76F5;
-  --secondary-color: #36a5ffff;
-  --dark-theme-primary-color: #111216;
-  --dark-theme-secondary-color: #2d2e33;
-  --dark-theme-tertiary-color: #969698;
-  --dark-text-color-primary: #ffffff;
-  --dark-text-color-secondary: #969698;
+  --color-primary: #3A76F5;
+  --color-secondary: #36a5ffff;
+  --dark-bg-primary: #111216;
+  --dark-bg-secondary: #2d2e33;
+  --dark-bg-tertiary: #969698;
+  --dark-text-primary: #ffffff;
+  --dark-text-secondary: #969698;
 
-  
-  --light-theme-primary-color: #ffffff;
-  --light-theme-secondary-color: #939494;
-  --light-theme-tertiary-color: #202020;
-  --light-text-color-primary: #171717;
-  --light-text-color-secondary: #3b3b3b;
+  --light-bg-primary: #ffffff;
+  --light-bg-secondary: #939494;
+  --light-bg-tertiary: #202020;
+  --light-text-primary: #171717;
+  --light-text-secondary: #3b3b3b;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -39,11 +38,11 @@ h1, h2, h3, h4, h5, h6, a, p, li, ul {
 
 a {
   font-weight: 500;
-  color: light-dark(var(--light-text-color-secondary), var(--dark-text-color-secondary));
+  color: light-dark(var(--light-text-secondary), var(--dark-text-secondary));
   text-decoration: inherit;
 }
 a:hover {
-  color: var(--primary-color);
+  color: var(--color-primary);
 }
 
 body {
@@ -66,7 +65,7 @@ button {
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: var(--secondary-color);
+  border-color: var(--color-secondary);
 }
 button:focus,
 button:focus-visible {

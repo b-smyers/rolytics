@@ -23,16 +23,16 @@
     z-index: 1;
     width: 400px;
     height: 480px;
-    background-color: light-dark(var(--light-theme-secondary-color), var(--dark-theme-secondary-color));
+    background-color: light-dark(var(--light-bg-secondary), var(--dark-bg-secondary));
     border-radius: 16px;
-    box-shadow: 5px 5px 15px light-dark(var(--light-theme-secondary-color), var(--dark-theme-secondary-color));
+    box-shadow: 5px 5px 15px light-dark(var(--light-bg-secondary), var(--dark-bg-secondary));
 }
 
 #form-box {
     padding: 30px 40px;
 
     p {
-        color: light-dark(var(--light-text-color-primary), var(--dark-text-color-primary));
+        color: light-dark(var(--light-text-primary), var(--dark-text-primary));
     }
 }
 
@@ -45,7 +45,7 @@
     h1 {
         font-size: 3.2em;
         line-height: 0;
-        color: light-dark(var(--light-text-color-primary), var(--dark-text-color-primary));
+        color: light-dark(var(--light-text-primary), var(--dark-text-primary));
     }
 
     img {
@@ -68,9 +68,9 @@
         height: 40px;
         margin: 15px 0px;
         font-size: 1em;
-        background-color: light-dark(var(--light-theme-secondary-color), var(--dark-theme-secondary-color));
+        background-color: light-dark(var(--light-bg-secondary), var(--dark-bg-secondary));
         border: 0;
-        border-bottom: 1px solid light-dark(var(--light-theme-tertiary-color), var(--dark-theme-tertiary-color));
+        border-bottom: 1px solid light-dark(var(--light-bg-tertiary), var(--dark-bg-tertiary));
     }
 
     input:focus {
@@ -78,7 +78,7 @@
     }
 
     ::placeholder {
-        color: light-dark(var(--light-text-color-secondary), var(--dark-text-color-secondary));
+        color: light-dark(var(--light-text-secondary), var(--dark-text-secondary));
         font-family: 'quicksand';
     }
     
@@ -88,6 +88,6 @@
 }
 
 #login-button {
-    background-color: var(--primary-color);
-    color: light-dark(var(--light-text-color-primary), var(--dark-text-color-primary));
+    background-color: var(--color-primary);
+    color: light-dark(var(--light-text-primary), var(--dark-text-primary));
 }
