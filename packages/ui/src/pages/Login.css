@@ -86,8 +86,3 @@
         margin: 45px 0px 10px;
     }
 }
-
-#login-button {
-    background-color: var(--color-primary);
-    color: light-dark(var(--light-text-primary), var(--dark-text-primary));
-}
