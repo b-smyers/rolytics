@@ -3,6 +3,7 @@ import Layout from './layouts/Layout';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Settings from './pages/Settings';
 import NotFound from './pages/NotFound';
 
 function App() {
@@ -12,9 +13,10 @@ function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Landing />}/>
+            <Route path="settings" element={<Settings />}/>
             <Route path="login" element={<Login />}/>
             <Route path="register" element={<Register />}/>
-            
+
             {/* Custom 404 Page */}
             <Route path="*" element={<NotFound />} />
           </Route>

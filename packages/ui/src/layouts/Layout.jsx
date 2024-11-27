@@ -32,6 +32,7 @@ function Layout() {
                     <SidbarButton icon={"/logos/rolytics.svg"} name={"Rolytics"} uri={""}/>
                 </div>
                 <div className="sidebar-bottom">
+                    <SidbarButton icon={"/icons/gear.png"} name={"Settings"} uri="settings"/>
                     <SidbarButton icon={null} name={"Register"} uri={"register"}/>
                     <SidbarButton icon={"/icons/login.png"} name={"Login"} uri={"login"}/>
                 </div>
