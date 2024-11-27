@@ -4,8 +4,8 @@ const usersdb = require('@services/users.services');
 const settingsSchema = {
     theme: {
         type: 'string',
-        allowedValues: ['light', 'dark'],
-        default: 'light'
+        allowedValues: ['auto', 'light', 'dark'],
+        default: 'auto'
     },
     currency: {
         type: 'string',
