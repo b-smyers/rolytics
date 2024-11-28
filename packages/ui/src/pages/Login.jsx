@@ -26,6 +26,7 @@ function Login() {
 
       if (response.status === 200) {
         console.log(response.data.data.message);
+        document.location.href = '/login';
       }
 
     } catch (error) {

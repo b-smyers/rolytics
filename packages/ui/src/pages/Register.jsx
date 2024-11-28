@@ -71,8 +71,8 @@ function Register() {
 
       if (response.status === 200) {
         console.log(response.data.data.message);
+        document.location.href = '/login';
       }
-
     } catch (error) {
       if (error.response && error.response.data && error.response.data.data) {
         console.log(error.response.data.data.message);

@@ -1,0 +1,34 @@
+#gradient {
+    z-index: 1;
+    width: 100%;
+    flex: 2;
+    background: linear-gradient(transparent, transparent, var(--theme-tertiary));
+}
+
+#header {
+    padding: 20px;
+
+    h1 {
+        padding-top: 10px;
+        font-size: 3em;
+    }
+}
+
+#settings-page {
+    z-index: 1;
+    width: 100%;
+    flex: 8;
+    background-color: var(--theme-tertiary);
+}
+
+.setting-entry {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 20px;
+    align-items: center;
+}
+
+#save-settings-button {
+    width: 200px;
+}

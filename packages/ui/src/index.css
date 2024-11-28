@@ -11,9 +11,9 @@
   --color-secondary: #7b9de7;
 
   /* Dark theme */
-  --dark-bg-primary: #111216;
-  --dark-bg-secondary: #2d2e33;
-  --dark-bg-tertiary: #969698;
+  --dark-bg-primary: #28292b;
+  --dark-bg-secondary: #424248;
+  --dark-bg-tertiary: #1b1c1f;
   --dark-text-primary: #ffffff;
   --dark-text-secondary: #969698;
 
@@ -76,6 +76,7 @@ button {
   font-family: inherit;
   cursor: pointer;
   transition: border-color 0.25s;
+  transition: background-color 0.05s;
 }
 button:hover {
   border-color: var(--color-secondary);
@@ -86,5 +87,8 @@ button:focus-visible {
 }
 button:disabled,
 button[disabled] {
-  background-color: light-dark(var(--color-secondary), var(--color-secondary));
+  background-color: var(--color-secondary);
+}
+button:active {
+  background-color: var(--color-secondary);
 }

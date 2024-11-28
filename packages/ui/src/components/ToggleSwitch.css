@@ -1,0 +1,32 @@
+.toggle-switch-checkbox {
+    height: 0;
+    width: 0;
+    visibility: hidden;
+}
+  
+#toggle-switch-label {
+    cursor: pointer;
+    width: 90px;
+    height: 40px;
+    background: var(--theme-primary);
+    border-radius: 45px;
+    position: relative;
+    transition: background-color .2s;
+}
+  
+#toggle-switch-label #toggle-switch-button {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    aspect-ratio: 1/1;
+    height: calc(100% - 8px);
+    border-radius: 21px;
+    transition: 0.2s;
+    background: var(--color-primary);
+}
+  
+.toggle-switch-checkbox:checked + #toggle-switch-label #toggle-switch-button {
+    left: calc(100% - 2px);
+    transform: translateX(calc(-100% - 4px));
+    background-color: var(--theme-secondary);
+}

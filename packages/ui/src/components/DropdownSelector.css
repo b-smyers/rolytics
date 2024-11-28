@@ -1,0 +1,11 @@
+.selector {
+    width: 350px;
+    height: 50px;
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: var(--theme-primary);
+    font-size: 1em;
+    font-family: 'quicksand';
+    cursor: pointer;
+}
