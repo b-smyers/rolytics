@@ -1,0 +1,6 @@
+#path-box {
+    background-color: var(--theme-primary);
+    padding: 5px 10px;
+    border-radius: 15px;
+    width: fit-content;
+}

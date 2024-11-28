@@ -15,7 +15,7 @@
 
 @media (prefers-color-scheme: dark) {
     #stars {
-        filter: invert(100%) brightness(0.2);
+        filter: invert(100%) brightness(0.1);
     }
 }
 
@@ -23,9 +23,9 @@
     z-index: 1;
     width: 400px;
     height: 620px;
-    background-color: var(--theme-secondary);
+    background-color: var(--theme-primary);
     border-radius: 16px;
-    box-shadow: 5px 5px 15px var(--theme-secondary);
+    box-shadow: 5px 5px 15px var(--theme-primary);
 }
 
 #form-box {
@@ -68,9 +68,9 @@
         height: 40px;
         margin: 15px 0px;
         font-size: 1em;
-        background-color: var(--theme-secondary);
+        background-color: var(--theme-primary);
         border: 0;
-        border-bottom: 1px solid var(--theme-tertiary);
+        border-bottom: 1px solid var(--theme-secondary);
     }
 
     input:focus {
