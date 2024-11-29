@@ -4,7 +4,6 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
 
   /* Site colors */
   --color-primary: #3A76F5;
@@ -18,9 +17,9 @@
   --dark-text-secondary: #969698;
 
   /* Light theme */
-  --light-bg-primary: #ffffff;
+  --light-bg-primary: #ededed;
   --light-bg-secondary: #2d2e33;
-  --light-bg-tertiary: #202020;
+  --light-bg-tertiary: #d9d9da;
   --light-text-primary: #171717;
   --light-text-secondary: #3b3b3b;
 
@@ -30,6 +29,8 @@
   --theme-tertiary: light-dark(var(--light-bg-tertiary), var(--dark-bg-tertiary));
   --text-primary: light-dark(var(--light-text-primary), var(--dark-text-primary));
   --text-secondary: light-dark(var(--light-text-secondary), var(--dark-text-secondary));
+
+  color: var(--text-primary);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
