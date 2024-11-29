@@ -1,6 +1,5 @@
 services:
   nginx:
-    image: nginx:latest
     container_name: proxy
     build:
       context: ./nginx

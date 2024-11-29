@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
 const app = express();
-app.set('trust proxy', '127.0.0.1');
+app.set('trust proxy', 1);
 const limiter = rateLimit({
     windowMs: 5 * 60 * 1000,
     limit: 100,
@@ -18,12 +18,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     cookie: { 
         secure: process.env.NODE_ENV === 'production',
         maxAge: 7 * 60 * 60 * 1000,
         httpOnly: true,
-        sameSite: 'strict'
+        sameSite: 'lax'
     }
 }));
 app.use(cookieParser());
