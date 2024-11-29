@@ -1,3 +1,4 @@
+const serversService = require('@services/servers.services.js');
 const Ajv = require("ajv");
 
 const schema = {
@@ -141,7 +142,7 @@ const schema = {
             additionalProperties: false
         }
     },
-    required: ['performance', 'players', 'metadata'],
+    required: ['purchases', 'performance', 'social', 'players', 'metadata'],
     additionalProperties: false
 }
 
@@ -174,16 +175,9 @@ async function logData(req, res) {
         });
     }
 
-    // Deconstruct JSON
-    const {
-        players,
-        performance,
-        social,
-        purchases,
-        metadata
-    } = data;
+    // Write payload
+    serversService.writePayload(data);
 
-    console.log(data);
     res.status(200).json({
         code: 200,
         status: 'success',
