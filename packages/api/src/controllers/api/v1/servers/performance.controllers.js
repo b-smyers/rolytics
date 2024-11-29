@@ -1,62 +1,24 @@
-async function getUptime(req, res) {
-    res.status(501).json({ message: 'Route not implemented' });
-}
+const serverService = require('@services/servers.services');
 
-async function getFps(req, res) {
-    res.status(501).json({ message: 'Route not implemented' });
-}
+async function getPerformance(req, res) {
+    const { serverId } = req.body;
 
-async function getMemory(req, res) {
-    res.status(501).json({ message: 'Route not implemented' });
-}
+    const rows = await serverService.getServerMetrics(serverId);
 
-async function getDataReceive(req, res) {
-    res.status(501).json({ message: 'Route not implemented' });
-}
+    const performanceData = rows.map(row => {
+        return row.performance;
+    })
 
-async function getDataSend(req, res) {
-    res.status(501).json({ message: 'Route not implemented' });
-}
-
-async function getHeartbeat(req, res) {
-    res.status(501).json({ message: 'Route not implemented' });
-}
-
-async function getInstances(req, res) {
-    res.status(501).json({ message: 'Route not implemented' });
-}
-
-async function getPrimitives(req, res) {
-    res.status(501).json({ message: 'Route not implemented' });
-}
-
-async function getMovingPrimitives(req, res) {
-    res.status(501).json({ message: 'Route not implemented' });
-}
-
-async function getPhysicsReceive(req, res) {
-    res.status(501).json({ message: 'Route not implemented' });
-}
-
-async function getPhysicsSend(req, res) {
-    res.status(501).json({ message: 'Route not implemented' });
-}
-
-async function getPhysicsStep(req, res) {
-    res.status(501).json({ message: 'Route not implemented' });
+    return res.status(200).json({
+        code: 200,
+        status: 'success',
+        data: {
+            message: 'Performance data successfully retrieved',
+            data: performanceData
+        }
+    })
 }
 
 module.exports = {
-    getUptime,
-    getFps,
-    getMemory,
-    getDataReceive,
-    getDataSend,
-    getHeartbeat,
-    getInstances,
-    getPrimitives,
-    getMovingPrimitives,
-    getPhysicsReceive,
-    getPhysicsSend,
-    getPhysicsStep,
+    getPerformance
 }

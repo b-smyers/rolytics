@@ -1,10 +1,6 @@
-const database = require('@services/sqlite.services');
-
+const getDatabase = require('@services/sqlite.services');
 let db;
-async function init() {
-    db = await database;
-}
-init().catch(console.error);
+(async function() { db = await getDatabase() })()
 
 async function getExperiences(userId) {
     const query = `SELECT * FROM experiences WHERE user_id = ?`;

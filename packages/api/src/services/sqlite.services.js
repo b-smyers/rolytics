@@ -1,6 +1,6 @@
 const sqlite3 = require('sqlite3').verbose();
 const { open } = require('sqlite');
-const fs = require('fs').promises;
+const fs = require('fs');
 const path = require('path');
 
 const dbFile = 'database.db';
@@ -14,33 +14,28 @@ const modelFiles = [
     path.join(__dirname, '../models', 'user_settings.models.sql')
 ];
 
-async function executeSchemaFile(db, filePath) {
-    try {
-        const schema = await fs.readFile(filePath, 'utf-8');
-        await db.exec(schema);
-    } catch (err) {
-        console.error(`Error executing schema file ${filePath}:`, err);
-    }
-}
+let db;
 
-async function database() {
-    try {
-        const db = await open({
+async function getDatabase() {
+    if (!db) {
+        db = await open({
             filename: dbFile,
             driver: sqlite3.Database
         });
 
         console.log('Database connected');
 
-        for (const filePath of modelFiles) {
-            await executeSchemaFile(db, filePath);
+        try {
+            for (const filePath of modelFiles) {
+                const schema = fs.readFileSync(filePath, 'utf-8');
+                await db.exec(schema);
+            }
+            console.log('All schemas executed successfully');
+        } catch (error) {
+            console.error(`Error executing schemas: ${error}`);
         }
-
-        return db;
-    } catch (err) {
-        console.error('Error setting up database:', err);
-        throw err;
     }
+    return db;
 }
 
-module.exports = database();
+module.exports = getDatabase;

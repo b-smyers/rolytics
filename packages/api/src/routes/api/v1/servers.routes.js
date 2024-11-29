@@ -18,18 +18,7 @@ router.get('/analytics/engagement', analyticsController.getEngagement);
 router.get('/analytics/retention',  analyticsController.getRetention);
 
 // Performance
-router.get('/performance/uptime',            performanceController.getUptime);
-router.get('/performance/fps',               performanceController.getFps);
-router.get('/performance/memory',            performanceController.getMemory);
-router.get('/performance/data-receive',      performanceController.getDataReceive);
-router.get('/performance/data-send',         performanceController.getDataSend);
-router.get('/performance/heartbeat',         performanceController.getHeartbeat);
-router.get('/performance/instances',         performanceController.getInstances);
-router.get('/performance/primitives',        performanceController.getPrimitives);
-router.get('/performance/moving-primitives', performanceController.getMovingPrimitives);
-router.get('/performance/physics-receive',   performanceController.getPhysicsReceive);
-router.get('/performance/physics-send',      performanceController.getPhysicsSend);
-router.get('/performance/physics-step',      performanceController.getPhysicsStep);
+router.get('/performance', performanceController.getPerformance);
 
 // Players
 router.get('/players/active',       playersController.getActive);

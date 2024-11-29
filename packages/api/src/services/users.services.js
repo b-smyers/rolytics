@@ -1,11 +1,7 @@
 const bcrypt = require('bcrypt');
-const database = require('@services/sqlite.services');
-
+const getDatabase = require('@services/sqlite.services');
 let db;
-async function init() {
-    db = await database;
-}
-init().catch(console.error);
+(async function() { db = await getDatabase() })()
 
 async function registerUser(username, email, password) {
     const query = `INSERT INTO users (username, email, password) VALUES (?, ?, ?)`;
