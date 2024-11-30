@@ -21,19 +21,12 @@ router.get('/analytics/retention',  analyticsController.getRetention);
 router.get('/performance', performanceController.getPerformance);
 
 // Players
-router.get('/players/active',       playersController.getActive);
-router.get('/players/new',          playersController.getNew);
-router.get('/players/returning',    playersController.getReturning);
-router.get('/players/demographics', playersController.getDemographics);
+router.get('/players', playersController.getPlayers);
 
 // Purchases
-router.get('/purchases/passes',             purchasesController.getPasses);
-router.get('/purchases/developer-products', purchasesController.getDeveloperProducts);
-router.get('/purchases/subscriptions',      purchasesController.getSubscriptions);
+router.get('/purchases', purchasesController.getPurchases);
 
 // Social
-router.get('/social/chats',           socialController.getChats);
-router.get('/social/friend-requests', socialController.getFriendRequests);
-router.get('/social/invites',         socialController.getInvites);
+router.get('/social', socialController.getSocial);
 
 module.exports = router;
