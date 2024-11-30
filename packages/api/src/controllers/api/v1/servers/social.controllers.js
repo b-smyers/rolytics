@@ -1,17 +1,34 @@
-async function getChats(req, res) {
-    res.status(501).json({ message: 'Route not implemented' });
-}
+const serverService = require('@services/servers.services');
 
-async function getFriendRequests(req, res) {
-    res.status(501).json({ message: 'Route not implemented' });
-}
+async function getSocial(req, res) {
+    const { serverId } = req.body;
 
-async function getInvites(req, res) {
-    res.status(501).json({ message: 'Route not implemented' });
+    if (!serverId) {
+        return res.status(400).json({
+            code: 400,
+            status: 'error',
+            data: {
+                message: 'Missing server ID'
+            }
+        });
+    }
+
+    const rows = await serverService.getServerMetrics(serverId);
+
+    const socialData = rows.map(row => {
+        return row.social;
+    })
+
+    return res.status(200).json({
+        code: 200,
+        status: 'success',
+        data: {
+            message: 'Social data successfully retrieved',
+            data: socialData
+        }
+    })
 }
 
 module.exports = {
-    getChats,
-    getFriendRequests,
-    getInvites,
+    getSocial
 }

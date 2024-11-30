@@ -1,22 +1,34 @@
-async function getActive(req, res) {
-    res.status(501).json({ message: 'Route not implemented' });
-}
+const serverService = require('@services/servers.services');
 
-async function getNew(req, res) {
-    res.status(501).json({ message: 'Route not implemented' });
-}
+async function getPlayers(req, res) {
+    const { serverId } = req.body;
 
-async function getReturning(req, res) {
-    res.status(501).json({ message: 'Route not implemented' });
-}
+    if (!serverId) {
+        return res.status(400).json({
+            code: 400,
+            status: 'error',
+            data: {
+                message: 'Missing server ID'
+            }
+        });
+    }
 
-async function getDemographics(req, res) {
-    res.status(501).json({ message: 'Route not implemented' });
+    const rows = await serverService.getServerMetrics(serverId);
+
+    const playersData = rows.map(row => {
+        return row.players;
+    })
+
+    return res.status(200).json({
+        code: 200,
+        status: 'success',
+        data: {
+            message: 'Players data successfully retrieved',
+            data: playersData
+        }
+    })
 }
 
 module.exports = {
-    getActive,
-    getNew,
-    getReturning,
-    getDemographics,
+    getPlayers
 }
