@@ -65,7 +65,7 @@ function Experiences() {
           />
         ))}
         <button id='add-experience-card'>
-          <img src={"/icons/plus.png"} alt={"Connect an experience"} />
+          <img src={"/icons/plus.svg"} alt={"Connect an experience"} />
           <h3 id='experience-card-title'>Connect an Experience</h3>
         </button>
       </div>
