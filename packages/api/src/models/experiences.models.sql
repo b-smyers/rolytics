@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS experiences (
     user_id INTEGER,
     experience_id TEXT,
-    name TEXT,
+    title TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     api_key TEXT UNIQUE,
     PRIMARY KEY (user_id, experience_id),
