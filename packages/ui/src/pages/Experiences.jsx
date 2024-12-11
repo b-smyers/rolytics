@@ -4,16 +4,16 @@ import PageCrumb from '../components/PageCrumb';
 import axios from 'axios';
 import './Experiences.css';
 
-const ExperienceCard = ({ title, img, uri }) => {
+const ExperienceCard = ({ img, title, description, uri }) => {
   const navigate = useNavigate();
-  const navigateURI = () => { navigate(`/${uri}`); };
+  const navigateURI = () => { navigate(`/${uri || '404'}`); };
 
   return (
     <button className={`experience-card`} onClick={navigateURI}>
-      <img src={img || "/logos/rolytics.svg"} alt={img} />
+      <img src={img || "/icons/missing.svg"} alt={img} />
       <div id='experience-card-content'>
-        <h3 id='experience-card-title'>{title}</h3>
-        <p id='experience-card-description'>Brief experience description will be put here automatically. Lorem ipsum doler sit amet</p>
+        <h3 id='experience-card-title'>{title || "No title"}</h3>
+        <p id='experience-card-description'>{description || "No description"}</p>
       </div>
     </button>
   )
@@ -24,14 +24,10 @@ function Experiences() {
 
   const loadExperiences = async () => {
     try {
-      // const response = await axios.get('/api/v1/experiences');
-      // const experiences = response.data.data.experiences;
-      const experiences = [
-        { id: 1, title: "game1", uri: "dashboard/experiences/game1"},
-        { id: 2, title: "game2", uri: "dashboard/experiences/game2"},
-        { id: 3, title: "game3", uri: "dashboard/experiences/game3"},
-        { id: 4, title: "game4", uri: "dashboard/experiences/game4"}
-      ];
+      const response = await axios.get('/api/v1/experiences');
+      const experiences = response.data.data.experiences;
+      // Image, Title, Description, Uri
+
       setExperienceCards(experiences);
     } catch (error) {
       if (error.response && error.response.data && error.response.data.data) {
@@ -56,11 +52,12 @@ function Experiences() {
         </div>
       </div>
       <div id="experiences-page">
-        {experienceCards.map((exp) => (
+        {experienceCards.map((exp, i) => (
           <ExperienceCard
-            key={exp.id}
+            key={i}
             img={exp.img}
             title={exp.title}
+            description={exp.description}
             uri={exp.uri}
           />
         ))}
