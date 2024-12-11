@@ -40,6 +40,7 @@
 .sidebar-nav-item {
     display: flex;
     padding: 0.5em;
+    height: 60px;
     background-color: var(--theme-primary);
     align-items: center; /* Vertical align */
     white-space: nowrap;

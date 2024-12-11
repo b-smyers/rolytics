@@ -14,7 +14,6 @@ function Settings() {
     try {
       const response = await axios.get('/api/v1/users/settings');
       const settings = response.data.data.settings;
-      console.log(settings);
       for (const setting of settings) {
         if (setting.setting_key == "theme") {
           setTheme(setting.setting_value);
@@ -39,8 +38,6 @@ function Settings() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    console.log(theme, currency, abbreviateUserCounts);
 
     try {
       const response = await axios.post('/api/v1/users/settings', { 
@@ -72,7 +69,7 @@ function Settings() {
         </div>
       </div>
       <div id="settings-page">
-        <form id='login-form' onSubmit={handleSubmit}>
+        <form id='settings-form' onSubmit={handleSubmit}>
           <div className='setting-entry'>
             <h2>Theme</h2>
             <DropdownSelector 
