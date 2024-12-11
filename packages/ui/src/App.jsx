@@ -5,6 +5,7 @@ import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Settings from './pages/Settings';
+import Experiences from './pages/Experiences';
 import Account from './pages/Account';
 import NotFound from './pages/NotFound';
 
@@ -19,8 +20,9 @@ function App() {
             <Route path="register" element={<Register />}/>
 
             {/* Protected routes for logged in users */}
-            <Route path="dashboard/settings" element={<ProtectedRoute> <Settings/> </ProtectedRoute>}/>
-            <Route path="dashboard/account" element={<ProtectedRoute> <Account/> </ProtectedRoute>}/>
+            <Route path="dashboard/settings" element={<ProtectedRoute> <Settings /> </ProtectedRoute>}/>
+            <Route path="dashboard/account" element={<ProtectedRoute> <Account /> </ProtectedRoute>}/>
+            <Route path="dashboard/experiences" element={<ProtectedRoute> <Experiences /> </ProtectedRoute>}/>
 
             {/* Custom 404 Page */}
             <Route path="*" element={<NotFound />} />

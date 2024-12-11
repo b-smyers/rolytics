@@ -73,6 +73,7 @@ Portforward 443 traffic on your router to your server.
     - /settings
     - /feedback
     - /experiences
+        - /connect
         - /(Experience Name)
             - /(Server ID)
 
