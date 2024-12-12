@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import PageCrumb from '../components/PageCrumb';
-import BackButton from '../components/BackButton';
+import PageLayout from '../layouts/PageLayout';
 import './Dashboard.css';
 
 const Card = ({ icon, title, uri }) => {
@@ -17,38 +16,26 @@ const Card = ({ icon, title, uri }) => {
 
 function Dashboard() {
     return (
-    <div className='background'>
-      <div id='stars'/>
-      <div id="gradient">
-        <div id="header">
-          <div>
-            <BackButton/>
-            <PageCrumb/>
-          </div>
-          <h1>Dashboard</h1>
-        </div>
-      </div>
-      <div id="dashboard-page">
-          <Card
-            key={1}
-            icon={"/icons/bullet-list.svg"}
-            title={"Experiences"}
-            uri={"/dashboard/experiences"}
-          />
-          <Card
-            key={2}
-            icon={""}
-            title={"Account"}
-            uri={"/dashboard/account"}
-          />
-          <Card
-            key={3}
-            icon={"/icons/gear.svg"}
-            title={"Settings"}
-            uri={"/dashboard/settings"}
-          />
-      </div>
-    </div>
+      <PageLayout title={"Dashboard"}>
+        <Card
+          key={1}
+          icon={"/icons/bullet-list.svg"}
+          title={"Experiences"}
+          uri={"/dashboard/experiences"}
+        />
+        <Card
+          key={2}
+          icon={""}
+          title={"Account"}
+          uri={"/dashboard/account"}
+        />
+        <Card
+          key={3}
+          icon={"/icons/gear.svg"}
+          title={"Settings"}
+          uri={"/dashboard/settings"}
+        />
+      </PageLayout>
   )
 }
 

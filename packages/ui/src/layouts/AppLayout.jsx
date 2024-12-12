@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import Protected from '../components/Protected';
-import './Layout.css';
+import './AppLayout.css';
 
 const SidbarButton = ({ icon, name, uri }) => {
     const navigate = useNavigate();
@@ -22,7 +22,7 @@ const SidbarButton = ({ icon, name, uri }) => {
     )
 };
 
-function Layout() {
+function AppLayout() {
     const date = new Date();
     let year = date.getFullYear();
 
@@ -52,4 +52,4 @@ function Layout() {
     );
 }
 
-export default Layout;
+export default AppLayout;

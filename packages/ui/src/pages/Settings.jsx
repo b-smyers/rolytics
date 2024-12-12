@@ -5,6 +5,7 @@ import DropdownSelector from '../components/DropdownSelector';
 import ToggleSwitch from '../components/ToggleSwitch';
 import axios from 'axios';
 import './Settings.css';
+import PageLayout from '../layouts/PageLayout';
 
 function Settings() {
   const [theme, setTheme] = useState('Auto');
@@ -61,52 +62,40 @@ function Settings() {
   };
 
   return (
-    <div className='background'>
-      <div id='stars'/>
-      <div id="gradient">
-        <div id="header">
-          <div>
-            <BackButton/>
-            <PageCrumb/>
-          </div>
-          <h1>Settings</h1>
+    <PageLayout title={"Settings"}>
+      <form id='settings-form' onSubmit={handleSubmit}>
+        <div className='setting-entry'>
+          <h2>Theme</h2>
+          <DropdownSelector 
+            name={"Theme"} 
+            selected={theme} 
+            options={["Auto", "Light", "Dark"]}
+            onChange={(e) => setTheme(e.target.value)}
+          />
         </div>
-      </div>
-      <div id="settings-page">
-        <form id='settings-form' onSubmit={handleSubmit}>
-          <div className='setting-entry'>
-            <h2>Theme</h2>
-            <DropdownSelector 
-              name={"Theme"} 
-              selected={theme} 
-              options={["Auto", "Light", "Dark"]}
-              onChange={(e) => setTheme(e.target.value)}
-            />
-          </div>
-          <div className='setting-entry'>
-            <h2>Currency</h2>
-            <DropdownSelector 
-              name={"Currency"} 
-              selected={currency} 
-              options={["R$", "USD", "EUR"]}
-              onChange={(e) => setCurrency(e.target.value)}
-            />
-          </div>
-          <div className='setting-entry'>
-            <h2>Abbreviate User Counts</h2>
-            <ToggleSwitch
-              name={"Abbreviate User Counts"}
-              selected={abbreviateUserCounts}
-              onChange={(state) => setAbbreviateUserCounts(state)}  
-            />
-          </div>
-          <div className='setting-entry'>
-            <h2></h2>
-            <button id="save-settings-button" type="submit">Save Changes</button>
-          </div>
-        </form>
-      </div>
-    </div>
+        <div className='setting-entry'>
+          <h2>Currency</h2>
+          <DropdownSelector 
+            name={"Currency"} 
+            selected={currency} 
+            options={["R$", "USD", "EUR"]}
+            onChange={(e) => setCurrency(e.target.value)}
+          />
+        </div>
+        <div className='setting-entry'>
+          <h2>Abbreviate User Counts</h2>
+          <ToggleSwitch
+            name={"Abbreviate User Counts"}
+            selected={abbreviateUserCounts}
+            onChange={(state) => setAbbreviateUserCounts(state)}  
+          />
+        </div>
+        <div className='setting-entry'>
+          <h2></h2>
+          <button id="save-settings-button" type="submit">Save Changes</button>
+        </div>
+      </form>
+    </PageLayout>
   )
 }
 

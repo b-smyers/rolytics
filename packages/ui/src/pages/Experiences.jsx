@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import PageCrumb from '../components/PageCrumb';
-import BackButton from '../components/BackButton';
+import PageLayout from '../layouts/PageLayout';
 import axios from 'axios';
 import './Experiences.css';
 
@@ -44,33 +43,21 @@ function Experiences() {
   }, []);
 
   return (
-    <div className='background'>
-      <div id='stars'/>
-      <div id="gradient">
-        <div id="header">
-          <div>
-            <BackButton/>
-            <PageCrumb/>
-          </div>
-          <h1>Experiences</h1>
-        </div>
-      </div>
-      <div id="experiences-page">
-        {experienceCards.map((exp, i) => (
-          <ExperienceCard
-            key={i}
-            img={exp.img}
-            title={exp.title}
-            description={exp.description}
-            uri={exp.uri}
-          />
-        ))}
-        <button id='add-experience-card'>
-          <img src={"/icons/plus.svg"} alt={"Connect an experience"} />
-          <h3 id='experience-card-title'>Connect an Experience</h3>
-        </button>
-      </div>
-    </div>
+    <PageLayout title={"Experiences"}>
+      {experienceCards.map((exp, i) => (
+        <ExperienceCard
+          key={i}
+          img={exp.img}
+          title={exp.title}
+          description={exp.description}
+          uri={exp.uri}
+        />
+      ))}
+      <button id='add-experience-card'>
+        <img src={"/icons/plus.svg"} alt={"Connect an experience"} />
+        <h3 id='experience-card-title'>Connect an Experience</h3>
+      </button>
+    </PageLayout>
   )
 }
 

@@ -1,33 +1,3 @@
-#gradient {
-    z-index: 1;
-    width: 100%;
-    flex: 2;
-    background: linear-gradient(transparent, transparent, var(--theme-tertiary));
-}
-
-#header {
-    padding: 20px;
-
-    h1 {
-        padding-top: 10px;
-        font-size: 3em;
-    }
-
-    div {
-        display: flex;
-        align-items: center;
-    }
-}
-
-#dashboard-page {
-    z-index: 1;
-    width: 100%;
-    flex: 8;
-    background-color: var(--theme-tertiary);
-    display: flex;
-    flex-wrap: wrap;
-}
-
 .card {
     margin: 8px 0px 16px 16px;
     width: 250px;
