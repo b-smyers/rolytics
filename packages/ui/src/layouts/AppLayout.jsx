@@ -42,7 +42,7 @@ function AppLayout() {
                 </div>
                 <div className="sidebar-bottom">
                     <SidbarButton
-                        icon={null}
+                        icon={"/icons/missing.svg"}
                         name={"Register"}
                         uri={"/register"}
                         isThemed={true}
