@@ -55,8 +55,8 @@ async function register(req, res) {
         // email & username
         const userInfo = await usersdb.registerUser(username, email, password);
 
-        res.status(201).json({
-            code: 201,
+        res.status(200).json({
+            code: 200,
             status: 'success',
             data: {
                 message: 'Registration successful',

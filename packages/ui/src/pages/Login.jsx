@@ -23,8 +23,8 @@ function Login() {
 
     try {
       const response = await axios.post('/api/v1/auth/login', { 
-        username,
-        password
+        username: username,
+        password: password
       });
 
       if (response.status === 200) {

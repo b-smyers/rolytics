@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Register.css';
 
 function Register() {
+  const navigate = useNavigate();
+  
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -63,15 +66,24 @@ function Register() {
     if (!isFormValid) { return; }
 
     try {
-      const response = await axios.post('/api/v1/auth/register', { 
+      const registerResponse = await axios.post('/api/v1/auth/register', { 
         username: username,
         email: email,
         password: password
       });
 
-      if (response.status === 200) {
-        console.log(response.data.data.message);
-        document.location.href = '/login';
+      if (registerResponse.status === 200) {
+        console.log(registerResponse.data.data.message);
+      }
+
+      const loginResponse = await axios.post('/api/v1/auth/login', { 
+        username: username,
+        password: password
+      });
+
+      if (loginResponse.status === 200) {
+        console.log(loginResponse.data.data.message);
+        navigate('/dashboard');
       }
     } catch (error) {
       if (error.response && error.response.data && error.response.data.data) {
