@@ -66,6 +66,7 @@
     img {
         width: 35%;
         margin: 10px;
+        filter: var(--icon-filter);
     }
 }
 

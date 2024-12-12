@@ -47,6 +47,10 @@
     cursor: pointer;
 }
 
+.themed {
+    filter: var(--icon-filter);
+}
+
 .sidebar-icon {
     display: flex;
     width: calc(60px - 1em);
@@ -65,6 +69,21 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+}
+
+#stars {
+    z-index: 0;
+    top: -50%;
+    left: -50%;
+    height: 200%;
+    width: 200%;
+    position: fixed;
+    background-image: url('/icons/small-star.png');
+    background-repeat: repeat;
+    background-position: center;
+    background-size: 50px 50px;
+    transform: rotate(45deg);
+    filter: invert(100%) brightness(0.2);
 }
 
 .fill-page {

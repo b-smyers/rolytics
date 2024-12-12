@@ -5,4 +5,8 @@
     height: 50px;
     width: 50px;
     display: flex;
+    
+    img {
+        filter: var(--icon-filter);
+    }
 }

@@ -15,13 +15,15 @@
   --dark-bg-tertiary: #1b1c1f;
   --dark-text-primary: #ffffff;
   --dark-text-secondary: #969698;
+  --dark-icon-filter: brightness(0) saturate(100%) invert(92%) sepia(2%) saturate(98%) hue-rotate(202deg) brightness(98%) contrast(87%);
 
   /* Light theme */
   --light-bg-primary: #ededed;
-  --light-bg-secondary: #2d2e33;
+  --light-bg-secondary: #696969;
   --light-bg-tertiary: #d9d9da;
   --light-text-primary: #171717;
   --light-text-secondary: #3b3b3b;
+  --light-icon-filter: brightness(0) saturate(100%) invert(23%) sepia(7%) saturate(461%) hue-rotate(201deg) brightness(97%) contrast(89%);
 
   /* Chose theme dynamically */
   --theme-primary: light-dark(var(--light-bg-primary), var(--dark-bg-primary));
@@ -29,6 +31,8 @@
   --theme-tertiary: light-dark(var(--light-bg-tertiary), var(--dark-bg-tertiary));
   --text-primary: light-dark(var(--light-text-primary), var(--dark-text-primary));
   --text-secondary: light-dark(var(--light-text-secondary), var(--dark-text-secondary));
+  
+  --icon-filter: var(--light-icon-filter);
 
   color: var(--text-primary);
 
@@ -36,6 +40,12 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --icon-filter: var(--dark-icon-filter);
+  }
 }
 
 @font-face {
