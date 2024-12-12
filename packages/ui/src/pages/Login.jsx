@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Login.css';
 
 function Login() {
+  const navigate = useNavigate();
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
@@ -26,7 +29,7 @@ function Login() {
 
       if (response.status === 200) {
         console.log(response.data.data.message);
-        document.location.href = '/login';
+        navigate('/dashboard');
       }
 
     } catch (error) {
