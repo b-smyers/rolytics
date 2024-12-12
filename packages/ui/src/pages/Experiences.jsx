@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageCrumb from '../components/PageCrumb';
+import BackButton from '../components/BackButton';
 import axios from 'axios';
 import './Experiences.css';
 
@@ -47,7 +48,10 @@ function Experiences() {
       <div id='stars'/>
       <div id="gradient">
         <div id="header">
-          <PageCrumb/>
+          <div>
+            <BackButton/>
+            <PageCrumb/>
+          </div>
           <h1>Experiences</h1>
         </div>
       </div>

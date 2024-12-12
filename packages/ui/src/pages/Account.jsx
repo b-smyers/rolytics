@@ -1,4 +1,5 @@
 import PageCrumb from '../components/PageCrumb';
+import BackButton from '../components/BackButton';
 import './Account.css';
 
 function Account() {
@@ -7,7 +8,10 @@ function Account() {
       <div id='stars'/>
       <div id="gradient">
         <div id="header">
-          <PageCrumb/>
+          <div>
+            <BackButton/>
+            <PageCrumb/>
+          </div>
           <h1>Account</h1>
         </div>
       </div>

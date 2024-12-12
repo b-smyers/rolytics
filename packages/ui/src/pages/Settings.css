@@ -12,8 +12,12 @@
         padding-top: 10px;
         font-size: 3em;
     }
-}
 
+    div {
+        display: flex;
+        align-items: center;
+    }
+}
 #settings-page {
     z-index: 1;
     width: 100%;

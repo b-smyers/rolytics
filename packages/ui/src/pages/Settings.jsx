@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import PageCrumb from '../components/PageCrumb';
+import BackButton from '../components/BackButton';
 import DropdownSelector from '../components/DropdownSelector';
 import ToggleSwitch from '../components/ToggleSwitch';
 import axios from 'axios';
@@ -64,7 +65,10 @@ function Settings() {
       <div id='stars'/>
       <div id="gradient">
         <div id="header">
-          <PageCrumb/>
+          <div>
+            <BackButton/>
+            <PageCrumb/>
+          </div>
           <h1>Settings</h1>
         </div>
       </div>

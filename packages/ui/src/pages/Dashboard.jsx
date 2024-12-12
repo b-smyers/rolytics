@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import PageCrumb from '../components/PageCrumb';
+import BackButton from '../components/BackButton';
 import './Dashboard.css';
 
 const Card = ({ icon, title, uri }) => {
@@ -20,7 +21,10 @@ function Dashboard() {
       <div id='stars'/>
       <div id="gradient">
         <div id="header">
-          <PageCrumb/>
+          <div>
+            <BackButton/>
+            <PageCrumb/>
+          </div>
           <h1>Dashboard</h1>
         </div>
       </div>

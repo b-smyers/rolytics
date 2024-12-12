@@ -1,6 +1,17 @@
 #path-box {
     background-color: var(--theme-primary);
     padding: 5px 10px;
+    margin-left: 15px;
     border-radius: 15px;
+    height: 1.5em;
     width: fit-content;
+
+    u {
+        position: relative;
+        top: -1.5px; /* visually vertically center */
+    }
+
+    a {
+        padding-right: 5px;
+    }
 }
