@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import PageCrumb from '../components/PageCrumb';
 import './Account.css';
 
@@ -8,7 +7,7 @@ function Account() {
       <div id='stars'/>
       <div id="gradient">
         <div id="header">
-          <PageCrumb uri={'/dashboard/account'}/>
+          <PageCrumb/>
           <h1>Account</h1>
         </div>
       </div>

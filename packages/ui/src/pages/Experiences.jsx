@@ -47,7 +47,7 @@ function Experiences() {
       <div id='stars'/>
       <div id="gradient">
         <div id="header">
-          <PageCrumb uri={'/dashboard/experiences'}/>
+          <PageCrumb/>
           <h1>Experiences</h1>
         </div>
       </div>

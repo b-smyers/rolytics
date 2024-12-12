@@ -1,14 +1,16 @@
+import { useNavigate } from 'react-router-dom';
 import './PageCrumb.css';
 
-// Example: '/dashboard/experiences/servers'
-const PageCrumb = ({ uri }) => {
-    const pages = uri.split("/").filter(Boolean);
-    let currentPath = '';
+const PageCrumb = () => {
+    const navigate = useNavigate();
+    const navigateURI = (uri) => { navigate(uri)};
+
+    const pages = window.location.pathname.split("/").filter(Boolean);
 
     return (
         <div id="path-box">
         {pages.map((page, index) => {
-          currentPath += `/${page}`;
+          const currentPath = '/' + pages.slice(0, index + 1).join('/');
   
           const pageName = page.charAt(0).toUpperCase() + page.slice(1);
   
@@ -16,7 +18,7 @@ const PageCrumb = ({ uri }) => {
             <span key={index}>
               {index > 0 && ' > '}
               {index < pages.length - 1 ? (
-                <a href={currentPath}>{pageName}</a>
+                <a onClick={() => navigateURI(currentPath)} style={{ cursor: 'pointer' }}>{pageName}</a>
               ) : (
                 <u>{pageName}</u>
               )}

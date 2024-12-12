@@ -20,7 +20,7 @@ function Dashboard() {
       <div id='stars'/>
       <div id="gradient">
         <div id="header">
-          <PageCrumb uri={'/dashboard'}/>
+          <PageCrumb/>
           <h1>Dashboard</h1>
         </div>
       </div>

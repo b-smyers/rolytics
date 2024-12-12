@@ -64,7 +64,7 @@ function Settings() {
       <div id='stars'/>
       <div id="gradient">
         <div id="header">
-          <PageCrumb uri={'/dashboard/settings'}/>
+          <PageCrumb/>
           <h1>Settings</h1>
         </div>
       </div>
