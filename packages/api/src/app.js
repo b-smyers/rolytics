@@ -7,8 +7,8 @@ const bodyParser = require('body-parser');
 const app = express();
 app.set('trust proxy', 1);
 const limiter = rateLimit({
-    windowMs: 5 * 60 * 1000,
-    limit: 100,
+    windowMs: 1 * 60 * 1000, // 1 minute
+    limit: 60,               // 60 requests / 1 min
     standardHeaders: 'draft-7',
     legacyHeaders: false
 });
