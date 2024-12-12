@@ -32,13 +32,10 @@ function Layout() {
                 <div className="sidebar-top">
                     <SidbarButton icon={"/logos/rolytics.svg"} name={"Rolytics"} uri={""}/>
                     <Protected>
-                        <SidbarButton icon={"/icons/bullet-list.svg"} name={"Experiences"} uri={"dashboard/experiences"}/>
+                        <SidbarButton icon={"/icons/missing.svg"} name={"Dashboard"} uri={"dashboard"}/>
                     </Protected>
                 </div>
                 <div className="sidebar-bottom">
-                    <Protected>
-                        <SidbarButton icon={"/icons/gear.svg"} name={"Settings"} uri="dashboard/settings"/>
-                    </Protected>
                     <SidbarButton icon={null} name={"Register"} uri={"register"}/>
                     <SidbarButton icon={"/icons/login.svg"} name={"Login"} uri={"login"}/>
                 </div>
