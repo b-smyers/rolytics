@@ -24,7 +24,7 @@ async function loginUser(username, password) {
     const query = `SELECT * FROM users WHERE username = ?`;
     try {
         const row = await db.get(query, [username]);
-        if (!row) { return false; }
+        if (!row || !row.password) { return false; }
 
         const isPasswordCorrect = await bcrypt.compare(password, row.password);
         if (isPasswordCorrect) {
