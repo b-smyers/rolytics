@@ -13,9 +13,7 @@ const router = express.Router();
 router.post('/data', dataController.logData);
 
 // Analytics
-router.get('/analytics/gameplay',   analyticsController.getGameplay);
-router.get('/analytics/engagement', analyticsController.getEngagement);
-router.get('/analytics/retention',  analyticsController.getRetention);
+router.get('/analytics',   analyticsController.getAnalytics);
 
 // Performance
 router.get('/performance', performanceController.getPerformance);
