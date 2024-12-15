@@ -1,9 +1,10 @@
 CREATE TABLE IF NOT EXISTS experiences (
     user_id INTEGER,
-    experience_id TEXT,
+    universe_id INTEGER,
+    thumbnail_link TEXT,
+    page_link TEXT,
     title TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    api_key TEXT UNIQUE,
-    PRIMARY KEY (user_id, experience_id),
+    PRIMARY KEY (user_id, universe_id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );

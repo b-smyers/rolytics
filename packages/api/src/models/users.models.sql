@@ -3,5 +3,6 @@ CREATE TABLE IF NOT EXISTS users (
     username TEXT UNIQUE,
     email TEXT UNIQUE,
     password TEXT,
+    api_key TEXT UNIQUE,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );

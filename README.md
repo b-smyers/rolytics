@@ -89,6 +89,8 @@ Portforward 443 traffic on your router to your server.
         - /profile
         - /settings
     - /experiences
+        - /connect
+        - /disconnect
         - /analytics
             - gameplay
             - engagement

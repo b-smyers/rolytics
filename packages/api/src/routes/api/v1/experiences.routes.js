@@ -9,6 +9,10 @@ const socialController = require('@controllers/api/v1/experiences/social.control
 
 const router = express.Router();
 
+router.get('/', experiencesController.getExperiences);
+router.post('/connect', experiencesController.connectExperience);
+router.post('/disconnect', experiencesController.disconnectExperience);
+
 // Analytics
 router.get('/analytics', analyticsController.getAnalytics);
 
