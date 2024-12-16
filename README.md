@@ -79,6 +79,8 @@ Portforward 443 traffic on your router to your server.
 
 ## API Layout
 - /api/v1
+    - /roblox
+        - /place-details
     - /auth
         - /login
         - /register

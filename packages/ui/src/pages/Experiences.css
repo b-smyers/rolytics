@@ -20,9 +20,10 @@
 }
 
 .experience-card img {
-    width: 100%;
+    object-fit: cover;
     height: 60%;
     display: block;
+    overflow: hidden;
 }
 
 #experience-card-content {

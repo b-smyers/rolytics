@@ -1,6 +1,4 @@
 import { useState, useEffect } from 'react';
-import PageCrumb from '../components/PageCrumb';
-import BackButton from '../components/BackButton';
 import DropdownSelector from '../components/DropdownSelector';
 import ToggleSwitch from '../components/ToggleSwitch';
 import axios from 'axios';
@@ -91,7 +89,6 @@ function Settings() {
           />
         </div>
         <div className='setting-entry'>
-          <h2></h2>
           <button id="save-settings-button" type="submit">Save Changes</button>
         </div>
       </form>

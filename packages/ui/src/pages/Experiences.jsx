@@ -6,7 +6,7 @@ import './Experiences.css';
 
 const ExperienceCard = ({ img, title, description, uri }) => {
   const navigate = useNavigate();
-  const navigateURI = () => { navigate(`/${uri || '404'}`); };
+  const navigateURI = () => { navigate(`${uri || '/404'}`); };
 
   return (
     <button className={`experience-card`} onClick={navigateURI}>
@@ -25,8 +25,8 @@ function Experiences() {
   const loadExperiences = async () => {
     try {
       const response = await axios.get('/api/v1/experiences');
-      const experiences = response.data.data.experiences;
-      // Image, Title, Description, Uri
+      const experiences = response.data.data.data;
+      // Page Link, Image Link, Title, Description
 
       setExperienceCards(experiences);
     } catch (error) {
@@ -42,18 +42,21 @@ function Experiences() {
     loadExperiences();
   }, []);
 
+  const navigate = useNavigate();
+  const navigateURI = (uri) => { navigate(`${uri || '/404'}`); };
+
   return (
     <PageLayout title={"Experiences"}>
       {experienceCards.map((exp, i) => (
         <ExperienceCard
           key={i}
-          img={exp.img}
+          img={exp.thumbnail_link}
           title={exp.title}
           description={exp.description}
           uri={exp.uri}
         />
       ))}
-      <button id='add-experience-card'>
+      <button id='add-experience-card' onClick={() => navigateURI("/dashboard/experiences/connect")}>
         <img src={"/icons/plus.svg"} alt={"Connect an experience"} />
         <h3 id='experience-card-title'>Connect an Experience</h3>
       </button>
