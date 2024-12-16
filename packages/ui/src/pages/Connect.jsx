@@ -1,9 +1,12 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PageLayout from '../layouts/PageLayout';
 import axios from 'axios';
 import './Connect.css';
 
 function Connect() { 
+  const navigate = useNavigate();
+  
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [pageLink, setPageLink] = useState('');
@@ -59,8 +62,8 @@ function Connect() {
       if (response.status === 200) {
         console.log(response.data.data.message);
       }
-
-    } catch (error) {
+      navigate('/dashboard/experiences');
+} catch (error) {
       if (error.response && error.response.data && error.response.data.data) {
         console.log(error.response.data.data.message);
       } else {
