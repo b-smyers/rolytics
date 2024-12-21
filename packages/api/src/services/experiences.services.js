@@ -30,8 +30,19 @@ async function connectExperience(user_id, universe_id, thumbnail_link, page_link
     }
 }
 
+async function getExperienceCount(user_id) {
+    const query = `SELECT COUNT(*) AS count FROM experiences WHERE user_id = ?`;
+    try {
+        const result = await db.get(query, [user_id]);
+        return result.count;
+    } catch (error) {
+        throw new Error(`Unable to get user's experience count: ${error.message}`);
+    }
+}
+
 module.exports = {
     getExperiences,
     findExistingExperience,
-    connectExperience
+    connectExperience,
+    getExperienceCount
 }

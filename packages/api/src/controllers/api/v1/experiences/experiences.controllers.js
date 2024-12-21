@@ -59,7 +59,21 @@ async function connectExperience(req, res) {
             }
         });
     }
+    
+    // Check account experience cap
+    const experienceCount = await experiencesdb.getExperienceCount(userId);
+    
+    if (experienceCount >= 5) { // TODO: Arbitrary limit for now
+        return res.status(400).json({
+            code: 400,
+            status: 'error',
+            data: {
+                message: 'Experience connection limit reached'
+            }
+        });
+    }
 
+    // Check for pre-existing experience
     const existingExperience = await experiencesdb.findExistingExperience(userId, universe_id);
     
     if (existingExperience) {
