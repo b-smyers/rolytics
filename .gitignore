@@ -6,3 +6,7 @@ logs/
 
 # sqlite
 *.db
+
+# Development
+.editorconfig
+.vscode/
