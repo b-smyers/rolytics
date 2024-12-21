@@ -20,7 +20,7 @@ async function getExperiences(req, res) {
         status: 'success',
         data: {
             message: 'Experiences successfully retrieved',
-            data: rows
+            experiences: rows
         }
     })
 }

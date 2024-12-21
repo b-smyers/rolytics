@@ -25,15 +25,15 @@ function Experiences() {
   const loadExperiences = async () => {
     try {
       const response = await axios.get('/api/v1/experiences');
-      const experiences = response.data.data.data;
-      // Page Link, Image Link, Title, Description
+      const experiences = response.data.data.experiences;
+      // Page Link, Image Link, Title, Description, URI
 
       setExperienceCards(experiences);
     } catch (error) {
       if (error.response && error.response.data && error.response.data.data) {
         console.log(error.response.data.data.message);
       } else {
-        console.log('An unexpected error occurred');
+        console.log('An unexpected error occurred:', error);
       }
     }
   }
