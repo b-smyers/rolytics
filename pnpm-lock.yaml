@@ -23,6 +23,9 @@ importers:
       ajv:
         specifier: ^8.17.1
         version: 8.17.1
+      axios:
+        specifier: ^1.7.9
+        version: 1.7.9
       bcrypt:
         specifier: ^5.1.1
         version: 5.1.1(encoding@0.1.13)
