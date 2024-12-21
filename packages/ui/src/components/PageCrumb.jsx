@@ -5,7 +5,7 @@ const PageCrumb = () => {
     const navigate = useNavigate();
     const navigateURI = (uri) => { navigate(uri)};
 
-    const pages = window.location.pathname.split("/").filter(Boolean);
+    const pages = window.location.pathname.split("/").filter(Boolean).map(decodeURIComponent);;
 
     return (
         <div id="path-box">
