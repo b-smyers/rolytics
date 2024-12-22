@@ -60,7 +60,7 @@ function AppLayout() {
                     <Outlet />
                 </div>
                 <footer>
-                    <p>&copy;Rolytics {year}</p>
+                    <p>&copy;Rolytics {year} — Rolytics is not affiliated with or endorsed by Roblox Corporation — All trademarks and copyrights are the property of their respective owners.</p>
                 </footer>
             </div>
         </div>
