@@ -53,7 +53,7 @@ function Experiences() {
           img={exp.thumbnail_link}
           title={exp.title}
           description={exp.description}
-          uri={exp.uri}
+          uri={"/dashboard/experiences/" + (exp.title?.toString())}
         />
       ))}
       <button id='add-experience-card' onClick={() => navigateURI("/dashboard/experiences/connect")}>

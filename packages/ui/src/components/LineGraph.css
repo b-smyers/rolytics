@@ -1,0 +1,40 @@
+#graph-box {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--theme-primary);
+    border-radius: 16px;
+    height: 100%;
+}
+
+#graph-label {
+    padding: 10px 0 10px 20px;
+    font-size: 1.6em;
+}
+
+#graph-line {
+    stroke-width: 2px;
+}
+
+#graph-container {
+    width: 100%;
+    height: 500px;
+}
+
+#graph {
+    margin-left: -20px;
+}
+
+#themed {
+    stroke: var(--text-secondary);
+}
+
+#themed-text {
+    fill: var(--text-secondary);
+}
+
+#custom-tooltip {
+    background-color: var(--theme-secondary);
+    color: var(--text-primary);
+    border-radius: 8px;
+    padding: 10px;
+}
