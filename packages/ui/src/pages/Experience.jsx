@@ -116,14 +116,14 @@ function Experience() {
   const navigateURI = (uri) => { navigate(`${uri || '/404'}`); };
 
   // Default to first source
-  const [selectedSource, setSelectedSource] = useState(Object.keys(data)[0]);
+  const [selectedSource, setSelectedSource] = useState(Object.keys(data)[0] || 'none');
   // Default to first key of each source (don't show empty graph by default)
   const [selectedKeys, setSelectedKeys] = useState({
-    players: [data.players.keys[0]],
-    purchases: [data.purchases.keys[0]],
-    analytics: [data.analytics.keys[0]],
-    performance: [data.performance.keys[0]],
-    social: [data.social.keys[0]]
+    players: [data?.players?.keys[0] || []],
+    purchases: [data?.purchases?.keys[0] || []],
+    analytics: [data?.analytics?.keys[0] || []],
+    performance: [data?.performance?.keys[0] || []],
+    social: [data?.social?.keys[0] || []]
   });
 
   function handleSourceChange(e) {
@@ -202,24 +202,30 @@ function Experience() {
                 </div>
               ))
             ) : (
-              <p>No metrics available</p>
+              <div style={{ height: "90%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                <p>No metrics available</p>
+              </div>
             )}
           </div>
         </div>
-        <div className="row" id="trend-indicators">
-          {data[selectedSource]?.keys?.length && data[selectedSource]?.data?.length ? (
-            data[selectedSource].keys.map((key, i) => (
-              <TrendIndicator
-                key={i}
-                label={toDisplayString(key)}
-                past={data[selectedSource].data[0][key]} // TODO: Determine if we should use 2nd newest point or oldest point or average of past points
-                current={data[selectedSource].data[data[selectedSource].data.length - 1][key]}
-                upIsGood={true}
-                delta={5}
-              />
-            ))
+        <div className="row">
+          {data[selectedSource]?.keys?.length > 0 && data[selectedSource]?.data?.length > 0 ? (
+            <div id="trend-indicators">
+              {data[selectedSource].keys.map((key, i) => (
+                <TrendIndicator
+                  key={i}
+                  label={toDisplayString(key)}
+                  past={data[selectedSource].data[0][key]} // Use the 2nd newest point, oldest point, or average based on your TODO decision
+                  current={data[selectedSource].data[data[selectedSource].data.length - 1][key]}
+                  upIsGood={true}
+                  delta={5}
+                />
+              ))}
+            </div>
           ) : (
-            <p>No trend data available</p>
+            <div style={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+              <p>No trend data available</p>
+            </div>
           )}
         </div>
         <div className="row">
