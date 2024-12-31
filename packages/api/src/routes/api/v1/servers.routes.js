@@ -1,5 +1,6 @@
 const express = require('express');
 
+const serversController     = require('@controllers/api/v1/servers/servers.controllers');
 const dataController        = require('@controllers/api/v1/servers/data.controllers');
 const analyticsController   = require('@controllers/api/v1/servers/analytics.controllers');
 const performanceController = require('@controllers/api/v1/servers/performance.controllers');
@@ -8,6 +9,8 @@ const purchasesController   = require('@controllers/api/v1/servers/purchases.con
 const socialController      = require('@controllers/api/v1/servers/social.controllers');
 
 const router = express.Router();
+
+router.get('/', serversController.getServers);
 
 // Data
 router.post('/data', dataController.logData);

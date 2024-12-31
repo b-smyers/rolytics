@@ -4,7 +4,7 @@ import PageLayout from '../layouts/PageLayout';
 import axios from 'axios';
 import './Experiences.css';
 
-const ExperienceCard = ({ img, title, description, uri }) => {
+const ExperienceCard = ({ img, name, description, uri }) => {
   const navigate = useNavigate();
   const navigateURI = () => { navigate(`${uri || '/404'}`); };
 
@@ -12,7 +12,7 @@ const ExperienceCard = ({ img, title, description, uri }) => {
     <button className={`experience-card`} onClick={navigateURI}>
       <img src={img || "/icons/missing.svg"} alt={img} />
       <div id='experience-card-content'>
-        <h3 id='experience-card-title'>{title || "No title"}</h3>
+        <h3 id='experience-card-title'>{name || "No name"}</h3>
         <p id='experience-card-description'>{description || "No description"}</p>
       </div>
     </button>
@@ -26,7 +26,7 @@ function Experiences() {
     try {
       const response = await axios.get('/api/v1/experiences');
       const experiences = response.data.data.experiences;
-      // Page Link, Image Link, Title, Description, URI
+      // Page Link, Image Link, Name, Description, URI
 
       setExperienceCards(experiences);
     } catch (error) {
@@ -51,9 +51,9 @@ function Experiences() {
         <ExperienceCard
           key={i}
           img={exp.thumbnail_link}
-          title={exp.title}
+          name={exp.name}
           description={exp.description}
-          uri={"/dashboard/experiences/" + (exp.title?.toString())}
+          uri={"/dashboard/experiences/" + (exp.name?.toString())}
         />
       ))}
       <button id='add-experience-card' onClick={() => navigateURI("/dashboard/experiences/connect")}>

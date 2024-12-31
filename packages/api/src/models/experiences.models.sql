@@ -1,12 +1,12 @@
 CREATE TABLE IF NOT EXISTS experiences (
+    id INTEGER, -- External ID
     user_id INTEGER,
-    place_id INTEGER,
-    universe_id INTEGER,
-    thumbnail_link TEXT,
+    name VARCHAR(50), -- Roblox enforced limit
+    description VARCHAR(1000), -- Roblox enforced limit
     page_link TEXT,
-    title TEXT,
-    description CHAR(1024),
+    thumbnail_link TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (user_id, universe_id),
+
+    PRIMARY KEY (id, user_id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );

@@ -2,62 +2,70 @@ const getDatabase = require('@services/sqlite.services');
 let db;
 (async function() { db = await getDatabase() })()
 
-async function writePayload(payload) {
-    const {
-        purchases,
-        performance,
-        social,
-        players,
-        metadata
-    } = payload;
+async function createServer(id, place_id, name) {
+    const query = `INSERT INTO servers (id, place_id, name) VALUES (?, ?, ?)`;
 
-    const experienceId = metadata.game.id;
-    const serverId = metadata.server.id;
-    const timestamp = metadata.timestamp || new Date();
-
-    const query = `INSERT INTO analytics 
-        (experience_id, server_id, timestamp, purchases, performance, social, players, metadata) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-    
     try {
-        await db.run(query, [
-            experienceId, 
-            serverId, 
-            timestamp, 
-            JSON.stringify(purchases),
-            JSON.stringify(performance), 
-            JSON.stringify(social), 
-            JSON.stringify(players), 
-            JSON.stringify(metadata)
-        ]);
-        console.log('Payload data logged');
+        const result = await db.run(query, [id, place_id, name]);
+
+        return result;
     } catch (error) {
-        console.error(`An error occured writing payload: ${error.message}`);
+        console.error(`An error occured creating server: ${error.message}`);
     }
 }
 
-async function getServerMetrics(serverId) {
-    const query = `SELECT * FROM analytics WHERE server_id = ? LIMIT 10`;
+async function deleteServer(id) {
+    const query = `DELETE FROM servers WHERE id = ?`;
 
     try {
-        const result = await db.all(query, [serverId]);
+        const result = await db.run(query, [id]);
 
-        const parsedResult = result.map(row => ({
-            ...row,
-            purchases: JSON.parse(row.purchases),
-            performance: JSON.parse(row.performance),
-            social: JSON.parse(row.social),
-            players: JSON.parse(row.players),
-            metadata: JSON.parse(row.metadata)
-        }));
-
-        return parsedResult;
+        return result;
     } catch (error) {
-        console.error(`An error occured getting server metrics: ${error.message}`);
+        console.error(`An error occured deleting server: ${error.message}`);
+    }
+}
+
+async function updateServer(id, name) {
+    const query = `UPDATE servers SET name = ? WHERE id = ?`;
+
+    try {
+        const result = await db.run(query, [name, id]);
+
+        return result;
+    } catch (error) {
+        console.error(`An error occured updating server: ${error.message}`);
+    }
+}
+
+async function getServerById(id) {
+    const query = `SELECT * FROM servers WHERE id = ?`;
+
+    try {
+        const result = await db.get(query, [id]);
+
+        return result;
+    } catch (error) {
+        console.error(`An error occured getting server by id: ${error.message}`);
+    }
+}
+
+async function getServersByPlaceId(place_id, limit = 10) {
+    const query = `SELECT * FROM servers WHERE place_id = ? LIMIT ${limit}`;
+
+    try {
+        const result = await db.all(query, [place_id]);
+
+        return result;
+    } catch (error) {
+        console.error(`An error occured getting server by place id: ${error.message}`);
     }
 }
 
 module.exports = {
-    writePayload,
-    getServerMetrics
+    createServer,
+    deleteServer,
+    updateServer,
+    getServerById,
+    getServersByPlaceId
 }

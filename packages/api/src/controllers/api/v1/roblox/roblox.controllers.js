@@ -15,9 +15,9 @@ async function getPlaceDetails(req, res) {
 
     try {
         // Step 1: Get Universe ID from the Place ID
-        const universeId = await axios.get(`https://apis.roblox.com/universes/v1/places/${placeId}/universe`, {
+        const experienceId = await axios.get(`https://apis.roblox.com/universes/v1/places/${placeId}/universe`, {
             headers: { 'accept': 'application/json' }
-        }).then(response => response.data.universeId)
+        }).then(response => response.data.universeId) // Experience ID == Universe ID
           .catch(error => {
             console.error("Error fetching Universe ID:", {
                 message: error.message,
@@ -31,12 +31,12 @@ async function getPlaceDetails(req, res) {
             });
         });
 
-        // Step 2: Get Title and Description
+        // Step 2: Get Name and Description
         // DOCS: https://develop.roblox.com//docs/index.html
-        let title = "";
+        let name = "";
         let description = "";
-        if (universeId) {
-            const universeData = await axios.get(`https://develop.roblox.com/v1/universes/${universeId}`, {
+        if (experienceId) {
+            const experienceData = await axios.get(`https://develop.roblox.com/v1/universes/${experienceId}`, {
                 headers: { 'accept': 'application/json' }
             }).then(response => response.data)
             .catch(error => {
@@ -47,15 +47,15 @@ async function getPlaceDetails(req, res) {
                 });
                 return { name: "", description: "" };
             });
-            title = universeData.name;
-            description = universeData.description;
+            name = experienceData.name;
+            description = experienceData.description;
         }
 
         // Step 3: Get thumbnails (media) for the Universe ID
         // DOCS: https://games.roblox.com//docs/index.html
         let imageIds = [];
-        if (universeId) {
-            imageIds = await axios.get(`https://games.roblox.com/v2/games/${universeId}/media`, {
+        if (experienceId) {
+            imageIds = await axios.get(`https://games.roblox.com/v2/games/${experienceId}/media`, {
                 headers: { 'accept': 'application/json' }
             }).then(response => response.data.data.map(item => item.imageId))
             .catch(error => {
@@ -73,7 +73,7 @@ async function getPlaceDetails(req, res) {
         let imageUrl = [];
         if (imageIds.length > 0) {
             const imageSize = '768x432'; // 768x432, 576x324, 480x270, 384x216, 256x144
-            imageUrl = await axios.get(`https://thumbnails.roblox.com/v1/games/${universeId}/thumbnails`, {
+            imageUrl = await axios.get(`https://thumbnails.roblox.com/v1/games/${experienceId}/thumbnails`, {
                 headers: { 'accept': 'application/json' },
                 params: {
                     thumbnailIds: imageIds[0], // Get only the first thumbnail
@@ -97,9 +97,9 @@ async function getPlaceDetails(req, res) {
             status: 'success',
             data: {
                 placeId,
-                title,
+                name,
                 description,
-                universeId,
+                experienceId,
                 thumbnails: imageUrl
             }
         });

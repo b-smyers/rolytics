@@ -7,11 +7,11 @@ import './Connect.css';
 function Connect() { 
   const navigate = useNavigate();
   
-  const [title, setTitle] = useState('');
+  const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [pageLink, setPageLink] = useState('');
   const [placeId, setPlaceId] = useState('');
-  const [universeId, setUniverseId] = useState('');
+  const [experienceId, setExperienceId] = useState('');
   const [thumbnailLink, setThumbnailLink] = useState('/icons/missing.svg');
   const [isFormValid, setIsFormValid] = useState(false);
 
@@ -21,7 +21,7 @@ function Connect() {
 
     const id = link.match(/(?<=roblox\.com\/games\/)[0-9]+/);
 
-    if (!id || !id[0]) { setIsFormValid(false); setPlaceId(''); setUniverseId(''); setTitle(''); setDescription(''); setThumbnailLink('/icons/missing.svg'); return; }
+    if (!id || !id[0]) { setIsFormValid(false); setPlaceId(''); setExperienceId(''); setName(''); setDescription(''); setThumbnailLink('/icons/missing.svg'); return; }
     if (id[0] == placeId) { return; } // Avoid uneccessary requests
     setPlaceId(id[0]);
 
@@ -32,9 +32,9 @@ function Connect() {
       const data = response.data.data;
 
       setThumbnailLink(data.thumbnails[0] || '/icons/missing.svg');
-      setTitle(data.title || "Game Not Found");
+      setName(data.name || "Game Not Found");
       setDescription(data.description || "No description available.");
-      setUniverseId(data.universeId || "");
+      setExperienceId(data.experienceId || "");
 
       setIsFormValid(true);
     } catch (error) {
@@ -53,9 +53,9 @@ function Connect() {
       const response = await axios.post('/api/v1/experiences/connect', {
         page_link: pageLink, 
         place_id: placeId,
-        universe_id: universeId,
+        experience_id: experienceId,
         thumbnail_link: thumbnailLink,
-        title: title,
+        name: name,
         description: description
       });
 
@@ -107,8 +107,8 @@ function Connect() {
             name="universe-id"
             id="universe-id"
             placeholder="Universe ID"
-            value={universeId}
-            onChange={(e) => setUniverseId(e.target.value)}
+            value={experienceId}
+            onChange={(e) => setExperienceId(e.target.value)}
             disabled
           />
         </div>
@@ -122,7 +122,7 @@ function Connect() {
           <img src={thumbnailLink} />
         </div>
         <div id='title-box'>
-          <h2>{title}</h2>
+          <h2>{name}</h2>
           <a href={pageLink}>Game Page</a>
         </div>
         <p>{description ? description : <small>No description</small>}</p>

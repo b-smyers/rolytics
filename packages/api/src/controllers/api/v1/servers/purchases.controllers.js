@@ -1,4 +1,4 @@
-const serverService = require('@services/servers.services');
+const analyticsService = require('@services/analytics.services');
 
 async function getPurchases(req, res) {
     const { serverId } = req.body;
@@ -13,7 +13,7 @@ async function getPurchases(req, res) {
         });
     }
 
-    const rows = await serverService.getServerMetrics(serverId);
+    const rows = await analyticsService.getAnalyticsByServerId(serverId);
 
     const purchasesData = rows.map(row => {
         return row.purchases;

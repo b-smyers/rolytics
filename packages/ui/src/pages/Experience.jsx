@@ -14,106 +14,113 @@ async function experienceExists(title) {
     const response = await axios.get('/api/v1/experiences');
     const experiences = response.data.data.experiences;
     
-    for (const experience of experiences) {
-      if (experience.title === title) { exists = true; }
-    }
+    exists = experiences.some(experience => experience.name === title);
   } catch (error) {
     if (error.response && error.response.data && error.response.data.data) {
       console.log(error.response.data.data.message);
     } else {
-      console.log('An unexpected error occurred:', error);
+      console.log('An unexpected error occurred:', error.status);
     }
   }
-
   return exists;
 }
 
-const data = {
-  players: {
-    keys: ["active", "free", "premium", "returning"],
-    data: [
-      { time: '-2:00', active: 20, free: 10, premium: 9, returning: 18 },
-      { time: '-1:45', active: 30, free: 20, premium: 7, returning: 12 },
-      { time: '-1:30', active: 25, free: 15, premium: 4, returning: 10 },
-      { time: '-1:15', active: 15, free: 10, premium: 7, returning: 11 },
-      { time: '-1:00', active: 20, free: 15, premium: 4, returning: 10 },
-      { time: '-0:45', active: 50, free: 30, premium: 5, returning: 12 },
-      { time: '-0:30', active: 60, free: 50, premium: 2, returning: 26 },
-      { time: '-0:15', active: 44, free: 40, premium: 1, returning: 12 },
-      { time: '0:00', active: 55, free: 50, premium: 0, returning: 22 }
-    ]
-  },
-  purchases: {
-    keys: ["dev-products", "subscriptions", "passes"],
-    data: [
-      { time: '-2:00', "dev-products": 1, subscriptions: 0, passes: 9},
-      { time: '-1:45', "dev-products": 2, subscriptions: 0, passes: 7},
-      { time: '-1:30', "dev-products": 1, subscriptions: 0, passes: 4},
-      { time: '-1:15', "dev-products": 3, subscriptions: 1, passes: 7},
-      { time: '-1:00', "dev-products": 1, subscriptions: 1, passes: 4},
-      { time: '-0:45', "dev-products": 3, subscriptions: 0, passes: 5},
-      { time: '-0:30', "dev-products": 6, subscriptions: 0, passes: 2},
-      { time: '-0:15', "dev-products": 4, subscriptions: 0, passes: 1},
-      { time: '0:00', "dev-products": 5, subscriptions: 1, passes: 0}
-    ]
-  },
-  analytics: {
-    keys: ["retention", "engagement", "gameplay"],
-    data: [
-      { time: '-2:00', retention: 1, engagement: 0, gameplay: 9},
-      { time: '-1:45', retention: 2, engagement: 0, gameplay: 7},
-      { time: '-1:30', retention: 1, engagement: 0, gameplay: 4},
-      { time: '-1:15', retention: 3, engagement: 1, gameplay: 7},
-      { time: '-1:00', retention: 1, engagement: 1, gameplay: 4},
-      { time: '-0:45', retention: 3, engagement: 0, gameplay: 5},
-      { time: '-0:30', retention: 6, engagement: 0, gameplay: 2},
-      { time: '-0:15', retention: 4, engagement: 0, gameplay: 1},
-      { time: '0:00', retention: 5, engagement: 1, gameplay: 0}
-    ]
-  },
-  performance: {
-    keys: ["fps", "memory", "memory","memory","memory", "data-receive", "data-send", "heartbeat", "instances", "primitives", "moving-primitives", "physics-receive", "physics-send", "physics-step"],
-    data: [
-      { time: '-2:00', "fps": 60, "memory": 1125, "data-receive": 1, "data-send": 1, "heartbeat": 52, "instances": 1, "primitives": 1, "moving-primitives": 1, "physics-receive": 1, "physics-send": 1, "physics-step": 1},
-      { time: '-1:45', "fps": 59, "memory": 1105, "data-receive": 1, "data-send": 1, "heartbeat": 58, "instances": 1, "primitives": 1, "moving-primitives": 1, "physics-receive": 1, "physics-send": 1, "physics-step": 1},
-      { time: '-1:30', "fps": 58, "memory": 1055, "data-receive": 1, "data-send": 1, "heartbeat": 56, "instances": 1, "primitives": 1, "moving-primitives": 1, "physics-receive": 1, "physics-send": 1, "physics-step": 1},
-      { time: '-1:15', "fps": 60, "memory": 1035, "data-receive": 1, "data-send": 1, "heartbeat": 56, "instances": 1, "primitives": 1, "moving-primitives": 1, "physics-receive": 1, "physics-send": 1, "physics-step": 1},
-      { time: '-1:00', "fps": 57, "memory": 1095, "data-receive": 1, "data-send": 1, "heartbeat": 56, "instances": 1, "primitives": 1, "moving-primitives": 1, "physics-receive": 1, "physics-send": 1, "physics-step": 1},
-      { time: '-0:45', "fps": 56, "memory": 1105, "data-receive": 1, "data-send": 1, "heartbeat": 52, "instances": 1, "primitives": 1, "moving-primitives": 1, "physics-receive": 1, "physics-send": 1, "physics-step": 1},
-      { time: '-0:30', "fps": 60, "memory": 1225, "data-receive": 1, "data-send": 1, "heartbeat": 58, "instances": 1, "primitives": 1, "moving-primitives": 1, "physics-receive": 1, "physics-send": 1, "physics-step": 1},
-      { time: '-0:15', "fps": 61, "memory": 1125, "data-receive": 1, "data-send": 1, "heartbeat": 84, "instances": 1, "primitives": 1, "moving-primitives": 1, "physics-receive": 1, "physics-send": 1, "physics-step": 1},
-      { time: '0:00', "fps": 61, "memory": 1025, "data-receive": 1, "data-send": 1, "heartbeat": 58, "instances": 1, "primitives": 1, "moving-primitives": 1, "physics-receive": 1, "physics-send": 1, "physics-step": 1},
-    ]
-  },
-  social: {
-    keys: ["chats", "friend-requests", "invites"],
-    data: [
-      { time: '-2:00', chats: 10, "friend-requests": 2, invites: 9},
-      { time: '-1:45', chats: 20, "friend-requests": 3, invites: 7},
-      { time: '-1:30', chats: 10, "friend-requests": 1, invites: 4},
-      { time: '-1:15', chats: 30, "friend-requests": 2, invites: 7},
-      { time: '-1:00', chats: 10, "friend-requests": 1, invites: 4},
-      { time: '-0:45', chats: 30, "friend-requests": 0, invites: 5},
-      { time: '-0:30', chats: 60, "friend-requests": 1, invites: 2},
-      { time: '-0:15', chats: 40, "friend-requests": 0, invites: 1},
-      { time: '0:00', chats: 50, "friend-requests": 2, invites: 0}
-    ]
-  },
-};
+// const data = {
+//   players: {
+//     keys: ["active", "free", "premium", "returning"],
+//     data: [
+//       { time: '-2:00', active: 20, free: 10, premium: 9, returning: 18 },
+//       { time: '-1:45', active: 30, free: 20, premium: 7, returning: 12 },
+//       { time: '-1:30', active: 25, free: 15, premium: 4, returning: 10 },
+//       { time: '-1:15', active: 15, free: 10, premium: 7, returning: 11 },
+//       { time: '-1:00', active: 20, free: 15, premium: 4, returning: 10 },
+//       { time: '-0:45', active: 50, free: 30, premium: 5, returning: 12 },
+//       { time: '-0:30', active: 60, free: 50, premium: 2, returning: 26 },
+//       { time: '-0:15', active: 44, free: 40, premium: 1, returning: 12 },
+//       { time: '0:00', active: 55, free: 50, premium: 0, returning: 22 }
+//     ]
+//   },
+//   purchases: {
+//     keys: ["dev-products", "subscriptions", "passes"],
+//     data: [
+//       { time: '-2:00', "dev-products": 1, subscriptions: 0, passes: 9},
+//       { time: '-1:45', "dev-products": 2, subscriptions: 0, passes: 7},
+//       { time: '-1:30', "dev-products": 1, subscriptions: 0, passes: 4},
+//       { time: '-1:15', "dev-products": 3, subscriptions: 1, passes: 7},
+//       { time: '-1:00', "dev-products": 1, subscriptions: 1, passes: 4},
+//       { time: '-0:45', "dev-products": 3, subscriptions: 0, passes: 5},
+//       { time: '-0:30', "dev-products": 6, subscriptions: 0, passes: 2},
+//       { time: '-0:15', "dev-products": 4, subscriptions: 0, passes: 1},
+//       { time: '0:00', "dev-products": 5, subscriptions: 1, passes: 0}
+//     ]
+//   },
+//   analytics: {
+//     keys: ["retention", "engagement", "gameplay"],
+//     data: [
+//       { time: '-2:00', retention: 1, engagement: 0, gameplay: 9},
+//       { time: '-1:45', retention: 2, engagement: 0, gameplay: 7},
+//       { time: '-1:30', retention: 1, engagement: 0, gameplay: 4},
+//       { time: '-1:15', retention: 3, engagement: 1, gameplay: 7},
+//       { time: '-1:00', retention: 1, engagement: 1, gameplay: 4},
+//       { time: '-0:45', retention: 3, engagement: 0, gameplay: 5},
+//       { time: '-0:30', retention: 6, engagement: 0, gameplay: 2},
+//       { time: '-0:15', retention: 4, engagement: 0, gameplay: 1},
+//       { time: '0:00', retention: 5, engagement: 1, gameplay: 0}
+//     ]
+//   },
+//   performance: {
+//     keys: ["fps", "memory", "memory","memory","memory", "data-receive", "data-send", "heartbeat", "instances", "primitives", "moving-primitives", "physics-receive", "physics-send", "physics-step"],
+//     data: [
+//       { time: '-2:00', "fps": 60, "memory": 1125, "data-receive": 1, "data-send": 1, "heartbeat": 52, "instances": 1, "primitives": 1, "moving-primitives": 1, "physics-receive": 1, "physics-send": 1, "physics-step": 1},
+//       { time: '-1:45', "fps": 59, "memory": 1105, "data-receive": 1, "data-send": 1, "heartbeat": 58, "instances": 1, "primitives": 1, "moving-primitives": 1, "physics-receive": 1, "physics-send": 1, "physics-step": 1},
+//       { time: '-1:30', "fps": 58, "memory": 1055, "data-receive": 1, "data-send": 1, "heartbeat": 56, "instances": 1, "primitives": 1, "moving-primitives": 1, "physics-receive": 1, "physics-send": 1, "physics-step": 1},
+//       { time: '-1:15', "fps": 60, "memory": 1035, "data-receive": 1, "data-send": 1, "heartbeat": 56, "instances": 1, "primitives": 1, "moving-primitives": 1, "physics-receive": 1, "physics-send": 1, "physics-step": 1},
+//       { time: '-1:00', "fps": 57, "memory": 1095, "data-receive": 1, "data-send": 1, "heartbeat": 56, "instances": 1, "primitives": 1, "moving-primitives": 1, "physics-receive": 1, "physics-send": 1, "physics-step": 1},
+//       { time: '-0:45', "fps": 56, "memory": 1105, "data-receive": 1, "data-send": 1, "heartbeat": 52, "instances": 1, "primitives": 1, "moving-primitives": 1, "physics-receive": 1, "physics-send": 1, "physics-step": 1},
+//       { time: '-0:30', "fps": 60, "memory": 1225, "data-receive": 1, "data-send": 1, "heartbeat": 58, "instances": 1, "primitives": 1, "moving-primitives": 1, "physics-receive": 1, "physics-send": 1, "physics-step": 1},
+//       { time: '-0:15', "fps": 61, "memory": 1125, "data-receive": 1, "data-send": 1, "heartbeat": 84, "instances": 1, "primitives": 1, "moving-primitives": 1, "physics-receive": 1, "physics-send": 1, "physics-step": 1},
+//       { time: '0:00', "fps": 61, "memory": 1025, "data-receive": 1, "data-send": 1, "heartbeat": 58, "instances": 1, "primitives": 1, "moving-primitives": 1, "physics-receive": 1, "physics-send": 1, "physics-step": 1},
+//     ]
+//   },
+//   social: {
+//     keys: ["chats", "friend-requests", "invites"],
+//     data: [
+//       { time: '-2:00', chats: 10, "friend-requests": 2, invites: 9},
+//       { time: '-1:45', chats: 20, "friend-requests": 3, invites: 7},
+//       { time: '-1:30', chats: 10, "friend-requests": 1, invites: 4},
+//       { time: '-1:15', chats: 30, "friend-requests": 2, invites: 7},
+//       { time: '-1:00', chats: 10, "friend-requests": 1, invites: 4},
+//       { time: '-0:45', chats: 30, "friend-requests": 0, invites: 5},
+//       { time: '-0:30', chats: 60, "friend-requests": 1, invites: 2},
+//       { time: '-0:15', chats: 40, "friend-requests": 0, invites: 1},
+//       { time: '0:00', chats: 50, "friend-requests": 2, invites: 0}
+//     ]
+//   },
+// };
 
-const servers = [
-  { name: "Server 1", age: "2:00" },
-  { name: "Server 2", age: "1:45" },
-  { name: "Server 3", age: "1:30" }
-];
+// const servers = [
+//   { name: "Server 1", age: "2:00" },
+//   { name: "Server 2", age: "1:45" },
+//   { name: "Server 3", age: "1:30" }
+// ];
 
-function toDisplayString(key) {
+function toDisplayString(key = "Missing") {
   return key.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 }
 
 function Experience() {
   const navigate = useNavigate();
   const navigateURI = (uri) => { navigate(`${uri || '/404'}`); };
+
+  const [data, setData] = useState({
+    players: { keys: [], data: [] },
+    purchases: { keys: [], data: [] },
+    analytics: { keys: [], data: [] },
+    performance: { keys: [], data: [] },
+    social: { keys: [], data: [] }
+  });
+
+  const [servers, setServers] = useState([]);
 
   // Default to first source
   const [selectedSource, setSelectedSource] = useState(Object.keys(data)[0] || 'none');
@@ -126,22 +133,10 @@ function Experience() {
     social: [data?.social?.keys[0] || []]
   });
 
-  function handleSourceChange(e) {
-    const { name } = e.target;
-    setSelectedSource(name);
-  }
-
-  function handleKeyChange(e) {
-    const { name, checked } = e.target;
-    const newKeys = checked
-      ? [...selectedKeys[selectedSource], name]
-      : selectedKeys[selectedSource].filter(key => key !== name);
-    setSelectedKeys({ ...selectedKeys, [selectedSource]: newKeys });
-  }
-  
   const { title } = useParams();
 
   const checkExperience = useCallback(async () => {
+    // redirect to experiences page if experience does not exist
     if (!(await experienceExists(title))) {
       navigate('/dashboard/experiences');
     }
@@ -151,6 +146,72 @@ function Experience() {
     checkExperience();
   }, [checkExperience]);
 
+  useEffect(() => {
+    // Load data from initally selected source
+    // All other data will be loaded ONCE when the source is changed (further updates will be updated from the refresh button)
+    const fetchData = async () => {
+      // Get analytics data
+      try {
+        const response = await axios.get(`/api/v1/experiences/${selectedSource}?name=${title}`);
+        const { analytics: responseAnalytics } = response.data.data;
+
+        setData({ ...data, [selectedSource]: responseAnalytics });
+      } catch (error) {
+        if (error.response && error.response.data && error.response.data.data) {
+          console.log(error.response.data.data.message);
+        } else {
+          console.log('An unexpected error occurred:', error.status);
+        }
+      }
+      // Get server data
+      try {
+        const response = await axios.get(`/api/v1/servers`);
+        const { servers: responseServers } = response.data.data;
+
+        setServers(responseServers);
+      } catch (error) {
+        if (error.response && error.response.data && error.response.data.data) {
+          console.log(error.response.data.data.message);
+        } else {
+          console.log('An unexpected error occurred:', error.status);
+        }
+      }
+    }
+    fetchData();
+  }, [data, title, servers]);
+
+
+  function handleSourceChange(e) {
+    const { name } = e.target;
+    // Fetch data for the new source if it hasn't been fetched yet
+    if (!data[name]) {
+      const fetchData = async () => {
+        try {
+          const response = await axios.get(`/api/v1/experiences/${name}?name=${title}`);
+          const { metrics: responseMetrics } = response.data.data;
+
+          setData({ ...data, [source]: responseMetrics });
+        } catch (error) {
+          if (error.response && error.response.data && error.response.data.data) {
+            console.log(error.response.data.data.message);
+          } else {
+            console.log('An unexpected error occurred:', error);
+          }
+        }
+      }
+      fetchData();
+    }
+    setSelectedSource(name);
+  }
+
+  function handleKeyChange(e) {
+    const { metric, checked } = e.target;
+    const newKeys = checked
+      ? [...selectedKeys[selectedSource], metric]
+      : selectedKeys[selectedSource].filter(key => key !== metric);
+    setSelectedKeys({ ...selectedKeys, [selectedSource]: newKeys });
+  }
+  
   return (
     <PageLayout title={title}>
       <div id='experience-page'>
@@ -195,7 +256,7 @@ function Experience() {
                   <input
                     type="checkbox"
                     checked={selectedKeys[selectedSource]?.includes(key) || false}
-                    name={key}
+                    metric={key}
                     onChange={handleKeyChange}
                   />
                   <label id="metric-label">{toDisplayString(key)}</label>

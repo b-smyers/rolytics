@@ -3,7 +3,7 @@ const getDatabase = require('@services/sqlite.services');
 let db;
 (async function() { db = await getDatabase() })()
 
-async function registerUser(username, email, password) {
+async function createUser(username, email, password) {
     const query = `INSERT INTO users (username, email, password) VALUES (?, ?, ?)`;
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -16,7 +16,30 @@ async function registerUser(username, email, password) {
     }
 }
 
-async function loginUser(username, password) {
+async function deleteUser(id) {
+    const query = `DELETE FROM users WHERE id = ?`;
+    try {
+        const result = await db.run(query, [id]);
+
+        return result;
+    } catch (error) {
+        throw new Error(`Unable to delete user: ${error.message}`);
+    }
+}
+
+async function updateUser(id, username, email, password, api_key) {
+    const query = `UPDATE users SET username = ?, email = ?, password = ?, api_key = ? WHERE id = ?`;
+    try {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const result = await db.run(query, [username, email, hashedPassword, api_key, id]);
+
+        return result;
+    } catch (error) {
+        throw new Error(`Unable to update user: ${error.message}`);
+    }
+}
+
+async function validate_credentials(username, password) {
     const query = `SELECT * FROM users WHERE username = ?`;
     try {
         const row = await db.get(query, [username]);
@@ -35,21 +58,30 @@ async function loginUser(username, password) {
     }
 }
 
-// TODO: This is not working properly and is hallucinating users.
-async function findExistingAccounts(username, email) {
-    const query = `SELECT * FROM users WHERE username = ? OR email = ?`
+async function getUsersByUsername(username, limit = 10) {
+    const query = `SELECT * FROM users WHERE username = ? LIMIT ${limit}`;
     try {
-        const row = await db.get(query, [username, email]);
-        return row && (row.username || row.email);
+        const row = await db.get(query, [username]);
+        return row && row.username;
     } catch (error) {
-        throw new Error(`Unable to find existing users: ${error.message}`);
+        throw new Error(`Unable to get user by username: ${error.message}`);
     }
 }
 
-async function getUser(userId) {
-    const query = `SELECT * FROM users WHERE user_id = ?`;
+async function getUsersByEmail(email, limit = 10) {
+    const query = `SELECT * FROM users WHERE email = ? LIMIT ${limit}`;
     try {
-        const row = await db.get(query, [userId]);
+        const row = await db.get(query, [email]);
+        return row && row.email;
+    } catch (error) {
+        throw new Error(`Unable to get user by email: ${error.message}`);
+    }
+}
+
+async function getUserById(id) {
+    const query = `SELECT * FROM users WHERE id = ?`;
+    try {
+        const row = await db.get(query, [id]);
         return row;
     } catch (error) {
         throw new Error(`Unable to get user: ${error.message}`);
@@ -57,8 +89,11 @@ async function getUser(userId) {
 }
 
 module.exports = {
-    registerUser,
-    loginUser,
-    findExistingAccounts,
-    getUser,
+    createUser,
+    deleteUser,
+    updateUser,
+    validate_credentials,
+    getUsersByUsername,
+    getUsersByEmail,
+    getUserById
 };

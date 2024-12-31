@@ -4,7 +4,7 @@ async function login(req, res) {
     // TODO: Login with email or username
     const { username, email, password } = req.body;
     try {
-        const user = await usersdb.loginUser(username, password);
+        const user = await usersdb.validate_credentials(username, password);
         if (!user) {
             return res.status(401).json({
                 code: 401,
@@ -41,19 +41,30 @@ async function register(req, res) {
     const { username, email, password } = req.body;
 
     try {
-        const existingUser = await usersdb.findExistingAccounts(username, email);
-        if (existingUser) {
+        const usernameInUse = await usersdb.getUsersByUsername(username);
+        if (usernameInUse) {
             return res.status(400).json({
                 code: 400,
                 status: 'error',
                 data: {
-                    message: 'Email or username already in use'
+                    message: 'Username already in use'
+                }
+            });
+        }
+
+        const emailInUse = await usersdb.getUsersByEmail(email);
+        if (emailInUse) {
+            return res.status(400).json({
+                code: 400,
+                status: 'error',
+                data: {
+                    message: 'Email already in use'
                 }
             });
         }
         
         // email & username
-        const userInfo = await usersdb.registerUser(username, email, password);
+        const userInfo = await usersdb.createUser(username, email, password);
 
         res.status(200).json({
             code: 200,

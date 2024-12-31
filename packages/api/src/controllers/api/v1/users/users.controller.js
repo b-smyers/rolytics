@@ -109,7 +109,7 @@ async function updateSettings(req, res) {
 
 async function getProfile(req, res) {
     try {
-        const profile = await usersdb.getUser(req.user?.id);
+        const profile = await usersdb.getUserById(req.user?.id);
         res.status(200).json({
             code: 200,
             status: 'success',

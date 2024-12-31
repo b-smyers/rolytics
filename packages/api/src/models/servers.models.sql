@@ -1,7 +1,9 @@
 CREATE TABLE IF NOT EXISTS servers (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    experience_id TEXT,
-    server_id TEXT UNIQUE,
+    id TEXT UNIQUE, -- External ID
+    place_id INTEGER,
+    name TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (experience_id) REFERENCES experiences(experience_id) ON DELETE CASCADE
+
+    PRIMARY KEY (id, place_id),
+    FOREIGN KEY (place_id) REFERENCES places(id) ON DELETE CASCADE
 );

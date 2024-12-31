@@ -13,7 +13,7 @@ async function getExperiences(req, res) {
         });
     }
 
-    const rows = await experiencesdb.getExperiences(userId);
+    const rows = await experiencesdb.getExperiencesByUserId(userId);
 
     return res.status(200).json({
         code: 200,
@@ -27,20 +27,19 @@ async function getExperiences(req, res) {
 
 async function connectExperience(req, res) {
     let { 
-        place_id, 
-        universe_id, 
+        experience_id, 
         page_link, 
         thumbnail_link, 
-        title, 
+        name, 
         description
     } = req.body;
 
-    if (!place_id || !universe_id || !page_link || !title) {
+    if (!experience_id || !page_link || !name) {
         return res.status(400).json({
             code: 400,
             status: 'error',
             data: {
-                message: 'Missing place_id, universe_id, page_link, or title'
+                message: 'Missing experience_id, page_link, or name'
             }
         });
     }
@@ -61,7 +60,7 @@ async function connectExperience(req, res) {
     }
     
     // Check account experience cap
-    const experienceCount = await experiencesdb.getExperienceCount(userId);
+    const experienceCount = await experiencesdb.getExperienceCountByUserId(userId);
     
     if (experienceCount >= 5) { // TODO: Arbitrary limit for now
         return res.status(400).json({
@@ -74,9 +73,11 @@ async function connectExperience(req, res) {
     }
 
     // Check for pre-existing experience
-    const existingExperience = await experiencesdb.findExistingExperience(userId, universe_id);
+    const existingExperiences = await experiencesdb.getExperiencesByUserId(userId);
+    // Make sure experience_id is not in existingExperiences
+    const hasExistingExperience = existingExperiences.some(experience => experience.id === experience_id);
     
-    if (existingExperience) {
+    if (hasExistingExperience) {
         return res.status(400).json({
             code: 400,
             status: 'error',
@@ -86,7 +87,7 @@ async function connectExperience(req, res) {
         });
     }
 
-    await experiencesdb.connectExperience(userId, universe_id, thumbnail_link, page_link, title, description);
+    await experiencesdb.createExperience(experience_id, userId, name, description, page_link, thumbnail_link);
 
     return res.status(200).json({
         code: 200,

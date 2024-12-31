@@ -1,4 +1,4 @@
-const serversService = require('@services/servers.services.js');
+const analyticsService = require('@services/analytics.services.js');
 const Ajv = require("ajv");
 
 const schema = {
@@ -176,7 +176,7 @@ async function logData(req, res) {
     }
 
     // Write payload
-    serversService.writePayload(data);
+    analyticsService.createAnalytics(data);
 
     res.status(200).json({
         code: 200,
