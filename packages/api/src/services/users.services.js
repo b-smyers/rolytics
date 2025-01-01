@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const getDatabase = require('@services/sqlite.services');
 let db;
 (async function() { db = await getDatabase() })()
@@ -9,6 +10,16 @@ async function createUser(username, email, password) {
         const hashedPassword = await bcrypt.hash(password, 10);
         const result = await db.run(query, [username, email, hashedPassword]);
         const userId = result.lastID
+
+        // Generate JWT token and add it to user
+        const user = {
+            id: userId
+        }
+        const api_key = jwt.sign(user, process.env.JWT_API_KEY_SECRET, { algorithm: 'HS256' }); // No expiry
+        await db.run(`UPDATE users SET api_key = ? WHERE id = ?`, [api_key, userId]);
+
+        console.log(api_key, " ", api_key.length);
+
         console.log('New user registered:', username);
         return { userId, username, email };
     } catch (error) {

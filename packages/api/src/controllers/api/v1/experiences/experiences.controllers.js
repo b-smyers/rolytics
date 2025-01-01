@@ -1,8 +1,7 @@
 const experiencesdb = require('@services/experiences.services'); 
 
 async function getExperiences(req, res) {
-    const userId = req.session?.user?.id || false;
-
+    const userId = req?.user?.id || false;
     if (!userId) {
         return res.status(400).json({
             code: 400,
@@ -47,7 +46,7 @@ async function connectExperience(req, res) {
     description = description || "";
     thumbnail_link = thumbnail_link || "";
 
-    const userId = req.session?.user?.id || false;
+    const userId = req?.user?.id || false;
 
     if (!userId) {
         return res.status(400).json({
