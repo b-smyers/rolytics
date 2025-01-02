@@ -1,4 +1,6 @@
-const experiencesdb = require('@services/experiences.services'); 
+const experiencesService = require('@services/experiences.services'); 
+const placesService = require('@services/places.services');
+const robloxService = require('@services/roblox.services');
 
 async function getExperiences(req, res) {
     const userId = req?.user?.id || false;
@@ -12,7 +14,7 @@ async function getExperiences(req, res) {
         });
     }
 
-    const rows = await experiencesdb.getExperiencesByUserId(userId);
+    const rows = await experiencesService.getExperiencesByUserId(userId);
 
     return res.status(200).json({
         code: 200,
@@ -46,7 +48,7 @@ async function connectExperience(req, res) {
     description = description || "";
     thumbnail_link = thumbnail_link || "";
 
-    const userId = req?.user?.id || false;
+    const userId = req.user.id || false;
 
     if (!userId) {
         return res.status(400).json({
@@ -59,7 +61,7 @@ async function connectExperience(req, res) {
     }
     
     // Check account experience cap
-    const experienceCount = await experiencesdb.getExperienceCountByUserId(userId);
+    const experienceCount = await experiencesService.getExperienceCountByUserId(userId);
     
     if (experienceCount >= 5) { // TODO: Arbitrary limit for now
         return res.status(400).json({
@@ -72,7 +74,7 @@ async function connectExperience(req, res) {
     }
 
     // Check for pre-existing experience
-    const existingExperiences = await experiencesdb.getExperiencesByUserId(userId);
+    const existingExperiences = await experiencesService.getExperiencesByUserId(userId);
     // Make sure experience_id is not in existingExperiences
     const hasExistingExperience = existingExperiences.some(experience => experience.id === experience_id);
     
@@ -86,7 +88,15 @@ async function connectExperience(req, res) {
         });
     }
 
-    await experiencesdb.createExperience(experience_id, userId, name, description, page_link, thumbnail_link);
+    await experiencesService.createExperience(experience_id, userId, name, description, page_link, thumbnail_link);
+
+    // Get places from Roblox API
+    const places = await robloxService.getPlacesByExperienceId(experience_id);
+    if (places.length) {
+        await Promise.all(places.map(async place => {
+            await placesService.createPlace(place.id, experience_id, place.name);
+        }));
+    }
 
     return res.status(200).json({
         code: 200,
