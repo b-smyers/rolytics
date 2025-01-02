@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import React from 'react'
 import LineGraph from '../components/LineGraph';
 import TrendIndicator from '../components/TrendIndicator';
@@ -98,10 +98,10 @@ async function experienceExists(title) {
 //   },
 // };
 
-// const servers = [
-//   { name: "Server 1", age: "2:00" },
-//   { name: "Server 2", age: "1:45" },
-//   { name: "Server 3", age: "1:30" }
+// const places = [
+//   { name: "Place 1", age: "2:00" },
+//   { name: "Place 2", age: "1:45" },
+//   { name: "Place 3", age: "1:30" }
 // ];
 
 function toDisplayString(key = "Missing") {
@@ -120,20 +120,22 @@ function Experience() {
     social: { keys: [], data: [] }
   });
 
-  const [servers, setServers] = useState([]);
+  const [places, setPlaces] = useState([]);
 
   // Default to first source
   const [selectedSource, setSelectedSource] = useState(Object.keys(data)[0] || 'none');
   // Default to first key of each source (don't show empty graph by default)
   const [selectedKeys, setSelectedKeys] = useState({
-    players: [data?.players?.keys[0] || []],
-    purchases: [data?.purchases?.keys[0] || []],
-    analytics: [data?.analytics?.keys[0] || []],
-    performance: [data?.performance?.keys[0] || []],
-    social: [data?.social?.keys[0] || []]
+    players: [],
+    purchases: [],
+    analytics: [],
+    performance: [],
+    social: []
   });
 
   const { title } = useParams();
+  const location = useLocation();
+  const { id } = location.state || {};
 
   const checkExperience = useCallback(async () => {
     // redirect to experiences page if experience does not exist
@@ -142,73 +144,66 @@ function Experience() {
     }
   }, [title, navigate]);
 
-  useEffect(() => {
-    checkExperience();
-  }, [checkExperience]);
-
-  useEffect(() => {
+  const fetchSourceData = useCallback(async (source) => {
     // Load data from initally selected source
     // All other data will be loaded ONCE when the source is changed (further updates will be updated from the refresh button)
-    const fetchData = async () => {
-      // Get analytics data
-      try {
-        const response = await axios.get(`/api/v1/experiences/${selectedSource}?name=${title}`);
-        const { analytics: responseAnalytics } = response.data.data;
+    // Get analytics data
+    try {
+      const response = await axios.get(`/api/v1/experiences/${source}?id=${id}`);
+      const { analytics: data } = response.data.data;
 
-        setData({ ...data, [selectedSource]: responseAnalytics });
-      } catch (error) {
-        if (error.response && error.response.data && error.response.data.data) {
-          console.log(error.response.data.data.message);
-        } else {
-          console.log('An unexpected error occurred:', error.status);
-        }
+      // Enable a key if there are keys and none are selected
+      if (data[source]?.keys?.length === 0) {
+        setSelectedKeys({ ...selectedKeys, [source]: [data.keys[0]] });
       }
-      // Get server data
-      try {
-        const response = await axios.get(`/api/v1/servers`);
-        const { servers: responseServers } = response.data.data;
 
-        setServers(responseServers);
-      } catch (error) {
-        if (error.response && error.response.data && error.response.data.data) {
-          console.log(error.response.data.data.message);
-        } else {
-          console.log('An unexpected error occurred:', error.status);
-        }
+      setData({ ...data, [source]: data });
+    } catch (error) {
+      if (error.response && error.response.data && error.response.data.data) {
+        console.log(error.response.data.data.message);
+      } else {
+        console.log('An error occurred getting source data:', error.status);
       }
     }
-    fetchData();
-  }, [data, title, servers]);
+  }, [data, title, places]);
+
+  const fetchPlaceData = useCallback(async () => {
+    // Get place data
+    try {
+      const response = await axios.get(`/api/v1/places?id=${id}`);
+      const { places: responsePlaces } = response.data.data;
+
+      setPlaces(responsePlaces);
+    } catch (error) {
+      if (error.response && error.response.data && error.response.data.data) {
+        console.log(error.response.data.data.message);
+      } else {
+        console.log('An error occurred getting place data:', error.status);
+      }
+    }
+  }, [places]);
+
+  useEffect(() => {
+    checkExperience();
+    fetchSourceData(selectedSource);
+    fetchPlaceData();
+  }, [checkExperience]);
 
 
   function handleSourceChange(e) {
     const { name } = e.target;
     // Fetch data for the new source if it hasn't been fetched yet
     if (!data[name]) {
-      const fetchData = async () => {
-        try {
-          const response = await axios.get(`/api/v1/experiences/${name}?name=${title}`);
-          const { metrics: responseMetrics } = response.data.data;
-
-          setData({ ...data, [source]: responseMetrics });
-        } catch (error) {
-          if (error.response && error.response.data && error.response.data.data) {
-            console.log(error.response.data.data.message);
-          } else {
-            console.log('An unexpected error occurred:', error);
-          }
-        }
-      }
-      fetchData();
+      fetchSourceData(name);
     }
     setSelectedSource(name);
   }
 
   function handleKeyChange(e) {
-    const { metric, checked } = e.target;
+    const { name, checked } = e.target;
     const newKeys = checked
-      ? [...selectedKeys[selectedSource], metric]
-      : selectedKeys[selectedSource].filter(key => key !== metric);
+      ? [...selectedKeys[selectedSource], name]
+      : selectedKeys[selectedSource].filter(key => key !== name);
     setSelectedKeys({ ...selectedKeys, [selectedSource]: newKeys });
   }
   
@@ -229,7 +224,7 @@ function Experience() {
               name="social" onClick={handleSourceChange}>Social</a>
           </div>
           <div id="experience-buttons">
-            <button>
+            <button onClick={() => {fetchSourceData(selectedSource); fetchPlaceData();}}>
               <img src="/icons/circular-arrow.svg" alt="" />
             </button>
             <button>
@@ -256,7 +251,7 @@ function Experience() {
                   <input
                     type="checkbox"
                     checked={selectedKeys[selectedSource]?.includes(key) || false}
-                    metric={key}
+                    name={key}
                     onChange={handleKeyChange}
                   />
                   <label id="metric-label">{toDisplayString(key)}</label>
@@ -290,17 +285,17 @@ function Experience() {
           )}
         </div>
         <div className="row">
-          <div id="servers-box">
-            <h2>Servers</h2>
-            <table id="servers-table">
+          <div id="places-box">
+            <h2>Places</h2>
+            <table id="places-table">
               <tr>
-                <th>Server Name</th>
-                <th>Age</th>
+                <th>Place Name</th>
+                <th>ID</th>
               </tr>
-              {servers.map((server, i) => (
+              {places.map((place, i) => (
                 <tr key={i}>
-                  <td>{server.name}</td>
-                  <td>{server.age}</td>
+                  <td>{place.name}</td>
+                  <td>{parseInt(place.id)}</td>
                 </tr>
               ))}
             </table>

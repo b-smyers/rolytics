@@ -4,9 +4,9 @@ import PageLayout from '../layouts/PageLayout';
 import axios from 'axios';
 import './Experiences.css';
 
-const ExperienceCard = ({ img, name, description, uri }) => {
+const ExperienceCard = ({ img, name, description, uri, id }) => {
   const navigate = useNavigate();
-  const navigateURI = () => { navigate(`${uri || '/404'}`); };
+  const navigateURI = () => { navigate(`${uri || '/404'}`, { state: { id: id }}); };
 
   return (
     <button className={`experience-card`} onClick={navigateURI}>
@@ -54,6 +54,7 @@ function Experiences() {
           name={exp.name}
           description={exp.description}
           uri={"/dashboard/experiences/" + (exp.name?.toString())}
+          id={exp.id}
         />
       ))}
       <button id='add-experience-card' onClick={() => navigateURI("/dashboard/experiences/connect")}>

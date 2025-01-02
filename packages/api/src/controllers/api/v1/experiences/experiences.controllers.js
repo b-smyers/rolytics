@@ -3,18 +3,7 @@ const placesService = require('@services/places.services');
 const robloxService = require('@services/roblox.services');
 
 async function getExperiences(req, res) {
-    const userId = req?.user?.id || false;
-    if (!userId) {
-        return res.status(400).json({
-            code: 400,
-            status: 'error',
-            data: {
-                message: 'Unauthorized'
-            }
-        });
-    }
-
-    const rows = await experiencesService.getExperiencesByUserId(userId);
+    const rows = await experiencesService.getExperiencesByUserId(req.user.id);
 
     return res.status(200).json({
         code: 200,
