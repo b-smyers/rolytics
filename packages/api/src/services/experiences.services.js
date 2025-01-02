@@ -32,7 +32,7 @@ async function updateExperience(id, name, description, page_link, thumbnail_link
 async function getExperienceById(id) {
     const query = `SELECT * FROM experiences WHERE id = ?`;
     try {
-        return await db.all(query, [id]);
+        return await db.get(query, [id]);
     } catch (error) {
         throw new Error(`Unable to get experience: ${error.message}`);
     }

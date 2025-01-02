@@ -9,6 +9,7 @@ const dbFile = 'database.db';
 const modelFiles = [
     path.join(__dirname, '../models', 'users.models.sql'),
     path.join(__dirname, '../models', 'experiences.models.sql'),
+    path.join(__dirname, '../models', 'places.models.sql'),
     path.join(__dirname, '../models', 'servers.models.sql'),
     path.join(__dirname, '../models', 'analytics.models.sql'),
     path.join(__dirname, '../models', 'user_settings.models.sql')

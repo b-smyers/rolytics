@@ -11,7 +11,8 @@ const socialController      = require('@controllers/api/v1/servers/social.contro
 const router = express.Router();
 
 router.get('/', serversController.getServers);
-
+router.post('/open', serversController.openServer);
+router.post('/close', serversController.closeServer);
 // Data
 router.post('/data', dataController.logData);
 

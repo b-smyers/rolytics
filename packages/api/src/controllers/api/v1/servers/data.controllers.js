@@ -1,4 +1,5 @@
 const analyticsService = require('@services/analytics.services.js');
+const serversService = require('@services/servers.services.js');
 const Ajv = require("ajv");
 
 const schema = {
@@ -86,7 +87,7 @@ const schema = {
                     required: ['id', 'name', 'version'],
                     additionalProperties: false
                 },
-                game: {
+                experience: {
                     type: 'object',
                     properties: {
                         id:   { type: 'integer' },
@@ -118,6 +119,7 @@ const schema = {
                             required: ['comment', 'product', 'raw_value'],
                             additionalProperties: false
                         },
+                        hostname:    { type: 'string' },
                         longitude:   { type: 'number' },
                         asn_org:     { type: 'string' },
                         country:     { type: 'string' },
@@ -134,11 +136,11 @@ const schema = {
                         region_code: { type: 'string' },
                         country_iso: { type: 'string' }
                     },
-                    required: ['longitude', 'asn_org', 'country', 'time_zone', 'ip_decimal', 'metro_code', 'ip', 'asn', 'latitude', 'city', 'zip_code', 'region_name', 'country_eu', 'region_code', 'country_iso'],
+                    required: ['hostname', 'longitude', 'asn_org', 'country', 'time_zone', 'ip_decimal', 'metro_code', 'ip', 'asn', 'latitude', 'city', 'zip_code', 'region_name', 'country_eu', 'region_code', 'country_iso'],
                     additionalProperties: false
                 }
             },
-            required: ['geo', 'uptime', 'creator', 'place', 'timestamp', 'game', 'server'],
+            required: ['geo', 'uptime', 'creator', 'place', 'timestamp', 'experience', 'server'],
             additionalProperties: false
         }
     },
@@ -175,8 +177,29 @@ async function logData(req, res) {
         });
     }
 
+    // Check if the server has been opened
+    const serverId = data.metadata.server.id;
+    const server = serversService.getServerById(serverId);
+    if (!server) {
+        return res.status(400).json({
+            code: 400,
+            status: 'error',
+            data: {
+                message: 'Server not opened'
+            }
+        });
+    }
+
+    const {
+        purchases,
+        performance,
+        social,
+        players,
+        metadata
+    } = data;
+
     // Write payload
-    analyticsService.createAnalytics(data);
+    analyticsService.createAnalytics(serverId, metadata.timestamp, purchases, performance, social, players, metadata);
 
     res.status(200).json({
         code: 200,
