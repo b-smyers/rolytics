@@ -4,11 +4,16 @@ let db;
 
 async function getSettings(userId) {
     const query = `SELECT * FROM user_settings WHERE user_id = ?`;
-    try {
-        return await db.all(query, [userId]);
-    } catch (error) {
-        throw new Error(`Unable to get user's settings: ${error.message}`);
-    }
+
+    return new Promise((resolve, reject) => {
+        db.all(query, [userId], function (error, rows) {
+            if (error) {
+                console.error(`An error occured getting user's settings: ${error.message}`);
+                reject(error);
+            }
+            resolve(rows);
+        });
+    });
 }
 
 async function setSettings(userId, settings) {
@@ -18,15 +23,45 @@ async function setSettings(userId, settings) {
                    ON CONFLICT(user_id, setting_key) DO UPDATE SET setting_value = excluded.setting_value`;
 
     try {
-        await db.run('BEGIN TRANSACTION');
+        await new Promise((resolve, reject) => {
+            db.run('BEGIN TRANSACTION', function (error) {
+                if (error) {
+                    console.error(`An error occured starting transaction: ${error.message}`);
+                    reject(error);
+                }
+                resolve();
+            });
+        });
 
-        for (const [key, value] of Object.entries(settings)) {
-            await db.run(query, [userId, key, value]);
-        }
+        const queries = Object.entries(settings).map(([key, value]) => {
+            return new Promise((resolve, reject) => {
+                db.run(query, [userId, key, value], function (error) {
+                    if (error) {
+                        console.error(`An error occured setting user's settings: ${error.message}`);
+                        reject(error);
+                    }
+                    resolve();
+                });
+            });
+        });
 
-        await db.run('COMMIT');
+        await Promise.all(queries);
+
+        await new Promise((resolve, reject) => {
+            db.run('COMMIT', function (error) {
+                if (error) return reject(error);
+                resolve();
+            });
+        });
     } catch (error) {
-        await db.run('ROLLBACK');
+        await new Promise((resolve, reject) => {
+            db.run('ROLLBACK', function (rollbackError) {
+                if (rollbackError) {
+                    console.error(`An error occurred during rollback: ${rollbackError.message}`);
+                }
+                resolve(); // Resolve rollback even if it fails
+            });
+        });
         throw new Error(`Unable to set user's settings: ${error.message}`);
     }
 }
