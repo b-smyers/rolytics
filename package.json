@@ -8,16 +8,16 @@
   "scripts": {
     "start:api": "pnpm --filter api start",
     "start:ui": "pnpm --filter ui start",
-    "start": "concurrently \"pnpm --filter api start\" \"pnpm --filter ui start\"",
+    "start": "concurrently \"pnpm start:api\" \"pnpm start:ui\"",
     "dev:api": "pnpm --filter api dev",
     "dev:ui": "pnpm --filter ui dev",
-    "dev": "concurrently \"pnpm --filter api dev\" \"pnpm --filter ui dev\"",
+    "dev": "concurrently \"pnpm dev:api\" \"pnpm dev:ui\"",
     "build:api": "pnpm --filter ui build",
     "build:ui": "pnpm --filter ui build",
-    "build": "pnpm --filter api build && pnpm --filter ui build",
+    "build": "concurrently \"pnpm build:api\" \"pnpm build:ui\"",
     "lint:api": "pnpm --filter api lint",
     "lint:ui": "pnpm --filter ui lint",
-    "lint": "pnpm --filter api lint && pnpm --filter ui lint"
+    "lint": "concurrently \"pnpm lint:api\" \"pnpm lint:ui\""
   },
   "devDependencies": {
     "concurrently": "^9.1.2",
