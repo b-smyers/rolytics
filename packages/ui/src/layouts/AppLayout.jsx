@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import Protected from '../components/Protected';
 import './AppLayout.css';

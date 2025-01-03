@@ -8,5 +8,5 @@ CREATE TABLE IF NOT EXISTS analytics (
     metadata TEXT NOT NULL,
     
     PRIMARY KEY (timestamp, server_id),
-    FOREIGN KEY (server_id) REFERENCES servers(id) ON DELETE CASCADE
+    FOREIGN KEY (server_id) REFERENCES servers(server_id) ON DELETE CASCADE
 );

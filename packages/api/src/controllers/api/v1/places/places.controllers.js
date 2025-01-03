@@ -1,9 +1,9 @@
 const placesService = require('@services/places.services'); 
 
 async function getPlaces(req, res) {
-    const { id } = req.query;
+    const { experience_id } = req.query;
 
-    const rows = await placesService.getPlacesByExperienceId(id);
+    const rows = await placesService.getPlacesByExperienceId(experience_id);
 
     return res.status(200).json({
         code: 200,

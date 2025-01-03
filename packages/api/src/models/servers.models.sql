@@ -1,9 +1,10 @@
 CREATE TABLE IF NOT EXISTS servers (
-    id TEXT UNIQUE, -- External ID
+    server_id INTEGER PRIMARY KEY AUTOINCREMENT, -- Internal ID
+    roblox_server_id TEXT UNIQUE, -- External ID
     place_id INTEGER,
     name TEXT,
+    active BOOLEAN DEFAULT 1,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 
-    PRIMARY KEY (id, place_id),
-    FOREIGN KEY (place_id) REFERENCES places(id) ON DELETE CASCADE
+    FOREIGN KEY (place_id) REFERENCES places(place_id) ON DELETE CASCADE
 );

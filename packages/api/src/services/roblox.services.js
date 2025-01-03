@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-async function getPlacesByExperienceId(id) {
+async function getPlacesByRobloxExperienceId(id) {
     // https://develop.roblox.com//docs/index.html?urls.primaryName=Develop%20Api%20v1
     const url = `https://develop.roblox.com/v1/universes/${id}/places`;
 
@@ -18,5 +18,5 @@ async function getPlacesByExperienceId(id) {
 }
 
 module.exports = {
-    getPlacesByExperienceId
+    getPlacesByRobloxExperienceId
 }

@@ -17,19 +17,19 @@ async function getExperiences(req, res) {
 
 async function connectExperience(req, res) {
     let { 
-        experience_id, 
+        roblox_experience_id,
         page_link, 
         thumbnail_link, 
         name, 
         description
     } = req.body;
 
-    if (!experience_id || !page_link || !name) {
+    if (!roblox_experience_id || !page_link || !name) {
         return res.status(400).json({
             code: 400,
             status: 'error',
             data: {
-                message: 'Missing experience_id, page_link, or name'
+                message: 'Missing roblox_experience_id, page_link, or name'
             }
         });
     }
@@ -64,8 +64,8 @@ async function connectExperience(req, res) {
 
     // Check for pre-existing experience
     const existingExperiences = await experiencesService.getExperiencesByUserId(userId);
-    // Make sure experience_id is not in existingExperiences
-    const hasExistingExperience = existingExperiences.some(experience => experience.id === experience_id);
+    // Make sure roblox_experience_id is not in existingExperiences
+    const hasExistingExperience = existingExperiences.some(experience => experience.id === roblox_experience_id);
     
     if (hasExistingExperience) {
         return res.status(400).json({
@@ -77,10 +77,10 @@ async function connectExperience(req, res) {
         });
     }
 
-    await experiencesService.createExperience(experience_id, userId, name, description, page_link, thumbnail_link);
+    const experience_id = await experiencesService.createExperience(roblox_experience_id, userId, name, description, page_link, thumbnail_link);
 
     // Get places from Roblox API
-    const places = await robloxService.getPlacesByExperienceId(experience_id);
+    const places = await robloxService.getPlacesByRobloxExperienceId(roblox_experience_id);
     if (places.length) {
         await Promise.all(places.map(async place => {
             await placesService.createPlace(place.id, experience_id, place.name);

@@ -52,8 +52,8 @@ function Connect() {
     try {
       const response = await axios.post('/api/v1/experiences/connect', {
         page_link: pageLink, 
-        place_id: placeId,
-        experience_id: experienceId,
+        roblox_place_id: placeId,
+        roblox_experience_id: experienceId,
         thumbnail_link: thumbnailLink,
         name: name,
         description: description
@@ -101,12 +101,12 @@ function Connect() {
           />
         </div>
         <div className='connect-entry'>
-          <h2>Universe ID</h2>
+          <h2>Experience ID</h2>
           <input
             type="text"
-            name="universe-id"
-            id="universe-id"
-            placeholder="Universe ID"
+            name="experience-id"
+            id="experience-id"
+            placeholder="Experience ID"
             value={experienceId}
             onChange={(e) => setExperienceId(e.target.value)}
             disabled

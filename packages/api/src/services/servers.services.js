@@ -2,23 +2,23 @@ const getDatabase = require('@services/sqlite.services');
 let db;
 (async function() { db = await getDatabase() })()
 
-async function createServer(id, place_id, name) {
-    const query = `INSERT INTO servers (id, place_id, name) VALUES (?, ?, ?)`;
+async function createServer(roblox_server_id, place_id, name) {
+    const query = `INSERT INTO servers (roblox_server_id, place_id, name) VALUES (?, ?, ?)`;
 
     try {
-        const result = await db.run(query, [id, place_id, name]);
-
+        const result = await db.run(query, [roblox_server_id, place_id, name]);
+        console.log(`Server ${name} created`);
         return result;
     } catch (error) {
         console.error(`An error occured creating server: ${error.message}`);
     }
 }
 
-async function deleteServer(id) {
-    const query = `DELETE FROM servers WHERE id = ?`;
+async function deleteServer(server_id) {
+    const query = `DELETE FROM servers WHERE server_id = ?`;
 
     try {
-        const result = await db.run(query, [id]);
+        const result = await db.run(query, [server_id]);
 
         return result;
     } catch (error) {
@@ -26,27 +26,52 @@ async function deleteServer(id) {
     }
 }
 
-async function updateServer(id, name) {
-    const query = `UPDATE servers SET name = ? WHERE id = ?`;
+async function updateServer(server_id, { name, active }) {
+    const values = [];
+    let query = `UPDATE servers SET`;
+
+    if (name !== undefined) {
+        query += ` name = ?`;
+        values.push(name);
+    }
+
+    if (active !== undefined) {
+        query += ` active = ?`;
+        values.push(active);
+    }
+
+    query += " WHERE server_id = ?";
+    values.push(!!server_id);
 
     try {
-        const result = await db.run(query, [name, id]);
-
+        const result = await db.run(query, values);
         return result;
     } catch (error) {
         console.error(`An error occured updating server: ${error.message}`);
     }
 }
 
-async function getServerById(id) {
-    const query = `SELECT * FROM servers WHERE id = ?`;
+async function getServerById(server_id) {
+    const query = `SELECT * FROM servers WHERE server_id = ?`;
 
     try {
-        const result = await db.get(query, [id]);
+        const result = await db.get(query, [server_id]);
 
         return result;
     } catch (error) {
-        console.error(`An error occured getting server by id: ${error.message}`);
+        console.error(`An error occured getting server by server_id: ${error.message}`);
+    }
+}
+
+async function getServerByRobloxServerId(roblox_server_id) {
+    const query = `SELECT * FROM servers WHERE roblox_server_id = ?`;
+
+    try {
+        const result = await db.get(query, [roblox_server_id]);
+
+        return result;
+    } catch (error) {
+        console.error(`An error occured getting server by roblox server id: ${error.message}`);
     }
 }
 
@@ -67,5 +92,6 @@ module.exports = {
     deleteServer,
     updateServer,
     getServerById,
+    getServerByRobloxServerId,
     getServersByPlaceId
 }

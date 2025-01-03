@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import React from 'react'
 import LineGraph from '../components/LineGraph';
 import TrendIndicator from '../components/TrendIndicator';
 import PageLayout from '../layouts/PageLayout';
@@ -110,7 +109,6 @@ function toDisplayString(key = "Missing") {
 
 function Experience() {
   const navigate = useNavigate();
-  const navigateURI = (uri) => { navigate(`${uri || '/404'}`); };
 
   const [data, setData] = useState({
     players: { keys: [], data: [] },
@@ -135,7 +133,7 @@ function Experience() {
 
   const { title } = useParams();
   const location = useLocation();
-  const { id } = location.state || {};
+  const { experience_id } = location.state || {};
 
   const checkExperience = useCallback(async () => {
     // redirect to experiences page if experience does not exist
@@ -144,12 +142,12 @@ function Experience() {
     }
   }, [title, navigate]);
 
-  const fetchSourceData = useCallback(async (source) => {
+  const fetchSourceData = async (source) => {
     // Load data from initally selected source
     // All other data will be loaded ONCE when the source is changed (further updates will be updated from the refresh button)
     // Get analytics data
     try {
-      const response = await axios.get(`/api/v1/experiences/${source}?id=${id}`);
+      const response = await axios.get(`/api/v1/experiences/${source}?experience_id=${experience_id}`);
       const { analytics: data } = response.data.data;
 
       // Enable a key if there are keys and none are selected
@@ -165,12 +163,12 @@ function Experience() {
         console.log('An error occurred getting source data:', error.status);
       }
     }
-  }, [data, title, places]);
+  };
 
-  const fetchPlaceData = useCallback(async () => {
+  const fetchPlaceData = async () => {
     // Get place data
     try {
-      const response = await axios.get(`/api/v1/places?id=${id}`);
+      const response = await axios.get(`/api/v1/places?experience_id=${experience_id}`);
       const { places: responsePlaces } = response.data.data;
 
       setPlaces(responsePlaces);
@@ -181,13 +179,13 @@ function Experience() {
         console.log('An error occurred getting place data:', error.status);
       }
     }
-  }, [places]);
+  };
 
   useEffect(() => {
     checkExperience();
     fetchSourceData(selectedSource);
     fetchPlaceData();
-  }, [checkExperience]);
+  }); // Run once on mount
 
 
   function handleSourceChange(e) {
@@ -295,7 +293,7 @@ function Experience() {
               {places.map((place, i) => (
                 <tr key={i}>
                   <td>{place.name}</td>
-                  <td>{parseInt(place.id)}</td>
+                  <td>{parseInt(place.roblox_place_id)}</td>
                 </tr>
               ))}
             </table>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Login.css';
@@ -75,7 +75,7 @@ function Login() {
               Login
             </button>
           </form>
-          <a href="/register">Don't have an account?</a>
+          <a href="/register">Don&#39;t have an account?</a>
         </div>
       </div>
     </div>

@@ -3,24 +3,70 @@ const placesService = require('@services/places.services');
 const serversService = require('@services/servers.services'); 
 
 async function getServers(req, res) {
-    return res.status(501).json({ message: 'Route not implemented' });
-}
+    const { place_id } = req.query;
 
-async function openServer(req, res) {
-    const { server_id, place_id, name } = req.body;
-    if (!server_id || !place_id || !name) {
+    if (!place_id) {
         return res.status(400).json({
             code: 400,
             status: 'error',
             data: {
-                message: 'Missing server_id, place_id, or name'
+                message: 'Missing experience place_id'
+            }
+        });
+    }
+
+    const place = await placesService.getPlaceById(place_id);
+
+    const experience = await experiencesService.getExperienceById(place?.experience_id);
+    // Make sure they own the experience
+    if (experience.user_id !== req.user.id) {
+        return res.status(403).json({
+            code: 403,
+            status: 'error',
+            data: {
+                message: 'Unauthorized'
+            }
+        });
+    }
+
+    const servers = await serversService.getServersByPlaceId(place?.place_id);
+
+    return res.status(200).json({
+        code: 200,
+        status: 'success',
+        data: {
+            message: 'Successfully retrieved servers',
+            servers
+        }
+    });
+}
+
+async function openServer(req, res) {
+    const { roblox_server_id, roblox_place_id, name } = req.body;
+
+    if (!roblox_server_id || !roblox_place_id || !name) {
+        return res.status(400).json({
+            code: 400,
+            status: 'error',
+            data: {
+                message: 'Missing roblox_server_id, roblox_place_id, or name'
             }
         });
     }
 
     // Check if the server already exists
-    const server = await serversService.getServerById(server_id);
-    if (server) {
+    const server = await serversService.getServerByRobloxServerId(roblox_server_id);
+    if (server && !server.active) {
+        await serversService.updateServer(server.server_id, { active: true });
+        console.log(`Server ${server.name}:${server.server_id} reopened`);
+        return res.status(200).json({
+            code: 200,
+            status: 'success',
+            data: {
+                message: 'Server successfully reopened'
+            }
+        });
+    } else if (server && !!server.active) {
         return res.status(400).json({
             code: 400,
             status: 'error',
@@ -30,9 +76,23 @@ async function openServer(req, res) {
         });
     }
 
-    await serversService.createServer(server_id, place_id, name);
+    // Check if the place exists
+    const place = await placesService.getPlaceByRobloxPlaceId(roblox_place_id);
+    if (!place) {
+        return res.status(400).json({
+            code: 400,
+            status: 'error',
+            data: {
+                message: 'Place does not exist'
+            }
+        });
+    }
+    
+    // TODO: Need check to make sure server is part of place
 
-    console.log(`Server ${server_id} opened`);
+    await serversService.createServer(roblox_server_id, place.place_id, name);
+
+    console.log(`Server ${name} opened`);
 
     return res.status(200).json({
         code: 200,
@@ -44,26 +104,26 @@ async function openServer(req, res) {
 }
 
 async function closeServer(req, res) {
-    const { server_id } = req.body;
-    if (!server_id) {
+    const { roblox_server_id } = req.body;
+    if (!roblox_server_id) {
         return res.status(400).json({
             code: 400,
             status: 'error',
             data: {
-                message: 'Missing server_id'
+                message: 'Missing roblox_server_id'
             }
         });
     }
 
     // Get the server by id
-    const server = await serversService.getServerById(server_id);
+    const server = await serversService.getServerByRobloxServerId(roblox_server_id);
     // Get the place by server id
     const place = await placesService.getPlaceById(server?.place_id);
     // Get the experience by place id
     const experience = await experiencesService.getExperienceById(place?.experience_id);
 
     // Check if the user is the owner of the experience
-    if (experience.user_id !== req.user.id) {
+    if (experience?.user_id !== req.user.id) {
         return res.status(401).json({
             code: 401,
             status: 'error',
@@ -73,9 +133,9 @@ async function closeServer(req, res) {
         });
     }
 
-    await serversService.deleteServer(server_id);
+    await serversService.updateServer(server.server_id, { active: false });
 
-    console.log(`Server ${server_id} closed`);
+    console.log(`Server ${server.name}:${server.server_id} closed`);
 
     return res.status(200).json({
         code: 200,

@@ -47,15 +47,63 @@ async function getAnalyticById(id) {
     }
 }
 
-async function getAnalyticsByServerId(server_id, limit = 20) {
-    const query = `SELECT * FROM analytics WHERE server_id = ? LIMIT ${limit}`;
+async function getPerformanceMetricsByServerId(server_id, limit = 20) {
+    const query = `SELECT performance FROM analytics WHERE server_id = ? LIMIT ${limit}`;
 
     try {
         const result = await db.all(query, [server_id]);
 
         return result;
     } catch (error) {
-        console.error(`An error occured getting analytics by server id: ${error.message}`);
+        console.error(`An error occured getting performance metrics by server id: ${error.message}`);
+    }
+}
+
+async function getPurchasesMetricsByServerId(server_id, limit = 20) {
+    const query = `SELECT purchases FROM analytics WHERE server_id = ? LIMIT ${limit}`;
+
+    try {
+        const result = await db.all(query, [server_id]);
+
+        return result;
+    } catch (error) {
+        console.error(`An error occured getting purchase metrics by server id: ${error.message}`);
+    }
+}
+
+async function getSocialMetricsByServerId(server_id, limit = 20) {
+    const query = `SELECT social FROM analytics WHERE server_id = ? LIMIT ${limit}`;
+
+    try {
+        const result = await db.all(query, [server_id]);
+
+        return result;
+    } catch (error) {
+        console.error(`An error occured getting social metrics by server id: ${error.message}`);
+    }
+}
+
+async function getPlayersMetricsByServerId(server_id, limit = 20) {
+    const query = `SELECT players FROM analytics WHERE server_id = ? LIMIT ${limit}`;
+
+    try {
+        const result = await db.all(query, [server_id]);
+
+        return result;
+    } catch (error) {
+        console.error(`An error occured getting players metrics by server id: ${error.message}`);
+    }
+}
+
+async function getMetadataMetricsByServerId(server_id, limit = 20) {
+    const query = `SELECT metadata FROM analytics WHERE server_id = ? LIMIT ${limit}`;
+
+    try {
+        const result = await db.all(query, [server_id]);
+
+        return result;
+    } catch (error) {
+        console.error(`An error occured getting metadata metrics by server id: ${error.message}`);
     }
 }
 
@@ -63,5 +111,9 @@ module.exports = {
     createAnalytics,
     deleteAnalytics,
     getAnalyticById,
-    getAnalyticsByServerId
+    getPerformanceMetricsByServerId,
+    getPurchasesMetricsByServerId,
+    getSocialMetricsByServerId,
+    getPlayersMetricsByServerId,
+    getMetadataMetricsByServerId
 }

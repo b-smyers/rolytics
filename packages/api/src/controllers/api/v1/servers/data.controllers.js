@@ -164,7 +164,7 @@ async function logData(req, res) {
         });
     }
 
-    // Check data against schema - if it fails, send error code 400 Bad Request
+    // Check data against schema
     const valid = validate(data);
     if (!valid) {
         console.log(validate.errors);
@@ -178,9 +178,8 @@ async function logData(req, res) {
     }
 
     // Check if the server has been opened
-    const serverId = data.metadata.server.id;
-    const server = serversService.getServerById(serverId);
-    if (!server) {
+    const server = await serversService.getServerByRobloxServerId(data.metadata.server.id);
+    if (!server || !server.active) {
         return res.status(400).json({
             code: 400,
             status: 'error',
@@ -199,7 +198,7 @@ async function logData(req, res) {
     } = data;
 
     // Write payload
-    analyticsService.createAnalytics(serverId, metadata.timestamp, purchases, performance, social, players, metadata);
+    analyticsService.createAnalytics(server.server_id, metadata.timestamp, purchases, performance, social, players, metadata);
 
     res.status(200).json({
         code: 200,

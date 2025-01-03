@@ -12,7 +12,7 @@ function ToggleSwitch({ name, selected, onChange }) {
                 id={`toggle-switch-new`}
                 type="checkbox"
                 checked={state}
-                onChange={(e) => {setState(!state); onChange(state);}}
+                onChange={() => {setState(!state); onChange(state);}}
             />
             <label
                 id="toggle-switch-label"

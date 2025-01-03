@@ -1,9 +1,12 @@
+const experiencesService = require('@services/experiences.services');
+const placesService = require('@services/places.services');
+const serversService = require('@services/servers.services');
 const analyticsService = require('@services/analytics.services');
 
 async function getPlayers(req, res) {
-    const { serverId } = req.body;
+    const { server_id } = req.query;
 
-    if (!serverId) {
+    if (!server_id) {
         return res.status(400).json({
             code: 400,
             status: 'error',
@@ -13,18 +16,38 @@ async function getPlayers(req, res) {
         });
     }
 
-    const rows = await analyticsService.getAnalyticsByServerId(serverId);
+    // Check if the user owns the server
+    const server = await serversService.getServerById(server_id);
+    const place = await placesService.getPlaceById(server?.place_id);
+    const experience = await experiencesService.getExperienceById(place?.experience_id);
 
-    const playersData = rows.map(row => {
-        return row.players;
-    })
+    if (experience?.user_id !== req.user.id) {
+        return res.status(403).json({
+            code: 403,
+            status: 'error',
+            data: {
+                message: 'Unauthorized'
+            }
+        });
+    }
+
+    const players = await analyticsService.getPlayersMetricsByServerId(server.server_id);
+
+    // Decode each row into JSON
+    players.forEach((row, index) => {
+        players[index] = JSON.parse(row.players);
+    });
+
+    // Create list of keys
+    const keys = players && players[0] ? Object.keys(players[0]) : [];
 
     return res.status(200).json({
         code: 200,
         status: 'success',
         data: {
             message: 'Players data successfully retrieved',
-            data: playersData
+            keys,
+            players
         }
     })
 }

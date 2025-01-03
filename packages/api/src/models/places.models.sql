@@ -1,8 +1,15 @@
 CREATE TABLE IF NOT EXISTS places (
-    id TEXT UNIQUE, -- External ID
+    place_id INTEGER PRIMARY KEY AUTOINCREMENT, -- Internal ID
+    roblox_place_id TEXT UNIQUE, -- External ID
     experience_id INTEGER,
     name TEXT,
+    -- Aggregated Data
+    purchases TEXT,
+    performance TEXT,
+    social TEXT,
+    players TEXT,
+    metadata TEXT,
+    last_computed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     
-    PRIMARY KEY (id, experience_id),
-    FOREIGN KEY (experience_id) REFERENCES experiences(id) ON DELETE CASCADE
+    FOREIGN KEY (experience_id) REFERENCES experiences(experience_id) ON DELETE CASCADE
 );

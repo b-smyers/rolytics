@@ -1,42 +1,71 @@
 const sqlite3 = require('sqlite3').verbose();
-const { open } = require('sqlite');
 const fs = require('fs');
 const path = require('path');
 
 const dbFile = 'database.db';
 
-// sql schemas
+// SQL schema files
 const modelFiles = [
     path.join(__dirname, '../models', 'users.models.sql'),
     path.join(__dirname, '../models', 'experiences.models.sql'),
     path.join(__dirname, '../models', 'places.models.sql'),
     path.join(__dirname, '../models', 'servers.models.sql'),
     path.join(__dirname, '../models', 'analytics.models.sql'),
-    path.join(__dirname, '../models', 'user_settings.models.sql')
+    path.join(__dirname, '../models', 'user_settings.models.sql'),
 ];
 
 let db;
+let initPromise;
+
+async function initializeDatabase() {
+    if (initPromise) {
+        return initPromise;
+    }
+
+    initPromise = new Promise((resolve, reject) => {
+        const db = new sqlite3.Database(dbFile, (err) => {
+            if (err) {
+                console.error(`Error connecting to database: ${err.message}`);
+                reject(err);
+            } else {
+                console.log('Database connected');
+                resolve(db);
+            }
+        });
+    });
+
+    db = await initPromise;
+
+    try {
+        for (const filePath of modelFiles) {
+            const schema = fs.readFileSync(filePath, 'utf-8');
+            await new Promise((resolve, reject) => {
+                db.exec(schema, (err) => {
+                    if (err) {
+                        console.error(`Error executing schema from ${filePath}: ${err.message}`);
+                        reject(err);
+                    } else {
+                        resolve();
+                    }
+                });
+            });
+        }
+        console.log('All schemas executed successfully');
+    } catch (err) {
+        console.error(`Error during schema execution: ${err.message}`);
+        throw err;
+    }
+
+    return db;
+}
 
 async function getDatabase() {
-    if (!db) {
-        db = await open({
-            filename: dbFile,
-            driver: sqlite3.Database
-        });
-
-        console.log('Database connected');
-
-        try {
-            for (const filePath of modelFiles) {
-                const schema = fs.readFileSync(filePath, 'utf-8');
-                await db.exec(schema);
-            }
-            console.log('All schemas executed successfully');
-        } catch (error) {
-            console.error(`Error executing schemas: ${error}`);
-        }
+    if (db) {
+        return db; // Return if already initialized
     }
-    return db;
+
+    // Initialize the database if not already done
+    return await initializeDatabase();
 }
 
 module.exports = getDatabase;
