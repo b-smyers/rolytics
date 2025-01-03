@@ -185,7 +185,7 @@ function Experience() {
     checkExperience();
     fetchSourceData(selectedSource);
     fetchPlaceData();
-  }); // Run once on mount
+  }, []); // Run once on mount
 
 
   function handleSourceChange(e) {
