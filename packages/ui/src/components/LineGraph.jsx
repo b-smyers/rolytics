@@ -36,7 +36,7 @@ function LineGraph({ label = "No Graph Label", keys = [], data = [] }) {
               <Line key={i} id="graph-line" type="monotone" dataKey={key} stroke={getColor(i)} />
             ))}
             <CartesianGrid id="themed" />
-            <XAxis id="themed-text" dataKey="time" />
+            <XAxis id="themed-text" reversed={true} dataKey="timestamp" />
             <YAxis id="themed-text" />
             <Tooltip content={<CustomTooltip />} />
           </LineChart>

@@ -31,17 +31,15 @@ async function getPerformance(req, res) {
 
     // If the data is stale, recompute it
     const lastComputedAt = new Date(place.last_computed_at);
-    const STALE_TIME = 5 * 60 * 1000;
-    if (lastComputedAt < new Date(Date.now() - STALE_TIME)) {
-        console.log("Data is stale, recomputing");
+    if (lastComputedAt < new Date(Date.now() - process.env.PLACE_STALE_TIME)) {
         await analyticsService.aggregatePlaceMetrics(place_id);
     }
 
     place = await placesService.getPlaceById(place_id);
     const performance = JSON.parse(place.performance);
 
-    // Get keys
-    const keys = performance && performance[0] ? Object.keys(performance[0]) : [];
+    // Get keys (exclude 'timestamp')
+    const keys = performance && performance[0] ? Object.keys(performance[0]).filter(key => key !== 'timestamp') : [];
 
     return res.status(200).json({
         code: 200,
@@ -49,7 +47,7 @@ async function getPerformance(req, res) {
         data: {
             message: 'Performance data successfully retrieved',
             keys,
-            performance
+            data: performance
         }
     });
 }

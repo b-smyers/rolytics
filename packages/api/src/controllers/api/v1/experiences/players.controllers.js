@@ -1,7 +1,6 @@
 const experiencesService = require('@services/experiences.services.js');
-const placesService = require('@services/places.services.js');
-const serversService = require('@services/servers.services.js');
-const analyticsService = require('@services/analytics.services.js');
+const placesService = require('@services/places.services');
+const analyticsService = require('@services/analytics.services');
 
 async function getPlayers(req, res) {
     const { experience_id } = req.query;
@@ -11,14 +10,15 @@ async function getPlayers(req, res) {
             code: 400,
             status: 'error',
             data: {
-                message: 'Missing experience experience_id'
+                message: 'Missing experience ID'
             }
         });
     }
 
-    const experience = await experiencesService.getExperienceById(experience_id);
-    // Make sure they own the experience
-    if (experience.user_id !== req.user.id) {
+    // Check if the user owns the experience
+    let experience = await experiencesService.getExperienceById(experience_id);
+
+    if (experience?.user_id !== req.user.id) {
         return res.status(403).json({
             code: 403,
             status: 'error',
@@ -28,35 +28,34 @@ async function getPlayers(req, res) {
         });
     }
 
-    const data = experience.players; // JSON string
+    // If the data is stale, recompute it
+    const lastComputedAt = new Date(experience.last_computed_at);
+    if (lastComputedAt < new Date(Date.now() - process.env.EXPERIENCE_STALE_TIME)) {
+        // Check if any of the places are stale
+        const places = await placesService.getPlacesByExperienceId(experience_id);
+        // Re-aggregate place if stale
+        for (const place of places) {
+            const lastComputedAt = new Date(place.last_computed_at);
+            if (lastComputedAt < new Date(Date.now() - process.env.PLACE_STALE_TIME)) {
+                await analyticsService.aggregatePlaceMetrics(place.place_id);
+            }
+        }
+        await analyticsService.aggregateExperienceMetrics(experience_id);
+    }
 
-    // TODO: Implement logic to retrieve players data
-    // Probably a bottom up approach
-    // Server data is aggreated into place data
-    // Place data is aggregated into experience data
-    // fetch experience data
-    // Random number
-    const random = Math.floor(Math.random() * 10);
+    experience = await experiencesService.getExperienceById(experience_id);
+    const players = JSON.parse(experience.players);
+
+    // Get keys (exclude 'timestamp')
+    const keys = players && players[0] ? Object.keys(players[0]).filter(key => key !== 'timestamp') : [];
 
     return res.status(200).json({
         code: 200,
         status: 'success',
         data: {
-            message: 'Successfully retrieved players data',
-            analytics: {
-                keys: ["active", "free", "premium", "returning"],
-                data: [
-                    { time: '-2:00', active: 20 - random, free: 10, premium: 9, returning: 18 },
-                    { time: '-1:45', active: 30, free: 20 + random, premium: 7, returning: 12 - random },
-                    { time: '-1:30', active: 25 + random, free: 15, premium: 4, returning: 10 },
-                    { time: '-1:15', active: 15, free: 10, premium: 7, returning: 11 },
-                    { time: '-1:00', active: 20 + random, free: 15 - random, premium: 4, returning: 10 + random },
-                    { time: '-0:45', active: 50 - random, free: 30, premium: 5, returning: 12 },
-                    { time: '-0:30', active: 60, free: 50, premium: 2, returning: 26 },
-                    { time: '-0:15', active: 44, free: 40, premium: 1 + random, returning: 12 - random },
-                    { time: '0:00', active: 55 + random, free: 50, premium: 0, returning: 22 }
-                ]
-            }
+            message: 'Players data successfully retrieved',
+            keys,
+            data: players
         }
     });
 }

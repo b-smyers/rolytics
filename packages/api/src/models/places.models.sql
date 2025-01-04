@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS places (
     social TEXT,
     players TEXT,
     metadata TEXT,
-    last_computed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    last_computed_at DATETIME DEFAULT '1900-01-01 00:00:00',
     
     FOREIGN KEY (experience_id) REFERENCES experiences(experience_id) ON DELETE CASCADE
 );

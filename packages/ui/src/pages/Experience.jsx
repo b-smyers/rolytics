@@ -25,34 +25,6 @@ async function experienceExists(title) {
 }
 
 // const data = {
-//   players: {
-//     keys: ["active", "free", "premium", "returning"],
-//     data: [
-//       { time: '-2:00', active: 20, free: 10, premium: 9, returning: 18 },
-//       { time: '-1:45', active: 30, free: 20, premium: 7, returning: 12 },
-//       { time: '-1:30', active: 25, free: 15, premium: 4, returning: 10 },
-//       { time: '-1:15', active: 15, free: 10, premium: 7, returning: 11 },
-//       { time: '-1:00', active: 20, free: 15, premium: 4, returning: 10 },
-//       { time: '-0:45', active: 50, free: 30, premium: 5, returning: 12 },
-//       { time: '-0:30', active: 60, free: 50, premium: 2, returning: 26 },
-//       { time: '-0:15', active: 44, free: 40, premium: 1, returning: 12 },
-//       { time: '0:00', active: 55, free: 50, premium: 0, returning: 22 }
-//     ]
-//   },
-//   purchases: {
-//     keys: ["dev-products", "subscriptions", "passes"],
-//     data: [
-//       { time: '-2:00', "dev-products": 1, subscriptions: 0, passes: 9},
-//       { time: '-1:45', "dev-products": 2, subscriptions: 0, passes: 7},
-//       { time: '-1:30', "dev-products": 1, subscriptions: 0, passes: 4},
-//       { time: '-1:15', "dev-products": 3, subscriptions: 1, passes: 7},
-//       { time: '-1:00', "dev-products": 1, subscriptions: 1, passes: 4},
-//       { time: '-0:45', "dev-products": 3, subscriptions: 0, passes: 5},
-//       { time: '-0:30', "dev-products": 6, subscriptions: 0, passes: 2},
-//       { time: '-0:15', "dev-products": 4, subscriptions: 0, passes: 1},
-//       { time: '0:00', "dev-products": 5, subscriptions: 1, passes: 0}
-//     ]
-//   },
 //   analytics: {
 //     keys: ["retention", "engagement", "gameplay"],
 //     data: [
@@ -67,34 +39,6 @@ async function experienceExists(title) {
 //       { time: '0:00', retention: 5, engagement: 1, gameplay: 0}
 //     ]
 //   },
-//   performance: {
-//     keys: ["fps", "memory", "memory","memory","memory", "data-receive", "data-send", "heartbeat", "instances", "primitives", "moving-primitives", "physics-receive", "physics-send", "physics-step"],
-//     data: [
-//       { time: '-2:00', "fps": 60, "memory": 1125, "data-receive": 1, "data-send": 1, "heartbeat": 52, "instances": 1, "primitives": 1, "moving-primitives": 1, "physics-receive": 1, "physics-send": 1, "physics-step": 1},
-//       { time: '-1:45', "fps": 59, "memory": 1105, "data-receive": 1, "data-send": 1, "heartbeat": 58, "instances": 1, "primitives": 1, "moving-primitives": 1, "physics-receive": 1, "physics-send": 1, "physics-step": 1},
-//       { time: '-1:30', "fps": 58, "memory": 1055, "data-receive": 1, "data-send": 1, "heartbeat": 56, "instances": 1, "primitives": 1, "moving-primitives": 1, "physics-receive": 1, "physics-send": 1, "physics-step": 1},
-//       { time: '-1:15', "fps": 60, "memory": 1035, "data-receive": 1, "data-send": 1, "heartbeat": 56, "instances": 1, "primitives": 1, "moving-primitives": 1, "physics-receive": 1, "physics-send": 1, "physics-step": 1},
-//       { time: '-1:00', "fps": 57, "memory": 1095, "data-receive": 1, "data-send": 1, "heartbeat": 56, "instances": 1, "primitives": 1, "moving-primitives": 1, "physics-receive": 1, "physics-send": 1, "physics-step": 1},
-//       { time: '-0:45', "fps": 56, "memory": 1105, "data-receive": 1, "data-send": 1, "heartbeat": 52, "instances": 1, "primitives": 1, "moving-primitives": 1, "physics-receive": 1, "physics-send": 1, "physics-step": 1},
-//       { time: '-0:30', "fps": 60, "memory": 1225, "data-receive": 1, "data-send": 1, "heartbeat": 58, "instances": 1, "primitives": 1, "moving-primitives": 1, "physics-receive": 1, "physics-send": 1, "physics-step": 1},
-//       { time: '-0:15', "fps": 61, "memory": 1125, "data-receive": 1, "data-send": 1, "heartbeat": 84, "instances": 1, "primitives": 1, "moving-primitives": 1, "physics-receive": 1, "physics-send": 1, "physics-step": 1},
-//       { time: '0:00', "fps": 61, "memory": 1025, "data-receive": 1, "data-send": 1, "heartbeat": 58, "instances": 1, "primitives": 1, "moving-primitives": 1, "physics-receive": 1, "physics-send": 1, "physics-step": 1},
-//     ]
-//   },
-//   social: {
-//     keys: ["chats", "friend-requests", "invites"],
-//     data: [
-//       { time: '-2:00', chats: 10, "friend-requests": 2, invites: 9},
-//       { time: '-1:45', chats: 20, "friend-requests": 3, invites: 7},
-//       { time: '-1:30', chats: 10, "friend-requests": 1, invites: 4},
-//       { time: '-1:15', chats: 30, "friend-requests": 2, invites: 7},
-//       { time: '-1:00', chats: 10, "friend-requests": 1, invites: 4},
-//       { time: '-0:45', chats: 30, "friend-requests": 0, invites: 5},
-//       { time: '-0:30', chats: 60, "friend-requests": 1, invites: 2},
-//       { time: '-0:15', chats: 40, "friend-requests": 0, invites: 1},
-//       { time: '0:00', chats: 50, "friend-requests": 2, invites: 0}
-//     ]
-//   },
 // };
 
 // const places = [
@@ -104,13 +48,13 @@ async function experienceExists(title) {
 // ];
 
 function toDisplayString(key = "Missing") {
-  return key.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  return key.split(/[-_]/).map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 }
 
 function Experience() {
   const navigate = useNavigate();
 
-  const [data, setData] = useState({
+  const [sources, setSources] = useState({
     players: { keys: [], data: [] },
     purchases: { keys: [], data: [] },
     analytics: { keys: [], data: [] },
@@ -121,7 +65,7 @@ function Experience() {
   const [places, setPlaces] = useState([]);
 
   // Default to first source
-  const [selectedSource, setSelectedSource] = useState(Object.keys(data)[0] || 'none');
+  const [selectedSource, setSelectedSource] = useState(Object.keys(sources)[0] || 'none');
   // Default to first key of each source (don't show empty graph by default)
   const [selectedKeys, setSelectedKeys] = useState({
     players: [],
@@ -148,19 +92,30 @@ function Experience() {
     // Get analytics data
     try {
       const response = await axios.get(`/api/v1/experiences/${source}?experience_id=${experience_id}`);
-      const { analytics: data } = response.data.data;
+      const { keys, data } = response.data.data;
+
+      // Convert all timestamps to negative minutes from the current time
+      const now = new Date(); // ms
+      data.forEach((point, i) => {
+        const timestamp = new Date(Math.floor(point.timestamp)) // ms
+        const diff = (now - timestamp) / 1000 / 60; // minutes
+        const hours = Math.floor(diff / 60);
+        const minutes = Math.floor(diff % 60);
+        const seconds = Math.floor((diff - Math.floor(diff)) * 60);
+        data[i].timestamp = `-${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+      });
 
       // Enable a key if there are keys and none are selected
-      if (data[source]?.keys?.length === 0) {
-        setSelectedKeys({ ...selectedKeys, [source]: [data.keys[0]] });
+      if (keys?.length === 0) {
+        setSelectedKeys({ ...selectedKeys, [source]: [keys[0]] });
       }
 
-      setData({ ...data, [source]: data });
+      setSources({ ...sources, [source]: { keys, data } });
     } catch (error) {
       if (error.response && error.response.data && error.response.data.data) {
         console.log(error.response.data.data.message);
       } else {
-        console.log('An error occurred getting source data:', error.status);
+        console.log('An error occurred getting source data:', error.status || error);
       }
     }
   };
@@ -191,7 +146,7 @@ function Experience() {
   function handleSourceChange(e) {
     const { name } = e.target;
     // Fetch data for the new source if it hasn't been fetched yet
-    if (!data[name]) {
+    if (!sources[name]?.data?.length) {
       fetchSourceData(name);
     }
     setSelectedSource(name);
@@ -238,13 +193,13 @@ function Experience() {
             <LineGraph
               label={toDisplayString(selectedSource)}
               keys={selectedKeys[selectedSource] || []}
-              data={data[selectedSource]?.data || []}
+              data={sources[selectedSource]?.data || []}
             />
           </div>
           <div id="metric-selector-box" style={{ flex: 2 }}>
             <h2>Metrics</h2>
-            {data[selectedSource]?.keys?.length ? (
-              data[selectedSource].keys.map((key, i) => (
+            {sources[selectedSource]?.keys?.length ? (
+              sources[selectedSource].keys.map((key, i) => (
                 <div key={i} className="metric-selector">
                   <input
                     type="checkbox"
@@ -263,14 +218,14 @@ function Experience() {
           </div>
         </div>
         <div className="row">
-          {data[selectedSource]?.keys?.length > 0 && data[selectedSource]?.data?.length > 0 ? (
+          {sources[selectedSource]?.keys?.length > 0 && sources[selectedSource]?.data?.length > 0 ? (
             <div id="trend-indicators">
-              {data[selectedSource].keys.map((key, i) => (
+              {sources[selectedSource].keys.map((key, i) => (
                 <TrendIndicator
                   key={i}
                   label={toDisplayString(key)}
-                  past={data[selectedSource].data[0][key]} // Use the 2nd newest point, oldest point, or average based on your TODO decision
-                  current={data[selectedSource].data[data[selectedSource].data.length - 1][key]}
+                  past={sources[selectedSource].data[0][key]} // Use the 2nd newest point, oldest point, or average based on your TODO decision
+                  current={sources[selectedSource].data[sources[selectedSource].data.length - 1][key]}
                   upIsGood={true}
                   delta={5}
                 />

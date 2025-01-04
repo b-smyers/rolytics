@@ -12,8 +12,8 @@ CREATE TABLE IF NOT EXISTS experiences (
     performance TEXT,
     social TEXT,
     players TEXT,
-    metadata TEXT
-    last_computed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    metadata TEXT,
+    last_computed_at DATETIME DEFAULT '1900-01-01 00:00:00',
 
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
