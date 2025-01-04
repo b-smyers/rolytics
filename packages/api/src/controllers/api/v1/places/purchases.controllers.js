@@ -40,7 +40,7 @@ async function getPurchases(req, res) {
     place = await placesService.getPlaceById(place_id);
     const purchases = JSON.parse(place.purchases);
 
-    // Decode each row into JSON
+    // Get keys
     const keys = purchases && purchases[0] ? Object.keys(purchases[0]) : [];
 
     return res.status(200).json({

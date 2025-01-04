@@ -40,7 +40,7 @@ async function getPerformance(req, res) {
     place = await placesService.getPlaceById(place_id);
     const performance = JSON.parse(place.performance);
 
-    // Decode each row into JSON
+    // Get keys
     const keys = performance && performance[0] ? Object.keys(performance[0]) : [];
 
     return res.status(200).json({

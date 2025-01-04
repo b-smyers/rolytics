@@ -40,7 +40,7 @@ async function getPlayers(req, res) {
     place = await placesService.getPlaceById(place_id);
     const players = JSON.parse(place.players);
 
-    // Decode each row into JSON
+    // Get keys
     const keys = players && players[0] ? Object.keys(players[0]) : [];
 
     return res.status(200).json({
