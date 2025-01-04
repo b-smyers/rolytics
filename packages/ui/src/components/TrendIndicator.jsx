@@ -35,7 +35,7 @@ function TrendIndicator({ label = "No Trend Label", past, current, upIsGood, del
     <div id="trend-box">
       <p>{label}</p>
       <div id="trend">
-        <h2>{current}</h2>
+        <h2>{(current).toFixed(2)}</h2>
         {trendSymbol()}
       </div>
     </div>
