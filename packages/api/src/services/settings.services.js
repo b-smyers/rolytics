@@ -55,9 +55,10 @@ async function setSettings(userId, settings) {
         });
     } catch (error) {
         await new Promise((resolve, reject) => {
-            db.run('ROLLBACK', function (rollbackError) {
-                if (rollbackError) {
-                    console.error(`An error occurred during rollback: ${rollbackError.message}`);
+            db.run('ROLLBACK', function (error) {
+                if (error) {
+                    console.error(`An error occurred during rollback: ${error.message}`);
+                    reject(error);
                 }
                 resolve(); // Resolve rollback even if it fails
             });
