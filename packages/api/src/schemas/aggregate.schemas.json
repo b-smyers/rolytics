@@ -1,0 +1,127 @@
+{
+    "purchases": {
+        "passes":             { "type": "integer", "aggregation": "sum" },
+        "developer_products": { "type": "integer", "aggregation": "sum" },
+        "subscriptions":      { "type": "integer", "aggregation": "sum" }
+    },
+    "performance": {
+        "memory":            { "type": "number", "aggregation": "average" },
+        "data_send":         { "type": "number", "aggregation": "average" },
+        "physics_step":      { "type": "number", "aggregation": "average" },
+        "fps":               { "type": "number", "aggregation": "average" },
+        "physics_send":      { "type": "number", "aggregation": "average" },
+        "physics_receive":   { "type": "number", "aggregation": "average" },
+        "instances":         { "type": "number", "aggregation": "average" },
+        "moving_primitives": { "type": "number", "aggregation": "average" },
+        "heartbeat":         { "type": "number", "aggregation": "average" },
+        "primitives":        { "type": "number", "aggregation": "average" },
+        "data_receive":      { "type": "number", "aggregation": "average" }
+    },
+    "social": {
+        "friends_playing": { "type": "integer", "aggregation": "sum" },
+        "chats":           { "type": "integer", "aggregation": "sum" }
+    },
+    "players": {
+        "active":    { "type": "integer", "aggregation": "sum" },
+        "new":       { "type": "integer", "aggregation": "sum" },
+        "returning": { "type": "integer", "aggregation": "sum" },
+        "premium":   { "type": "integer", "aggregation": "sum" },
+        "average_session_duration": { "type": "number", "aggregation": "average" },
+        "demographics": {
+            "regions": {
+                "fr-fr": { "type": "integer", "aggregation": "sum" },
+                "fi-fi": { "type": "integer", "aggregation": "sum" },
+                "ka-ge": { "type": "integer", "aggregation": "sum" },
+                "kk-kz": { "type": "integer", "aggregation": "sum" },
+                "bn-bd": { "type": "integer", "aggregation": "sum" },
+                "uk-ua": { "type": "integer", "aggregation": "sum" },
+                "sl-sl": { "type": "integer", "aggregation": "sum" },
+                "it-it": { "type": "integer", "aggregation": "sum" },
+                "si-lk": { "type": "integer", "aggregation": "sum" },
+                "bg-bg": { "type": "integer", "aggregation": "sum" },
+                "sk-sk": { "type": "integer", "aggregation": "sum" },
+                "sq-al": { "type": "integer", "aggregation": "sum" },
+                "zh-cn": { "type": "integer", "aggregation": "sum" },
+                "hu-hu": { "type": "integer", "aggregation": "sum" },
+                "th-th": { "type": "integer", "aggregation": "sum" },
+                "sv-se": { "type": "integer", "aggregation": "sum" },
+                "my-mm": { "type": "integer", "aggregation": "sum" },
+                "id-id": { "type": "integer", "aggregation": "sum" },
+                "lv-lv": { "type": "integer", "aggregation": "sum" },
+                "tr-tr": { "type": "integer", "aggregation": "sum" },
+                "es-es": { "type": "integer", "aggregation": "sum" },
+                "hi-in": { "type": "integer", "aggregation": "sum" },
+                "sr-rs": { "type": "integer", "aggregation": "sum" },
+                "ru-ru": { "type": "integer", "aggregation": "sum" },
+                "bs-ba": { "type": "integer", "aggregation": "sum" },
+                "hr-hr": { "type": "integer", "aggregation": "sum" },
+                "ro-ro": { "type": "integer", "aggregation": "sum" },
+                "pt-br": { "type": "integer", "aggregation": "sum" },
+                "pl-pl": { "type": "integer", "aggregation": "sum" },
+                "da-dk": { "type": "integer", "aggregation": "sum" },
+                "nl-nl": { "type": "integer", "aggregation": "sum" },
+                "et-ee": { "type": "integer", "aggregation": "sum" },
+                "cs-cz": { "type": "integer", "aggregation": "sum" },
+                "vi-vn": { "type": "integer", "aggregation": "sum" },
+                "ko-kr": { "type": "integer", "aggregation": "sum" },
+                "ar-001": { "type": "integer", "aggregation": "sum" },
+                "ja-jp": { "type": "integer", "aggregation": "sum" },
+                "zh-tw": { "type": "integer", "aggregation": "sum" },
+                "nb-no": { "type": "integer", "aggregation": "sum" },
+                "km-kh": { "type": "integer", "aggregation": "sum" },
+                "el-gr": { "type": "integer", "aggregation": "sum" },
+                "de-de": { "type": "integer", "aggregation": "sum" },
+                "fil-ph": { "type": "integer", "aggregation": "sum" },
+                "lt-lt": { "type": "integer", "aggregation": "sum" },
+                "en-us": { "type": "integer", "aggregation": "sum" },
+                "ms-my": { "type": "integer", "aggregation": "sum" }
+            },
+            "average_account_age": { "type": "number", "aggregation": "average" }
+        }
+    },
+    "metadata": {
+        "uptime":    { "type": "integer" },
+        "timestamp": { "type": "number" },
+        "creator": {
+            "id":   { "type": "integer" },
+            "type": { "type": "string" }
+        },
+        "place": {
+            "id":      { "type": "integer" },
+            "name":    { "type": "string" },
+            "version": { "type": "integer" }
+        },
+        "experience": {
+            "id":   { "type": "integer" },
+            "name": { "type": "string" }
+        },
+        "server": {
+            "id":   { "type": "string" },
+            "type": { "type": "string" },
+            "size": { "type": "integer" }
+        },
+        "geo": {
+            "user_agent":  {
+                "comment": { "type": "string" },
+                "product": { "type": "string" },
+                "raw_value": { "type": "string" }
+            },
+            "hostname":    { "type": "string" },
+            "longitude":   { "type": "number" },
+            "asn_org":     { "type": "string" },
+            "country":     { "type": "string" },
+            "time_zone":   { "type": "string" },
+            "ip_decimal":  { "type": "integer" },
+            "metro_code":  { "type": "integer" },
+            "ip":          { "type": "string" },
+            "asn":         { "type": "string" },
+            "latitude":    { "type": "number" },
+            "city":        { "type": "string" },
+            "zip_code":    { "type": "string" },
+            "region_name": { "type": "string" },
+            "country_eu":  { "type": "boolean" },
+            "region_code": { "type": "string" },
+            "country_iso": { "type": "string" }
+        }
+    }
+}
