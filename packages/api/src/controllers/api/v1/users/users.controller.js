@@ -109,13 +109,13 @@ async function updateSettings(req, res) {
 
 async function getProfile(req, res) {
     try {
-        const profile = await usersdb.getUserById(req.user?.id);
+        const user = await usersdb.getUserById(req.user.id);
         res.status(200).json({
             code: 200,
             status: 'success',
             data: {
                 message: 'Profile retrieved successfully',
-                profile: profile
+                profile: user
             }
         });
     } catch (error) {
