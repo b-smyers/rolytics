@@ -10,8 +10,9 @@
     border-bottom: 1px solid var(--text-secondary);
     display: flex;
     flex-direction: row;
-    width: 800px;
+    flex: 1;
     font-size: 25px;
+    flex-wrap: wrap;
     justify-content: space-between;
 }
 
@@ -75,7 +76,7 @@
 #trend-indicators {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 20px;
 }
 
@@ -109,5 +110,21 @@
 
     th, td {
         font-size: 1.2em;
+    }
+}
+
+@media (max-width: 750px) {
+    .row {
+        display: block;
+        width: 83%;
+    }
+
+    #metric-selector-box {
+        margin-top: 20px;
+        height: fit-content;
+    }
+
+    #source-selector-box {
+        width: 100%;
     }
 }

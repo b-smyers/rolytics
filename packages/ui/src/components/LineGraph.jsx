@@ -33,7 +33,14 @@ function LineGraph({ label = "No Graph Label", keys = [], data = [] }) {
         <ResponsiveContainer id="graph-container" height={400} width="100%">
           <LineChart id="graph" data={data}>
             {keys.map((key, i) => (
-              <Line key={i} id="graph-line" type="monotone" dataKey={key} stroke={getColor(i)} />
+              <Line 
+                key={i} 
+                id="graph-line" 
+                type="monotone" 
+                dataKey={key} 
+                stroke={getColor(i)}
+                dot={{ r: 0 }}
+              />
             ))}
             <CartesianGrid id="themed" />
             <XAxis id="themed-text" reversed={true} dataKey="timestamp" />

@@ -7,6 +7,12 @@
     box-shadow: 5px 5px 15px var(--theme-primary);
 }
 
+@media (max-width: 750px) {
+    #login-box {
+        width: 80%;
+    }
+}
+
 #form-box {
     padding: 30px 40px;
 

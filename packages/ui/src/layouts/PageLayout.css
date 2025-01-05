@@ -25,5 +25,4 @@
     flex: 8;
     background-color: var(--theme-tertiary);
     display: flex;
-    flex-wrap: wrap;
 }
