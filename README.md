@@ -59,7 +59,13 @@ Use freedns to route a free subdomain to your external IP on port 443 (https)
 Portforward 443 traffic on your router to your server.
 
 ## TODO
-- [ ] Implement saving analytics to sqlite databse
+- [x] Implement saving analytics to sqlite databse
+- [ ] Automatically delete old analytics data
+- [ ] Automatically delete old servers
+- [ ] Implement download data button on the experience page
+- [ ] Add place analytics page
+- [ ] Add server analytics page
+- [ ] Add rolytics luaua tool to this git repo
 
 ## Site Layout
 - /      <--(Landing page)
