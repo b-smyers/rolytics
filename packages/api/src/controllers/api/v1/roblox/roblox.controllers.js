@@ -1,4 +1,5 @@
 const axios = require("axios");
+const robloxService = require("@services/roblox.services");
 
 async function getPlaceDetails(req, res) {
     const { placeId } = req.body;
@@ -14,93 +15,63 @@ async function getPlaceDetails(req, res) {
     }
 
     try {
-        // Step 1: Get Universe ID from the Place ID
-        const experienceId = await axios.get(`https://apis.roblox.com/universes/v1/places/${placeId}/universe`, {
-            headers: { 'accept': 'application/json' }
-        }).then(response => response.data.universeId) // Experience ID == Universe ID
-          .catch(error => {
-            console.error("Error fetching Universe ID:", {
-                message: error.message,
-                status: error.response?.status,
-                data: error.response?.data
+        // Step 1: Get Experience ID from the Place ID
+        const experienceId = await robloxService.getExperienceIdfromPlaceId(placeId)
+            .catch(error => {
+                console.error(error);
+                return res.status(404).json({
+                    code: 404,
+                    status: 'error',
+                    data: { message: 'Experience not found' }
+                });
             });
-            return res.status(404).json({
-                code: 404,
-                status: 'error',
-                data: { message: 'Universe not found' }
-            });
-        });
+
 
         // Step 2: Get Name and Description
-        // DOCS: https://develop.roblox.com//docs/index.html
-        let name = "";
-        let description = "";
-        if (experienceId) {
-            const experienceData = await axios.get(`https://develop.roblox.com/v1/universes/${experienceId}`, {
-                headers: { 'accept': 'application/json' }
-            }).then(response => response.data)
+        const details = await robloxService.getExperienceDetails(experienceId)
             .catch(error => {
-                console.error("Error fetching Universe details:", {
-                    message: error.message,
-                    status: error.response?.status,
-                    data: error.response?.data
+                console.error(error);
+                return res.status(404).json({
+                    code: 404,
+                    status: 'error',
+                    data: { message: 'Experience details not found' }
                 });
-                return { name: "", description: "" };
             });
-            name = experienceData.name;
-            description = experienceData.description;
-        }
 
         // Step 3: Get thumbnails (media) for the Universe ID
-        // DOCS: https://games.roblox.com//docs/index.html
-        let imageIds = [];
-        if (experienceId) {
-            imageIds = await axios.get(`https://games.roblox.com/v2/games/${experienceId}/media`, {
-                headers: { 'accept': 'application/json' }
-            }).then(response => response.data.data.map(item => item.imageId))
+        const media = await robloxService.getExperienceMedia(experienceId)
             .catch(error => {
-                console.error("Error fetching media:", {
-                    message: error.message,
-                    status: error.response?.status,
-                    data: error.response?.data
+                console.error(error);
+                return res.status(404).json({
+                    code: 404,
+                    status: 'error',
+                    data: { message: 'Experience media not found' }
                 });
-                return [];
             });
-        };
+
+        const imageIds = media.data.map(item => item.imageId);
 
         // Step 4: Get the actual image URLs from the CDN
-        // DOCS: https://thumbnails.roblox.com//docs/index.html
-        let imageUrl = [];
-        if (imageIds.length > 0) {
-            const imageSize = '768x432'; // 768x432, 576x324, 480x270, 384x216, 256x144
-            imageUrl = await axios.get(`https://thumbnails.roblox.com/v1/games/${experienceId}/thumbnails`, {
-                headers: { 'accept': 'application/json' },
-                params: {
-                    thumbnailIds: imageIds[0], // Get only the first thumbnail
-                    size: imageSize,
-                    format: 'png'
-                }
-            }).then(response => response.data.data.map(thumbnail => thumbnail.imageUrl))
-              .catch(error => {
-                  console.error("Error fetching thumbnails:", {
-                      message: error.message,
-                      status: error.response?.status,
-                      data: error.response?.data
-                  });
-                  return [];
-              });
-        };
+        const imageUrls = await robloxService.getMediaThumbnails(experienceId, imageIds)
+            .catch(error => {
+                console.error(error);
+                return res.status(404).json({
+                    code: 404,
+                    status: 'error',
+                    data: { message: 'Experience images not found' }
+                });
+            });
 
         // Step 5: Send the response back to the frontend
         return res.json({
             code: 200,
             status: 'success',
             data: {
-                placeId,
-                name,
-                description,
-                experienceId,
-                thumbnails: imageUrl
+                placeId: placeId,
+                name: details.name,
+                description: details.description,
+                experienceId: experienceId,
+                thumbnails: imageUrls
             }
         });
     } catch (error) {
