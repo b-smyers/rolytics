@@ -4,13 +4,17 @@ import './Account.css';
 import PageLayout from '../layouts/PageLayout';
 
 function Account() {
-  const [apiKey, setApiKey] = useState('');
+  const [apiKey, setApiKey] = useState('API Key');
+  const [username, setUsername] = useState('Username');
+  const [email, setEmail] = useState('Email');
 
   const loadAccount = async () => {
     try {
       const response = await axios.get('/api/v1/users/profile');
       const profile = response.data.data.profile;
       setApiKey(profile.api_key);
+      setUsername(profile.username);
+      setEmail(profile.email);
     } catch (error) {
       if (error.response && error.response.data && error.response.data.data) {
         console.log(error.response.data.data.message);
@@ -26,16 +30,31 @@ function Account() {
 
   return (
     <PageLayout title={"Account"}>
-      <div className='account-entry'>
-        <h2>API Key</h2>
-        <input
-          type="text"
-          name="api-key"
-          id="api-key"
-          placeholder="API Key"
-          value={apiKey}
-          disabled
-        />
+      <div id='account-details'>
+        <div className='account-entry'>
+          <h2>Username</h2>
+          <input
+            type="text"
+            value={username}
+            disabled
+          />
+        </div>
+        <div className='account-entry'>
+          <h2>Email</h2>
+          <input
+            type="text"
+            value={email}
+            disabled
+          />
+        </div>
+        <div className='account-entry'>
+          <h2>API Key</h2>
+          <input
+            type="text"
+            value={apiKey}
+            disabled
+          />
+        </div>
       </div>
     </PageLayout>
   )

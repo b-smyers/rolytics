@@ -4,7 +4,7 @@ import './PageLayout.css';
 
 function PageLayout({ title, children }) {
     return (
-        <div className='background'>
+      <div className='background'>
         <div id='stars'/>
         <div id="gradient">
           <div id="header">
