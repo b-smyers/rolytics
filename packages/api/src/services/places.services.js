@@ -57,7 +57,7 @@ async function updatePlace(place_id, { name }) {
 }
 
 async function getPlaceById(place_id) {
-    const query = `SELECT * FROM places WHERE place_id = ?`;
+    const query = `SELECT place_id, roblox_place_id, experience_id, name, purchases, performance, social, players, metadata, last_computed_at FROM places WHERE place_id = ?`;
 
     return new Promise((resolve, reject) => {
         db.get(query, [place_id], function (error, row) {
@@ -71,7 +71,7 @@ async function getPlaceById(place_id) {
 }
 
 async function getPlaceByRobloxPlaceId(roblox_place_id) {
-    const query = `SELECT * FROM places WHERE roblox_place_id = ?`;
+    const query = `SELECT place_id, roblox_place_id, experience_id, name, purchases, performance, social, players, metadata, last_computed_at FROM places WHERE roblox_place_id = ?`;
 
     return new Promise((resolve, reject) => {
         db.get(query, [roblox_place_id], function (error, row) {
@@ -85,7 +85,7 @@ async function getPlaceByRobloxPlaceId(roblox_place_id) {
 }
 
 async function getPlacesByExperienceId(experience_id, limit = 10) {
-    const query = `SELECT * FROM places WHERE experience_id = ? LIMIT ${limit}`;
+    const query = `SELECT place_id, roblox_place_id, experience_id, name, purchases, performance, social, players, metadata, last_computed_at FROM places WHERE experience_id = ? LIMIT ${limit}`;
 
     return new Promise((resolve, reject) => {
         db.all(query, [experience_id], function (error, row) {

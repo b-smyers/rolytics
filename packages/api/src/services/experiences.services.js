@@ -36,8 +36,33 @@ async function deleteExperience(experience_id) {
     });
 }
 
-async function updateExperience(experience_id, name, description, page_link, thumbnail_link) {
-    const query = `UPDATE experiences SET name = ?, description = ?, page_link = ?, thumbnail_link = ? WHERE experience_id = ?`;
+async function updateExperience(experience_id, { name, description, page_link, thumbnail_link }) {
+    const values = [];
+    let query = `UPDATE experiences SET`;
+
+    if (name !== undefined) {
+        query += ` name = ?`;
+        values.push(name);
+    }
+
+    if (description !== undefined) {
+        query += ` description = ?`;
+        values.push(description);
+    }
+
+    if (page_link !== undefined) {
+        query += ` page_link = ?`;
+        values.push(page_link);
+    }
+
+    if (thumbnail_link !== undefined) {
+        query += ` thumbnail_link = ?`;
+        values.push(thumbnail_link);
+    }
+    
+    query += "WHERE experience_id = ?";
+    values.push(experience_id);
+
     return new Promise((resolve, reject) => {
         db.run(query, [
             name.substring(0, 50),
@@ -57,7 +82,7 @@ async function updateExperience(experience_id, name, description, page_link, thu
 }
 
 async function getExperienceById(experience_id) {
-    const query = `SELECT * FROM experiences WHERE experience_id = ?`;
+    const query = `SELECT experience_id, roblox_experience_id, user_id, name, description, page_link, thumbnail_link, created_at, purchases, performance, social, players, metadata, last_computed_at FROM experiences WHERE experience_id = ?`;
     return new Promise((resolve, reject) => {
         db.get(query, [experience_id], function (error, row) {
             if (error) {
@@ -70,7 +95,7 @@ async function getExperienceById(experience_id) {
 }
 
 async function getExperiencesByUserId(user_id, limit = 10) {
-    const query = `SELECT * FROM experiences WHERE user_id = ? LIMIT ${limit}`;
+    const query = `SELECT experience_id, roblox_experience_id, user_id, name, description, page_link, thumbnail_link, created_at, purchases, performance, social, players, metadata, last_computed_at FROM experiences WHERE user_id = ? LIMIT ${limit}`;
     return new Promise((resolve, reject) => {
         db.all(query, [user_id], function (error, rows) {
             if (error) {

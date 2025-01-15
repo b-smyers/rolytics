@@ -44,8 +44,8 @@ async function deleteAnalytics(id) {
     });
 }
 
-async function getAnalyticById(id) {
-    const query = `SELECT * FROM analytics WHERE id = ?`;
+async function getMetricById(id) {
+    const query = `SELECT timestamp, server_id, purchases, performance, social, players, metadata FROM analytics WHERE id = ?`;
 
     return new Promise((resolve, reject) => {
         db.get(query, [id], function (error, row) {
@@ -59,7 +59,7 @@ async function getAnalyticById(id) {
 }
 
 async function getMetricsByServerId(server_id, limit = 20) {
-    const query = `SELECT * FROM analytics WHERE server_id = ? ORDER BY timestamp DESC LIMIT ${limit}`;
+    const query = `SELECT timestamp, server_id, purchases, performance, social, players, metadata FROM analytics WHERE server_id = ? ORDER BY timestamp DESC LIMIT ${limit}`;
 
     return new Promise((resolve, reject) => {
         db.all(query, [server_id], function (error, rows) {
@@ -288,7 +288,7 @@ async function aggregateExperienceMetrics(experience_id, place_limit = 100) {
 module.exports = {
     createAnalytics,
     deleteAnalytics,
-    getAnalyticById,
+    getMetricById,
     getMetricsByServerId,
     getPerformanceMetricsByServerId,
     getPurchasesMetricsByServerId,

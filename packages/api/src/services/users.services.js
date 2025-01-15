@@ -28,7 +28,7 @@ async function createUser(username, email, password) {
                 console.error(`An error occured creating api_key for userID ${userId}: ${error.message}`);
                 return reject(error);
             }
-            console.log(api_key, " ", api_key.length);
+            console.log(api_key, api_key.length);
             console.log('New user registered:', username);
             resolve({ userId, username, email });
         });
@@ -88,7 +88,7 @@ async function updateUser(id, { username, email, password, api_key }) {
 }
 
 async function validateCredentials(username, password) {
-    const query = `SELECT * FROM users WHERE username = ?`;
+    const query = `SELECT id, username, password FROM users WHERE username = ?`;
     try {
         const row = await new Promise((resolve, reject) => {
             db.get(query, [username], function (error, row) {
@@ -116,7 +116,7 @@ async function validateCredentials(username, password) {
 }
 
 async function getUsersByUsername(username, limit = 10) {
-    const query = `SELECT * FROM users WHERE username = ? LIMIT ${limit}`;
+    const query = `SELECT id, username, email, api_key FROM users WHERE username = ? LIMIT ${limit}`;
     return new Promise((resolve, reject) => {
         db.all(query, [username], function (error, row) {
             if (error) {
@@ -129,7 +129,7 @@ async function getUsersByUsername(username, limit = 10) {
 }
 
 async function getUsersByEmail(email, limit = 10) {
-    const query = `SELECT * FROM users WHERE email = ? LIMIT ${limit}`;
+    const query = `SELECT id, username, email, api_key FROM users WHERE email = ? LIMIT ${limit}`;
     return new Promise((resolve, reject) => {
         db.all(query, [email], function (error, row) {
             if (error) {
@@ -142,7 +142,7 @@ async function getUsersByEmail(email, limit = 10) {
 }
 
 async function getUserById(id) {
-    const query = `SELECT * FROM users WHERE id = ?`;
+    const query = `SELECT id, username, email, api_key FROM users WHERE id = ?`;
     return new Promise((resolve, reject) => {
         db.get(query, [id], function (error, row) {
             if (error) {
@@ -155,7 +155,7 @@ async function getUserById(id) {
 }
 
 async function getUsers() {
-    const query = `SELECT * FROM users`;
+    const query = `SELECT id, username, email, api_key FROM users`;
     return new Promise((resolve, reject) => {
         db.all(query, function (error, rows) {
             if (error) {

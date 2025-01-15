@@ -3,7 +3,7 @@ let db;
 (async function() { db = await getDatabase() })()
 
 async function getSettings(userId) {
-    const query = `SELECT * FROM user_settings WHERE user_id = ?`;
+    const query = `SELECT setting_key, setting_value FROM user_settings WHERE user_id = ?`;
 
     return new Promise((resolve, reject) => {
         db.all(query, [userId], function (error, rows) {
