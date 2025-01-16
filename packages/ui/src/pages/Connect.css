@@ -1,6 +1,6 @@
 #connect-form {
   height: fit-content;
-  width: 500px;
+  width: 600px;
   padding: 0 20px;
   display: flex;
   flex-direction: column;
@@ -19,6 +19,10 @@
     padding-left: 15px;
   }
 
+  input {
+    border-radius: 10px;
+  }
+
   input:focus {
     outline: none;
   }
@@ -31,7 +35,7 @@
 
 #preview-box {
   height: fit-content;
-  width: 500px;
+  width: 600px;
   padding: 0 20px;
   display: flex;
   flex-direction: column;
@@ -44,10 +48,9 @@
 
 #thumbnail-box {
   width: 100%;
-  aspect-ratio: 16/9;
 
   img {
-    height: 100%;
+    aspect-ratio: 16/9;
     object-fit: contain;
   }
 }

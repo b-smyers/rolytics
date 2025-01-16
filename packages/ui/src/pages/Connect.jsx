@@ -15,13 +15,28 @@ function Connect() {
   const [thumbnailLink, setThumbnailLink] = useState('/icons/missing.svg');
   const [isFormValid, setIsFormValid] = useState(false);
 
+  function reset() {
+    setIsFormValid(false);
+    setPlaceId('');
+    setExperienceId('');
+    setName('');
+    setDescription('');
+    setThumbnailLink('/icons/missing.svg');
+  }
+
   async function updateAutofill(link) {
     setPageLink(link || "");
-    if (!link) { return; }
+    if (!link) {
+      reset();
+      return;
+    }
 
     const id = link.match(/(?<=roblox\.com\/games\/)[0-9]+/);
 
-    if (!id || !id[0]) { setIsFormValid(false); setPlaceId(''); setExperienceId(''); setName(''); setDescription(''); setThumbnailLink('/icons/missing.svg'); return; }
+    if (!id || !id[0]) {
+      reset();
+      return;
+    }
     if (id[0] == placeId) { return; } // Avoid uneccessary requests
     setPlaceId(id[0]);
 
@@ -77,7 +92,7 @@ function Connect() {
     <PageLayout title={"Connect"}>
       <form id='connect-form' onSubmit={handleSubmit}>
         <div className='connect-entry'>
-          <h2>1. Link</h2>
+          <h2>Experience Link</h2>
           <input
             type="url"
             name="page-link"
@@ -123,7 +138,7 @@ function Connect() {
         </div>
         <div id='title-box'>
           <h2>{name}</h2>
-          <a href={pageLink}>Game Page</a>
+          <a href={pageLink || '#'}>Game Page</a>
         </div>
         <p>{description ? description : <small>No description</small>}</p>
       </div>
