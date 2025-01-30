@@ -6,8 +6,8 @@ let db;
 
 const aggregateSchema = require('@schemas/aggregate.schemas.json');
 
-async function createAnalytics(server_id, timestamp = new Date(), purchases, performance, social, players, metadata) {
-    const query = `INSERT INTO analytics (server_id, timestamp, purchases, performance, social, players, metadata) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+async function createMetric(server_id, timestamp = new Date(), purchases, performance, social, players, metadata) {
+    const query = `INSERT INTO metrics (server_id, timestamp, purchases, performance, social, players, metadata) VALUES (?, ?, ?, ?, ?, ?, ?)`;
     
     return new Promise((resolve, reject) => {
         db.run(query, [
@@ -20,7 +20,7 @@ async function createAnalytics(server_id, timestamp = new Date(), purchases, per
             JSON.stringify(metadata)
         ], function (error) {
             if (error) {
-                console.error(`An error occured creating analytics: ${error.message}`);
+                console.error(`An error occured creating metrics: ${error.message}`);
                 reject(error);
             }
             console.log(`Payload data logged`);
@@ -29,28 +29,28 @@ async function createAnalytics(server_id, timestamp = new Date(), purchases, per
     });
 }
 
-async function deleteAnalytics(id) {
-    const query = `DELETE FROM analytics WHERE id = ?`;
+async function deleteMetric(id) {
+    const query = `DELETE FROM metrics WHERE id = ?`;
 
     return new Promise((resolve, reject) => {
         db.run(query, [id], function (error) {
             if (error) {
-                console.error(`An error occured deleting analytics: ${error.message}`);
+                console.error(`An error occured deleting metrics: ${error.message}`);
                 reject(error);
             }
-            console.log(`Analytics deleted`);
+            console.log(`Deleted ${this.changes} rows.`);
             resolve();
         });
     });
 }
 
 async function getMetricById(id) {
-    const query = `SELECT timestamp, server_id, purchases, performance, social, players, metadata FROM analytics WHERE id = ?`;
+    const query = `SELECT timestamp, server_id, purchases, performance, social, players, metadata FROM metrics WHERE id = ?`;
 
     return new Promise((resolve, reject) => {
         db.get(query, [id], function (error, row) {
             if (error) {
-                console.error(`An error occured getting analytics by id: ${error.message}`);
+                console.error(`An error occured getting metrics by id: ${error.message}`);
                 reject(error);
             }
             resolve(row);
@@ -59,7 +59,7 @@ async function getMetricById(id) {
 }
 
 async function getMetricsByServerId(server_id, limit = 20) {
-    const query = `SELECT timestamp, server_id, purchases, performance, social, players, metadata FROM analytics WHERE server_id = ? ORDER BY timestamp DESC LIMIT ${limit}`;
+    const query = `SELECT timestamp, server_id, purchases, performance, social, players, metadata FROM metrics WHERE server_id = ? ORDER BY timestamp DESC LIMIT ${limit}`;
 
     return new Promise((resolve, reject) => {
         db.all(query, [server_id], function (error, rows) {
@@ -73,7 +73,7 @@ async function getMetricsByServerId(server_id, limit = 20) {
 }
 
 async function getPerformanceMetricsByServerId(server_id, limit = 20) {
-    const query = `SELECT performance FROM analytics WHERE server_id = ORDER BY timestamp DESC ? LIMIT ${limit}`;
+    const query = `SELECT performance FROM metrics WHERE server_id = ORDER BY timestamp DESC ? LIMIT ${limit}`;
 
     return new Promise((resolve, reject) => {
         db.all(query, [server_id], function (error, rows) {
@@ -87,7 +87,7 @@ async function getPerformanceMetricsByServerId(server_id, limit = 20) {
 }
 
 async function getPurchasesMetricsByServerId(server_id, limit = 20) {
-    const query = `SELECT purchases FROM analytics WHERE server_id = ORDER BY timestamp DESC ? LIMIT ${limit}`;
+    const query = `SELECT purchases FROM metrics WHERE server_id = ORDER BY timestamp DESC ? LIMIT ${limit}`;
 
     return new Promise((resolve, reject) => {
         db.all(query, [server_id], function (error, rows) {
@@ -101,7 +101,7 @@ async function getPurchasesMetricsByServerId(server_id, limit = 20) {
 }
 
 async function getSocialMetricsByServerId(server_id, limit = 20) {
-    const query = `SELECT social FROM analytics WHERE server_id = ORDER BY timestamp DESC ? LIMIT ${limit}`;
+    const query = `SELECT social FROM metrics WHERE server_id = ORDER BY timestamp DESC ? LIMIT ${limit}`;
 
     return new Promise((resolve, reject) => {
         db.all(query, [server_id], function (error, rows) {
@@ -115,7 +115,7 @@ async function getSocialMetricsByServerId(server_id, limit = 20) {
 }
 
 async function getPlayersMetricsByServerId(server_id, limit = 20) {
-    const query = `SELECT players FROM analytics WHERE server_id = ORDER BY timestamp DESC ? LIMIT ${limit}`;
+    const query = `SELECT players FROM metrics WHERE server_id = ORDER BY timestamp DESC ? LIMIT ${limit}`;
 
     return new Promise((resolve, reject) => {
         db.all(query, [server_id], function (error, rows) {
@@ -129,7 +129,7 @@ async function getPlayersMetricsByServerId(server_id, limit = 20) {
 }
 
 async function getMetadataMetricsByServerId(server_id, limit = 20) {
-    const query = `SELECT metadata FROM analytics WHERE server_id = ORDER BY timestamp DESC ? LIMIT ${limit}`;
+    const query = `SELECT metadata FROM metrics WHERE server_id = ORDER BY timestamp DESC ? LIMIT ${limit}`;
 
     return new Promise((resolve, reject) => {
         db.all(query, [server_id], function (error, rows) {
@@ -145,7 +145,7 @@ async function getMetadataMetricsByServerId(server_id, limit = 20) {
 async function aggregatePlaceMetrics(place_id, server_limit = 100) {
     console.log(`Place (${place_id}) data is stale, re-aggregating...`);
     const servers = await serversService.getServersByPlaceId(place_id, server_limit);
-    const analytics = await Promise.all(
+    const metrics = await Promise.all(
         servers.map(server => 
             getMetricsByServerId(server.server_id, 100)
         )
@@ -163,8 +163,8 @@ async function aggregatePlaceMetrics(place_id, server_limit = 100) {
             let valuesByTimestamp = {};
     
             // Group values by timestamp
-            analytics.forEach(serverAnalytics => {
-                serverAnalytics.forEach(a => {
+            metrics.forEach(serverMetrics => {
+                serverMetrics.forEach(a => {
                     const timestamp = a.timestamp;
                     if (!valuesByTimestamp[timestamp]) {
                         valuesByTimestamp[timestamp] = [];
@@ -292,12 +292,12 @@ async function aggregateExperienceMetrics(experience_id, place_limit = 100) {
  */
 async function deleteOldMetrics(milliseconds) {
     const cutoffMs = Date.now() - milliseconds;
-    const query = `DELETE FROM analytics WHERE strftime('%s', created_at) * 1000 < ?`;
+    const query = `DELETE FROM metrics WHERE strftime('%s', created_at) * 1000 < ?`;
 
     return new Promise((resolve, reject) => {
         db.run(query, [cutoffMs], function (error) {
             if (error) {
-                console.error(`An error occured deleting analytics: ${error.message}`);
+                console.error(`An error occured deleting metrics: ${error.message}`);
                 reject(error);
             }
             console.log(`Deleted ${this.changes} rows.`);
@@ -307,8 +307,8 @@ async function deleteOldMetrics(milliseconds) {
 }
 
 module.exports = {
-    createAnalytics,
-    deleteAnalytics,
+    createMetric,
+    deleteMetric,
     getMetricById,
     getMetricsByServerId,
     getPerformanceMetricsByServerId,

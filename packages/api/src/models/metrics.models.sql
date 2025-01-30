@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS analytics (
+CREATE TABLE IF NOT EXISTS metrics (
     timestamp DATETIME NOT NULL,
     server_id INTEGER,
     purchases TEXT NOT NULL,

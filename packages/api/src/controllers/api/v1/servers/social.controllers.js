@@ -1,7 +1,7 @@
 const experiencesService = require('@services/experiences.services');
 const placesService = require('@services/places.services');
 const serversService = require('@services/servers.services');
-const analyticsService = require('@services/analytics.services');
+const metricsService = require('@services/metrics.services');
 
 async function getSocial(req, res) {
     const { server_id } = req.query;
@@ -31,7 +31,7 @@ async function getSocial(req, res) {
         });
     }
 
-    const social = await analyticsService.getSocialMetricsByServerId(server.server_id);
+    const social = await metricsService.getSocialMetricsByServerId(server.server_id);
 
     // Decode each row into JSON
     social.forEach((row, index) => {

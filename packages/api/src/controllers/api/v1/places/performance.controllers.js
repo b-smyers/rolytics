@@ -1,6 +1,6 @@
 const experiencesService = require('@services/experiences.services');
 const placesService = require('@services/places.services');
-const analyticsService = require('@services/analytics.services');
+const metricsService = require('@services/metrics.services');
 
 async function getPerformance(req, res) {
     const { place_id } = req.query;
@@ -32,7 +32,7 @@ async function getPerformance(req, res) {
     // If the data is stale, recompute it
     const lastComputedAt = new Date(place.last_computed_at);
     if (lastComputedAt < new Date(Date.now() - process.env.PLACE_STALE_TIME)) {
-        await analyticsService.aggregatePlaceMetrics(place_id);
+        await metricsService.aggregatePlaceMetrics(place_id);
     }
 
     place = await placesService.getPlaceById(place_id);

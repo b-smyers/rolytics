@@ -1,7 +1,7 @@
 const experiencesService = require('@services/experiences.services');
 const placesService = require('@services/places.services');
 const serversService = require('@services/servers.services');
-const analyticsService = require('@services/analytics.services');
+const metricsService = require('@services/metrics.services');
 
 async function getPerformance(req, res) {
     const { server_id } = req.query;
@@ -31,7 +31,7 @@ async function getPerformance(req, res) {
         });
     }
 
-    const performance = await analyticsService.getPerformanceMetricsByServerId(server.server_id);
+    const performance = await metricsService.getPerformanceMetricsByServerId(server.server_id);
 
     // Decode each row into JSON
     performance.forEach((row, index) => {

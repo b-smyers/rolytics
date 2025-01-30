@@ -45,11 +45,11 @@ app.use('/api', (req, res) => {
     });
 });
 
-const analyticsService = require('@services/analytics.services');
+const metricsService = require('@services/metrics.services');
 // Cleanup old metrics
 cron.schedule(process.env.METRIC_CLEANUP_CRON, async () => {
     console.log(`[${Date.now()}]: Cleaning up old metrics...`);
-    await analyticsService.deleteOldMetrics(process.env.METRIC_MAX_AGE);
+    await metricsService.deleteOldMetrics(process.env.METRIC_MAX_AGE);
     console.log(`[${Date.now()}]: Old metrics cleaned up!`);
 });
 

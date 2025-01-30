@@ -1,6 +1,6 @@
 const experiencesService = require('@services/experiences.services.js');
 const placesService = require('@services/places.services');
-const analyticsService = require('@services/analytics.services');
+const metricsService = require('@services/metrics.services');
 
 async function getPurchases(req, res) {
     const { experience_id } = req.query;
@@ -37,10 +37,10 @@ async function getPurchases(req, res) {
         for (const place of places) {
             const lastComputedAt = new Date(place.last_computed_at);
             if (lastComputedAt < new Date(Date.now() - process.env.PLACE_STALE_TIME)) {
-                await analyticsService.aggregatePlaceMetrics(place.place_id);
+                await metricsService.aggregatePlaceMetrics(place.place_id);
             }
         }
-        await analyticsService.aggregateExperienceMetrics(experience_id);
+        await metricsService.aggregateExperienceMetrics(experience_id);
     }
 
     experience = await experiencesService.getExperienceById(experience_id);

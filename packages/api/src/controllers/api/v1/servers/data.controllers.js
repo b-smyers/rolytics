@@ -1,4 +1,4 @@
-const analyticsService = require('@services/analytics.services.js');
+const metricsService = require('@services/metrics.services.js');
 const serversService = require('@services/servers.services.js');
 const Ajv = require("ajv");
 
@@ -54,7 +54,7 @@ async function logData(req, res) {
     } = data;
 
     // Write payload
-    analyticsService.createAnalytics(server.server_id, metadata.timestamp, purchases, performance, social, players, metadata);
+    metricsService.createMetric(server.server_id, metadata.timestamp, purchases, performance, social, players, metadata);
 
     res.status(200).json({
         code: 200,
