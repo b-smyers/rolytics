@@ -11,7 +11,7 @@ const CustomTooltip = ({ label, active, payload }) => {
     return (
       <div id="custom-tooltip">
         {payload.map((item, i) => (
-          <p key={i} style={{color: item.stroke}}>{item.name}: {item.value}</p>
+          <p key={i} style={{color: item.stroke}}>{toDisplayString(item.name)}: {DataFormater(item.value)}</p>
         ))}
         <p>Time: {label}</p>
       </div>
@@ -20,6 +20,30 @@ const CustomTooltip = ({ label, active, payload }) => {
 
   return null;
 };
+
+function toDisplayString(key = "Missing") {
+  return key.split(/[-_]/).map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+}
+
+const DataFormater = (number) => {
+  if(number >= 1_000_000_000) {
+    return Math.round(number/1000000000, 2).toString() + 'B';
+  } else if(number >= 1_000_000) {
+    return (number/1_000_000).toString() + 'M';
+  } else if(number >= 1000) {
+    return Math.round(number/1000, 2).toString() + 'K';
+  } else if (number >= 100){
+    return number.toFixed(0).toString();
+  } else if (number >= 1){
+    return number.toFixed(1).toString();
+  } else if (number >= 0.01){
+    return number.toFixed(2).toString();
+  } else if (number != 0) {
+    return number.toFixed(3).toString();
+  } else {
+    return 0;
+  }
+}
 
 function LineGraph({ label = "No Graph Label", keys = [], data = [] }) {
   return (
@@ -44,7 +68,7 @@ function LineGraph({ label = "No Graph Label", keys = [], data = [] }) {
             ))}
             <CartesianGrid id="themed" />
             <XAxis id="themed-text" reversed={true} dataKey="timestamp" />
-            <YAxis id="themed-text" />
+            <YAxis id="themed-text" tickFormatter={DataFormater}/>
             <Tooltip content={<CustomTooltip />} />
           </LineChart>
         </ResponsiveContainer>
