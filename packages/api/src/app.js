@@ -3,6 +3,7 @@ const session = require('express-session');
 const { rateLimit } = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const cron = require('node-cron');
 
 const app = express();
 app.set('trust proxy', 1);
@@ -12,7 +13,9 @@ const limiter = rateLimit({
     standardHeaders: 'draft-7',
     legacyHeaders: false
 });
-app.use(limiter);
+if (process.env.NODE_ENV !== 'development') {
+    app.use(limiter);
+}
 app.use(bodyParser.json({ limit: '10kb' }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
@@ -40,6 +43,14 @@ app.use('/api', (req, res) => {
         code: 404,
         data: null
     });
+});
+
+const analyticsService = require('@services/analytics.services');
+// Cleanup old metrics
+cron.schedule(process.env.METRIC_CLEANUP_CRON, async () => {
+    console.log(`[${Date.now()}]: Cleaning up old metrics...`);
+    await analyticsService.deleteOldMetrics(process.env.METRIC_MAX_AGE);
+    console.log(`[${Date.now()}]: Old metrics cleaned up!`);
 });
 
 module.exports = app;

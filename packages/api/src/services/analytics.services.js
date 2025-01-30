@@ -285,6 +285,27 @@ async function aggregateExperienceMetrics(experience_id, place_limit = 100) {
     });
 }
 
+/**
+ * Deletes all metrics older than 'milliseconds' old
+ * @param {number} milliseconds - The max metric age
+ * @returns {Promise} SQLite3 database promise
+ */
+async function deleteOldMetrics(milliseconds) {
+    const cutoffMs = Date.now() - milliseconds;
+    const query = `DELETE FROM analytics WHERE strftime('%s', created_at) * 1000 < ?`;
+
+    return new Promise((resolve, reject) => {
+        db.run(query, [cutoffMs], function (error) {
+            if (error) {
+                console.error(`An error occured deleting analytics: ${error.message}`);
+                reject(error);
+            }
+            console.log(`Deleted ${this.changes} rows.`);
+            resolve();
+        });
+    });
+}
+
 module.exports = {
     createAnalytics,
     deleteAnalytics,
@@ -296,5 +317,6 @@ module.exports = {
     getPlayersMetricsByServerId,
     getMetadataMetricsByServerId,
     aggregatePlaceMetrics,
-    aggregateExperienceMetrics
+    aggregateExperienceMetrics,
+    deleteOldMetrics
 }
