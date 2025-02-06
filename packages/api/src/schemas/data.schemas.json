@@ -112,7 +112,7 @@
                                 "product": { "type": "string" },
                                 "raw_value": { "type": "string" }
                             },
-                            "required": ["comment", "product", "raw_value"],
+                            "required": [],
                             "additionalProperties": false
                         },
                         "hostname":    { "type": "string" },
@@ -132,7 +132,7 @@
                         "region_code": { "type": "string" },
                         "country_iso": { "type": "string" }
                     },
-                    "required": ["hostname", "longitude", "asn_org", "country", "time_zone", "ip_decimal", "metro_code", "ip", "asn", "latitude", "city", "zip_code", "region_name", "country_eu", "region_code", "country_iso"],
+                    "required": [],
                     "additionalProperties": false
                 }
             },
