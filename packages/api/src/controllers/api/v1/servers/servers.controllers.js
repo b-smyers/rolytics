@@ -19,7 +19,7 @@ async function getServers(req, res) {
 
     const experience = await experiencesService.getExperienceById(place?.experience_id);
     // Make sure they own the experience
-    if (experience.user_id !== req.user.id) {
+    if (!experience || experience.user_id !== req.user.id) {
         return res.status(403).json({
             code: 403,
             status: 'error',
