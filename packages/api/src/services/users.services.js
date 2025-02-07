@@ -1,170 +1,89 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const getDatabase = require('@services/sqlite.services');
-let db;
-(async function() { db = await getDatabase() })()
+const db = require('@services/sqlite.services');
 
-async function createUser(username, email, password) {
+function createUser(username, email, password) {
     const insertQuery = `INSERT INTO users (username, email, password) VALUES (?, ?, ?)`;
     const updateQuery = `UPDATE users SET api_key = ? WHERE id = ?`;
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const userId = await new Promise((resolve, reject) => {
-        db.run(insertQuery, [username, email, hashedPassword], function (error) {
-            if (error) {
-                console.error(`An error occured creating user: ${error.message}`);
-                return reject(error);
-            }
-            resolve(this.lastID);
-        });
-    });
-
-    // Generate JWT token and add it to user
-    const api_key = jwt.sign({ id: userId }, process.env.JWT_API_KEY_SECRET, { algorithm: 'HS256' }); // No expiry
-
-    return new Promise((resolve, reject) => {
-        db.run(updateQuery, [api_key, userId], function (error) {
-            if (error) {
-                console.error(`An error occured creating api_key for userID ${userId}: ${error.message}`);
-                return reject(error);
-            }
-            console.log(api_key, api_key.length);
-            console.log('New user registered:', username);
-            resolve({ userId, username, email });
-        });
-    });
+    
+    const hashedPassword = bcrypt.hashSync(password, 10);
+    const stmt = db.prepare(insertQuery);
+    const result = stmt.run(username, email, hashedPassword);
+    
+    const userId = result.lastInsertRowid;
+    const api_key = jwt.sign({ id: userId }, process.env.JWT_API_KEY_SECRET, { algorithm: 'HS256' });
+    
+    db.prepare(updateQuery).run(api_key, userId);
+    console.log('New user registered:', username);
+    
+    return { userId, username, email };
 }
 
-async function deleteUser(id) {
+function deleteUser(id) {
     const query = `DELETE FROM users WHERE id = ?`;
-    return new Promise((resolve, reject) => {
-        db.run(query, [id], function (error) {
-            if (error) {
-                console.error(`An error occured deleting user: ${error.message}`);
-                return reject(error);
-            }
-            resolve();
-        });
-    });
+    db.prepare(query).run(id);
 }
 
-async function updateUser(id, { username, email, password, api_key }) {
+function updateUser(id, { username, email, password, api_key }) {
+    const updates = [];
     const values = [];
-    let query = `UPDATE users SET`;
 
     if (username !== undefined) {
-        query += ` username = ?`;
+        updates.push('username = ?');
         values.push(username);
     }
-
     if (email !== undefined) {
-        query += ` email = ?`;
+        updates.push('email = ?');
         values.push(email);
     }
-
     if (password !== undefined) {
-        query += ` password = ?`;
-        const hashedPassword = await bcrypt.hash(password, 10);
-        values.push(hashedPassword);
+        updates.push('password = ?');
+        values.push(bcrypt.hashSync(password, 10));
     }
-
     if (api_key !== undefined) {
-        query += ` api_key = ?`;
+        updates.push('api_key = ?');
         values.push(api_key);
     }
 
-    query += " WHERE id = ?";
-    values.push(id);
+    if (updates.length === 0) return;
 
-    return new Promise((resolve, reject) => {
-        db.run(query, values, function (error) {
-            if (error) {
-                console.error(`An error occured updating user: ${error.message}`);
-                return reject(error);
-            }
-            resolve();
-        });
-    });
+    const query = `UPDATE users SET ${updates.join(', ')} WHERE id = ?`;
+    values.push(id);
+    db.prepare(query).run(...values);
 }
 
-async function validateCredentials(username, password) {
-    const query = `SELECT id, username, password FROM users WHERE username = ?`;
-    try {
-        const row = await new Promise((resolve, reject) => {
-            db.get(query, [username], function (error, row) {
-                if (error) {
-                    console.error(`An error occured validating credentials: ${error.message}`);
-                    return reject(error);
-                }
-                resolve(row);
-            });
-        });
+function validateCredentials(username, password) {
+    const query = `SELECT id, username, email, password FROM users WHERE username = ?`;
+    const row = db.prepare(query).get(username);
 
-        if (!row) { return false; }
-
-        const isPasswordCorrect = await bcrypt.compare(password, row.password);
-        if (isPasswordCorrect) {
-            console.log('A user logged in:', username);
-            return { id: row.id, username: row.username, email: row.email };
-        } else {
-            console.log('A user failed to login:', username);
-            return false;
-        }
-    } catch (error) {
-        throw new Error(`Unable to login user: ${error.message}`);
+    if (!row) return false;
+    if (bcrypt.compareSync(password, row.password)) {
+        console.log('A user logged in:', username);
+        return { id: row.id, username: row.username, email: row.email };
+    } else {
+        console.log('A user failed to login:', username);
+        return false;
     }
 }
 
-async function getUsersByUsername(username, limit = 10) {
-    const query = `SELECT id, username, email, api_key FROM users WHERE username = ? LIMIT ${limit}`;
-    return new Promise((resolve, reject) => {
-        db.all(query, [username], function (error, row) {
-            if (error) {
-                console.error(`An error occured getting users by username: ${error.message}`);
-                return reject(error);
-            }
-            resolve(row);
-        });
-    });
+function getUsersByUsername(username, limit = 10) {
+    const query = `SELECT id, username, email, api_key FROM users WHERE username = ? LIMIT ?`;
+    return db.prepare(query).all(username, limit);
 }
 
-async function getUsersByEmail(email, limit = 10) {
-    const query = `SELECT id, username, email, api_key FROM users WHERE email = ? LIMIT ${limit}`;
-    return new Promise((resolve, reject) => {
-        db.all(query, [email], function (error, row) {
-            if (error) {
-                console.error(`An error occured getting users by email: ${error.message}`);
-                return reject(error);
-            }
-            resolve(row);
-        });
-    });
+function getUsersByEmail(email, limit = 10) {
+    const query = `SELECT id, username, email, api_key FROM users WHERE email = ? LIMIT ?`;
+    return db.prepare(query).all(email, limit);
 }
 
-async function getUserById(id) {
+function getUserById(id) {
     const query = `SELECT id, username, email, api_key FROM users WHERE id = ?`;
-    return new Promise((resolve, reject) => {
-        db.get(query, [id], function (error, row) {
-            if (error) {
-                console.error(`An error occured getting user by id: ${error.message}`);
-                return reject(error);
-            }
-            resolve(row);
-        });
-    });
+    return db.prepare(query).get(id);
 }
 
-async function getUsers() {
+function getUsers() {
     const query = `SELECT id, username, email, api_key FROM users`;
-    return new Promise((resolve, reject) => {
-        db.all(query, function (error, rows) {
-            if (error) {
-                console.error(`An error occured getting users: ${error.message}`);
-                return reject(error);
-            }
-            resolve(rows);
-        });
-    });
+    return db.prepare(query).all();
 }
 
 module.exports = {

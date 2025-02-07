@@ -1,106 +1,53 @@
-const getDatabase = require('@services/sqlite.services');
-let db;
-(async function() { db = await getDatabase() })()
+const db = require('@services/sqlite.services');
 
-async function createServer(roblox_server_id, place_id, name) {
+function createServer(roblox_server_id, place_id, name) {
     const query = `INSERT INTO servers (roblox_server_id, place_id, name) VALUES (?, ?, ?)`;
-
-    return new Promise((resolve, reject) => {
-        db.run(query, [roblox_server_id, place_id, name], function (error) {
-            if (error) {
-                console.error(`An error occured creating server: ${error.message}`);
-                reject(error);
-            }
-            console.log(`Server ${name} created`);
-            resolve(this.lastID);
-        });
-    });
+    const result = db.prepare(query).run(roblox_server_id, place_id, name);
+    console.log(`Server ${name} created`);
+    return result.lastInsertRowid;
 }
 
-async function deleteServer(server_id) {
+function deleteServer(server_id) {
     const query = `DELETE FROM servers WHERE server_id = ?`;
-
-    return new Promise((resolve, reject) => {
-        db.run(query, [server_id], function (error) {
-            if (error) {
-                console.error(`An error occured deleting server: ${error.message}`);
-                reject(error);
-            }
-            console.log(`Server deleted`);
-            resolve();
-        });
-    });
+    db.prepare(query).run(server_id);
+    console.log(`Server deleted`);
 }
 
-async function updateServer(server_id, { name, active }) {
+function updateServer(server_id, { name, active }) {
+    const updates = [];
     const values = [];
-    let query = `UPDATE servers SET`;
-
+    
     if (name !== undefined) {
-        query += ` name = ?`;
+        updates.push(`name = ?`);
         values.push(name);
     }
-
+    
     if (active !== undefined) {
-        query += ` active = ?`;
+        updates.push(`active = ?`);
         values.push(!!active);
     }
-
-    query += " WHERE server_id = ?";
+    
+    if (updates.length === 0) return;
+    
+    const query = `UPDATE servers SET ${updates.join(', ')} WHERE server_id = ?`;
     values.push(server_id);
-
-    return new Promise((resolve, reject) => {
-        db.run(query, values, function (error) {
-            if (error) {
-                console.error(`An error occured updating server: ${error.message}`);
-                reject(error);
-            }
-            console.log(`Server updated`);
-            resolve();
-        });
-    });
+    db.prepare(query).run(...values);
+    console.log(`Server updated`);
 }
 
-async function getServerById(server_id) {
+function getServerById(server_id) {
     const query = `SELECT * FROM servers WHERE server_id = ?`;
-
-    return new Promise((resolve, reject) => {
-        db.get(query, [server_id], function (error, row) {
-            if (error) {
-                console.error(`An error occured getting server by id: ${error.message}`);
-                reject(error);
-            }
-            resolve(row);
-        });
-    });
+    return db.prepare(query).get(server_id);
 }
 
-async function getServerByRobloxServerId(roblox_server_id) {
+function getServerByRobloxServerId(roblox_server_id) {
     const query = `SELECT * FROM servers WHERE roblox_server_id = ?`;
-
-    return new Promise((resolve, reject) => {
-        db.get(query, [roblox_server_id], function (error, row) {
-            if (error) {
-                console.error(`An error occured getting server by roblox server id: ${error.message}`);
-                reject(error);
-            }
-            resolve(row);
-        });
-    });
+    return db.prepare(query).get(roblox_server_id);
 }
 
-async function getServersByPlaceId(place_id, limit = 10) {
-    const query = `SELECT * FROM servers WHERE place_id = ? LIMIT ${limit}`;
-
-    return new Promise((resolve, reject) => {
-        db.all(query, [place_id], function (error, rows) {
-            if (error) {
-                console.error(`An error occured getting server by place id: ${error.message}`);
-                reject(error);
-            }
-            resolve(rows);
-        });
-    });
+function getServersByPlaceId(place_id, limit = 10) {
+    const query = `SELECT * FROM servers WHERE place_id = ? LIMIT ?`;
+    return db.prepare(query).all(place_id, limit);
 }
 
 module.exports = {
@@ -110,4 +57,4 @@ module.exports = {
     getServerById,
     getServerByRobloxServerId,
     getServersByPlaceId
-}
+};

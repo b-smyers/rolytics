@@ -1,103 +1,39 @@
-const getDatabase = require('@services/sqlite.services');
-let db;
-(async function() { db = await getDatabase() })()
+const db = require('@services/sqlite.services');
 
-async function createPlace(roblox_place_id, experience_id, name) {
+function createPlace(roblox_place_id, experience_id, name) {
     const query = `INSERT INTO places (roblox_place_id, experience_id, name) VALUES (?, ?, ?)`;
-
-    return new Promise((resolve, reject) => {
-        db.run(query, [roblox_place_id, experience_id, name], function (error) {
-            if (error) {
-                console.error(`An error occured creating place: ${error.message}`);
-                reject(error);
-            }
-            console.log(`Place ${name} created`);
-            resolve(this.lastID);
-        });
-    });
+    const result = db.prepare(query).run(roblox_place_id, experience_id, name);
+    console.log(`Place ${name} created`);
+    return result.lastInsertRowid;
 }
 
-async function deletePlace(place_id) {
+function deletePlace(place_id) {
     const query = `DELETE FROM places WHERE place_id = ?`;
-
-    return new Promise((resolve, reject) => {
-        db.run(query, [place_id], function (error) {
-            if (error) {
-                console.error(`An error occured deleting place: ${error.message}`);
-                reject(error);
-            }
-            console.log(`Place deleted`);
-            resolve();
-        });
-    });
+    db.prepare(query).run(place_id);
+    console.log(`Place deleted`);
 }
 
-async function updatePlace(place_id, { name }) {
-    const values = [];
-    let query = `UPDATE places SET`;
-
-    if (name !== undefined) {
-        query += ` name = ?`;
-        values.push(name);
-    }
-
-    query += " WHERE place_id = ?";
-    values.push(place_id);
-
-    return new Promise((resolve, reject) => {
-        db.run(query, values, function (error) {
-            if (error) {
-                console.error(`An error occured updating place: ${error.message}`);
-                reject(error);
-            }
-            console.log(`Place updated`);
-            resolve();
-        });
-    });
+function updatePlace(place_id, { name }) {
+    if (name === undefined) return;
+    const query = `UPDATE places SET name = ? WHERE place_id = ?`;
+    db.prepare(query).run(name, place_id);
+    console.log(`Place updated`);
 }
 
-async function getPlaceById(place_id) {
+function getPlaceById(place_id) {
     const query = `SELECT place_id, roblox_place_id, experience_id, name, purchases, performance, social, players, metadata, last_computed_at FROM places WHERE place_id = ?`;
-
-    return new Promise((resolve, reject) => {
-        db.get(query, [place_id], function (error, row) {
-            if (error) {
-                console.error(`An error occured getting place by id: ${error.message}`);
-                reject(error);
-            }
-            resolve(row);
-        });
-    });
+    return db.prepare(query).get(place_id);
 }
 
-async function getPlaceByRobloxPlaceId(roblox_place_id) {
+function getPlaceByRobloxPlaceId(roblox_place_id) {
     const query = `SELECT place_id, roblox_place_id, experience_id, name, purchases, performance, social, players, metadata, last_computed_at FROM places WHERE roblox_place_id = ?`;
-
-    return new Promise((resolve, reject) => {
-        db.get(query, [roblox_place_id], function (error, row) {
-            if (error) {
-                console.error(`An error occured getting place by roblox_place_id: ${error.message}`);
-                reject(error);
-            }
-            resolve(row);
-        });
-    });
+    return db.prepare(query).get(roblox_place_id);
 }
 
-async function getPlacesByExperienceId(experience_id, limit = 10) {
-    const query = `SELECT place_id, roblox_place_id, experience_id, name, purchases, performance, social, players, metadata, last_computed_at FROM places WHERE experience_id = ? LIMIT ${limit}`;
-
-    return new Promise((resolve, reject) => {
-        db.all(query, [experience_id], function (error, row) {
-            if (error) {
-                console.error(`An error occured getting places by experience_id: ${error.message}`);
-                reject(error);
-            }
-            resolve(row);
-        });
-    });
+function getPlacesByExperienceId(experience_id, limit = 10) {
+    const query = `SELECT place_id, roblox_place_id, experience_id, name, purchases, performance, social, players, metadata, last_computed_at FROM places WHERE experience_id = ? LIMIT ?`;
+    return db.prepare(query).all(experience_id, limit);
 }
-
 
 module.exports = {
     createPlace,
@@ -106,4 +42,4 @@ module.exports = {
     getPlaceById,
     getPlaceByRobloxPlaceId,
     getPlacesByExperienceId
-}
+};
