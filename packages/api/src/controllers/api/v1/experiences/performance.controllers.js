@@ -2,7 +2,7 @@ const experiencesService = require('@services/experiences.services');
 const placesService = require('@services/places.services');
 const metricsService = require('@services/metrics.services');
 
-async function getPerformance(req, res) {
+function getPerformance(req, res) {
     const { experience_id } = req.query;
 
     if (!experience_id) {
@@ -16,7 +16,7 @@ async function getPerformance(req, res) {
     }
 
     // Check if the user owns the experience
-    let experience = await experiencesService.getExperienceById(experience_id);
+    let experience = experiencesService.getExperienceById(experience_id);
 
     if (experience?.user_id !== req.user.id) {
         return res.status(403).json({
@@ -32,18 +32,18 @@ async function getPerformance(req, res) {
     const lastComputedAt = new Date(experience.last_computed_at);
     if (lastComputedAt < new Date(Date.now() - process.env.EXPERIENCE_STALE_TIME)) {
         // Check if any of the places are stale
-        const places = await placesService.getPlacesByExperienceId(experience_id);
+        const places = placesService.getPlacesByExperienceId(experience_id);
         // Re-aggregate place if stale
         for (const place of places) {
             const lastComputedAt = new Date(place.last_computed_at);
             if (lastComputedAt < new Date(Date.now() - process.env.PLACE_STALE_TIME)) {
-                await metricsService.aggregatePlaceMetrics(place.place_id);
+                metricsService.aggregatePlaceMetrics(place.place_id);
             }
         }
-        await metricsService.aggregateExperienceMetrics(experience_id);
+        metricsService.aggregateExperienceMetrics(experience_id);
     }
 
-    experience = await experiencesService.getExperienceById(experience_id);
+    experience = experiencesService.getExperienceById(experience_id);
     const performance = JSON.parse(experience.performance);
 
     // Get keys (exclude 'timestamp')

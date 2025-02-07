@@ -1,0 +1,16 @@
+{
+    "theme": {
+        "type": "string",
+        "allowedValues": ["Auto", "Light", "Dark"],
+        "default": "Auto"
+    },
+    "currency": {
+        "type": "string",
+        "allowedValues": ["R$", "USD", "EUR"],
+        "default": "R$"
+    },
+    "abbreviateUserCounts": {
+        "type": "boolean",
+        "default": true
+    }
+}

@@ -2,7 +2,7 @@ const experiencesService = require('@services/experiences.services');
 const placesService = require('@services/places.services');
 const metricsService = require('@services/metrics.services');
 
-async function getPurchases(req, res) {
+function getPurchases(req, res) {
     const { place_id } = req.query;
 
     if (!place_id) {
@@ -16,8 +16,8 @@ async function getPurchases(req, res) {
     }
 
     // Check if the user owns the place
-    let place = await placesService.getPlaceById(place_id);
-    const experience = await experiencesService.getExperienceById(place?.experience_id);
+    let place = placesService.getPlaceById(place_id);
+    const experience = experiencesService.getExperienceById(place?.experience_id);
 
     if (experience?.user_id !== req.user.id) {
         return res.status(403).json({
@@ -32,10 +32,10 @@ async function getPurchases(req, res) {
     // If the data is stale, recompute it
     const lastComputedAt = new Date(place.last_computed_at);
     if (lastComputedAt < new Date(Date.now() - process.env.PLACE_STALE_TIME)) {
-        await metricsService.aggregatePlaceMetrics(place_id);
+        metricsService.aggregatePlaceMetrics(place_id);
     }
 
-    place = await placesService.getPlaceById(place_id);
+    place = placesService.getPlaceById(place_id);
     const purchases = JSON.parse(place.purchases);
 
     // Get keys (exclude 'timestamp')

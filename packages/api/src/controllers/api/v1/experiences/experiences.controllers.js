@@ -2,8 +2,8 @@ const experiencesService = require('@services/experiences.services');
 const placesService = require('@services/places.services');
 const robloxService = require('@services/roblox.services');
 
-async function getExperiences(req, res) {
-    const rows = await experiencesService.getExperiencesByUserId(req.user.id);
+function getExperiences(req, res) {
+    const rows = experiencesService.getExperiencesByUserId(req.user.id);
 
     return res.status(200).json({
         code: 200,
@@ -15,7 +15,7 @@ async function getExperiences(req, res) {
     })
 }
 
-async function connectExperience(req, res) {
+function connectExperience(req, res) {
     let { 
         roblox_experience_id,
         page_link, 
@@ -50,7 +50,7 @@ async function connectExperience(req, res) {
     }
     
     // Check account experience cap
-    const experienceCount = await experiencesService.getExperienceCountByUserId(userId);
+    const experienceCount = experiencesService.getExperienceCountByUserId(userId);
     
     if (experienceCount >= 5) { // TODO: Arbitrary limit for now
         return res.status(400).json({
@@ -63,7 +63,7 @@ async function connectExperience(req, res) {
     }
 
     // Check for pre-existing experience
-    const existingExperiences = await experiencesService.getExperiencesByUserId(userId);
+    const existingExperiences = experiencesService.getExperiencesByUserId(userId);
     // Make sure roblox_experience_id is not in existingExperiences
     const hasExistingExperience = existingExperiences.some(experience => experience.id === roblox_experience_id);
     
@@ -77,13 +77,13 @@ async function connectExperience(req, res) {
         });
     }
 
-    const experience_id = await experiencesService.createExperience(roblox_experience_id, userId, name, description, page_link, thumbnail_link);
+    const experience_id = experiencesService.createExperience(roblox_experience_id, userId, name, description, page_link, thumbnail_link);
 
     // Get places from Roblox API
-    const places = await robloxService.getPlacesByRobloxExperienceId(roblox_experience_id);
+    const places = robloxService.getPlacesByRobloxExperienceId(roblox_experience_id);
     if (places.length) {
-        await Promise.all(places.map(async place => {
-            await placesService.createPlace(place.id, experience_id, place.name);
+        Promise.all(places.map(place => {
+            placesService.createPlace(place.id, experience_id, place.name);
         }));
     }
 
@@ -96,7 +96,7 @@ async function connectExperience(req, res) {
     })
 }
 
-async function disconnectExperience(req, res) {
+function disconnectExperience(req, res) {
     return res.status(501).json({ message: 'Route not implemented' });
 }
 

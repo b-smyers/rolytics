@@ -2,7 +2,7 @@ const experiencesService = require('@services/experiences.services');
 const placesService = require('@services/places.services'); 
 const serversService = require('@services/servers.services'); 
 
-async function getServers(req, res) {
+function getServers(req, res) {
     const { place_id } = req.query;
 
     if (!place_id) {
@@ -15,9 +15,9 @@ async function getServers(req, res) {
         });
     }
 
-    const place = await placesService.getPlaceById(place_id);
+    const place = placesService.getPlaceById(place_id);
 
-    const experience = await experiencesService.getExperienceById(place?.experience_id);
+    const experience = experiencesService.getExperienceById(place?.experience_id);
     // Make sure they own the experience
     if (!experience || experience.user_id !== req.user.id) {
         return res.status(403).json({
@@ -29,7 +29,7 @@ async function getServers(req, res) {
         });
     }
 
-    const servers = await serversService.getServersByPlaceId(place?.place_id);
+    const servers = serversService.getServersByPlaceId(place?.place_id);
 
     return res.status(200).json({
         code: 200,
@@ -41,7 +41,7 @@ async function getServers(req, res) {
     });
 }
 
-async function openServer(req, res) {
+function openServer(req, res) {
     const { roblox_server_id, roblox_place_id, name } = req.body;
 
     if (!roblox_server_id || !roblox_place_id || !name) {
@@ -55,9 +55,9 @@ async function openServer(req, res) {
     }
 
     // Check if the server already exists
-    const server = await serversService.getServerByRobloxServerId(roblox_server_id);
+    const server = serversService.getServerByRobloxServerId(roblox_server_id);
     if (server && !server.active) {
-        await serversService.updateServer(server.server_id, { active: true });
+        serversService.updateServer(server.server_id, { active: true });
         console.log(`Server ${server.name}:${server.server_id} reopened`);
         return res.status(200).json({
             code: 200,
@@ -77,7 +77,7 @@ async function openServer(req, res) {
     }
 
     // Check if the place exists
-    const place = await placesService.getPlaceByRobloxPlaceId(roblox_place_id);
+    const place = placesService.getPlaceByRobloxPlaceId(roblox_place_id);
     if (!place) {
         return res.status(400).json({
             code: 400,
@@ -90,7 +90,7 @@ async function openServer(req, res) {
     
     // TODO: Need check to make sure server is part of place
 
-    await serversService.createServer(roblox_server_id, place.place_id, name);
+    serversService.createServer(roblox_server_id, place.place_id, name);
 
     console.log(`Server ${name} opened`);
 
@@ -103,7 +103,7 @@ async function openServer(req, res) {
     });
 }
 
-async function closeServer(req, res) {
+function closeServer(req, res) {
     const { roblox_server_id } = req.body;
     if (!roblox_server_id) {
         return res.status(400).json({
@@ -116,11 +116,11 @@ async function closeServer(req, res) {
     }
 
     // Get the server by id
-    const server = await serversService.getServerByRobloxServerId(roblox_server_id);
+    const server = serversService.getServerByRobloxServerId(roblox_server_id);
     // Get the place by server id
-    const place = await placesService.getPlaceById(server?.place_id);
+    const place = placesService.getPlaceById(server?.place_id);
     // Get the experience by place id
-    const experience = await experiencesService.getExperienceById(place?.experience_id);
+    const experience = experiencesService.getExperienceById(place?.experience_id);
 
     // Check if the user is the owner of the experience
     if (experience?.user_id !== req.user.id) {
@@ -133,7 +133,7 @@ async function closeServer(req, res) {
         });
     }
 
-    await serversService.updateServer(server.server_id, { active: false });
+    serversService.updateServer(server.server_id, { active: false });
 
     console.log(`Server ${server.name}:${server.server_id} closed`);
 

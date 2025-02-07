@@ -1,10 +1,10 @@
 const usersService = require('@services/users.services');
 
-async function login(req, res) {
+function login(req, res) {
     // TODO: Login with email or username
     const { username, email, password } = req.body;
     try {
-        const user = await usersService.validateCredentials(username, password);
+        const user = usersService.validateCredentials(username, password);
         if (!user) {
             return res.status(401).json({
                 code: 401,
@@ -37,11 +37,11 @@ async function login(req, res) {
     }
 }
 
-async function register(req, res) {
+function register(req, res) {
     const { username, email, password } = req.body;
 
     try {
-        const usersWithUsername = await usersService.getUsersByUsername(username);
+        const usersWithUsername = usersService.getUsersByUsername(username);
         if (usersWithUsername?.length > 0) {
             return res.status(400).json({
                 code: 400,
@@ -52,7 +52,7 @@ async function register(req, res) {
             });
         }
 
-        const usersWithEmail = await usersService.getUsersByEmail(email);
+        const usersWithEmail = usersService.getUsersByEmail(email);
         if (usersWithEmail?.length > 0) {
             return res.status(400).json({
                 code: 400,
@@ -64,7 +64,7 @@ async function register(req, res) {
         }
         
         // email & username
-        const userInfo = await usersService.createUser(username, email, password);
+        const userInfo = usersService.createUser(username, email, password);
 
         res.status(200).json({
             code: 200,

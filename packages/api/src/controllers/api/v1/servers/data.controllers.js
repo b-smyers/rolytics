@@ -7,7 +7,7 @@ const schema = require('@schemas/data.schemas.json');
 const ajv = new Ajv();
 const validate = ajv.compile(schema);
 
-async function logData(req, res) {
+function logData(req, res) {
     // Check if the req.body exists
     const data = req.body;
     if (!data) {
@@ -34,7 +34,7 @@ async function logData(req, res) {
     }
 
     // Check if the server has been opened
-    const server = await serversService.getServerByRobloxServerId(data.metadata.server.id);
+    const server = serversService.getServerByRobloxServerId(data.metadata.server.id);
     if (!server || !server.active) {
         return res.status(400).json({
             code: 400,
