@@ -17,7 +17,7 @@ jobs:
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:
-          version: 10
+          version: 9
           run_install: false
 
       - name: Set up Node.js
@@ -27,10 +27,7 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install
-
-      - name: Approve Required Builds
-        run: pnpm approve-builds
+        run: pnpm install --frozen-loackfile
 
       - name: Run tests
         run: pnpm test
