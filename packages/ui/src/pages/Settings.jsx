@@ -14,15 +14,9 @@ function Settings() {
     try {
       const response = await axios.get('/api/v1/users/settings');
       const settings = response.data.data.settings;
-      for (const setting of settings) {
-        if (setting.setting_key == "theme") {
-          setTheme(setting.setting_value);
-        } else if (setting.setting_key == "currency") {
-          setCurrency(setting.setting_value);
-        } else if (setting.setting_key == "abbreviateUserCounts") {
-          setAbbreviateUserCounts(!!setting.setting_value);
-        }
-      }
+      setTheme(settings.theme);
+      setCurrency(settings.currency);
+      setAbbreviateUserCounts(settings.abbreviateUserCounts);
     } catch (error) {
       if (error.response && error.response.data && error.response.data.data) {
         console.log(error.response.data.data.message);
