@@ -4,6 +4,12 @@ const bcrypt = require('bcrypt');
 
 describe('Users Service', () => {
     describe('createUser', () => {
+        let userId;
+        afterAll(() => {
+            // Delete created users
+            usersService.deleteUser(userId);
+        });
+        
         it('should create a new user and return it', () => {
             const username = 'John';
             const email = 'john.doe@mail.com';
@@ -11,9 +17,9 @@ describe('Users Service', () => {
 
             const user = usersService.createUser(username, email, password);
 
-            const userId = 1;
             expect(user).toHaveProperty('id');
-            expect(user.id).toBe(userId);
+            expect(user.id).toBe(1);
+            userId = user.id;
 
             expect(user).toHaveProperty('username');
             expect(user.username).toBe(username);
@@ -31,31 +37,50 @@ describe('Users Service', () => {
     });
 
     describe('deleteUser', () => {
-        it('should delete the user and return true', () => {
-            const userId = 1;
-            const result = usersService.deleteUser(userId);
-
-            expect(result).toBeTruthy();
-        });
-
-        it('should return false if no user exists', () => {
-            const userId = 1337;
-            const result = usersService.deleteUser(userId);
-
-            expect(result).not.toBeTruthy();
-        });
-    });
-
-    describe('updateUser', () => {
         let userId;
         beforeAll(() => {
-            // Create a new user to modify
+            // Create a new user to test
             const username = 'Mary';
             const email = 'mary.jane@mail.com';
             const password = 'password';
 
             const user = usersService.createUser(username, email, password);
             userId = user.id;
+        });
+
+        afterAll(() => {
+            // Delete the user
+            usersService.deleteUser(userId);
+        });
+
+        it('should delete the user and return true', () => {
+            const result = usersService.deleteUser(userId);
+
+            expect(result).toBe(true);
+        });
+
+        it('should return false if no user exists', () => {
+            const result = usersService.deleteUser(userId);
+
+            expect(result).toBe(false);
+        });
+    });
+
+    describe('updateUser', () => {
+        let userId;
+        beforeAll(() => {
+            // Create a new user to test
+            const username = 'Mary';
+            const email = 'mary.jane@mail.com';
+            const password = 'password';
+
+            const user = usersService.createUser(username, email, password);
+            userId = user.id;
+        });
+
+        afterAll(() => {
+            // Delete the user
+            usersService.deleteUser(userId);
         });
 
         it('should update the username', () => {
@@ -98,6 +123,51 @@ describe('Users Service', () => {
 
             const user = usersService.getUserById(userId);
             expect(user.api_key).toBe(api_key);
+        });
+    });
+
+    describe('validateCredentials', () => {
+        let userId;
+        let username = 'Billie';
+        let email = 'billie.jean@mail.com';
+        let password = 'password123';
+        beforeAll(() => {
+            // Create user to test
+            const user = usersService.createUser(username, email, password);
+            userId = user.id;
+        });
+
+        afterAll(() => {
+            // Delete the user
+            usersService.deleteUser(userId);
+        });
+
+        it('should return user id, email, and username if credentials are correct', () => {
+            const result = usersService.validateCredentials(username, password);
+
+            expect(result).toBeTruthy();
+            expect(result).toHaveProperty('id');
+            expect(result.id).toBe(userId);
+
+            expect(result).toHaveProperty('email');
+            expect(result.email).toBe(email);
+
+            expect(result).toHaveProperty('username');
+            expect(result.username).toBe(username);
+        });
+
+        it('should return false if username is wrong', () => {
+            const incorrectUsername = 'wrongUsername';
+            const result = usersService.validateCredentials(incorrectUsername, password);
+
+            expect(result).toBe(false);
+        });
+
+        it('should return false if password is wrong', () => {
+            const incorrectPassword = 'wrongPassword';
+            const result = usersService.validateCredentials(username, incorrectPassword);
+
+            expect(result).toBe(false);
         });
     });
 });
