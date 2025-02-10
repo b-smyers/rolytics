@@ -5,7 +5,7 @@ logs/
 .env
 
 # sqlite
-*.db
+*.db*
 
 # Development
 .editorconfig

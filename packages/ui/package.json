@@ -7,7 +7,8 @@
     "start": "pnpm --filter=ui build && vite preview --host",
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "echo \"[ UI ]: No test step\""
   },
   "dependencies": {
     "react": "^19.0.0",

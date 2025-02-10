@@ -1,25 +1,10 @@
-const settingsdb = require('@services/settings.services');
+const settingsService = require('@services/settings.services');
 const usersdb = require('@services/users.services');
 
-const settingsSchema = {
-    theme: {
-        type: 'string',
-        allowedValues: ['Auto', 'Light', 'Dark'],
-        default: 'Auto'
-    },
-    currency: {
-        type: 'string',
-        allowedValues: ['R$', 'USD', 'EUR'],
-        default: 'R$'
-    },
-    abbreviateUserCounts: {
-        type: 'boolean',
-        default: true
-    }
-}
+const schema = require('@schemas/settings.schemas.json');
 
 function validateSetting(key, value) {
-    const setting = settingsSchema[key];
+    const setting = schema[key];
     if (!setting) {
         return { valid: false, message: `Unknown setting: ${key}` };
     }
@@ -37,9 +22,9 @@ function validateSetting(key, value) {
     return { valid: true };
 }
 
-async function getSettings(req, res) {
+function getSettings(req, res) {
     try {
-        const settings = await settingsdb.getSettings(req.user?.id);
+        const settings = settingsService.getSettings(req.user.id);
         res.status(200).json({
             code: 200,
             status: 'success',
@@ -60,7 +45,7 @@ async function getSettings(req, res) {
     }
 }
 
-async function updateSettings(req, res) {
+function updateSettings(req, res) {
     const { theme, currency, abbreviateUserCounts } = req.body;
 
     // Validate new setting changes
@@ -80,14 +65,14 @@ async function updateSettings(req, res) {
 
     // Use defaults for missing settings
     const updatedSettings = {
-        theme: theme ?? settingsSchema.theme.default,
-        currency: currency ?? settingsSchema.currency.default,
-        abbreviateUserCounts: abbreviateUserCounts ?? settingsSchema.abbreviateUserCounts.default
+        theme: theme ?? schema.theme.default,
+        currency: currency ?? schema.currency.default,
+        abbreviateUserCounts: abbreviateUserCounts ?? schema.abbreviateUserCounts.default
     };
 
-    // Update settingsdb
+    // Update settingsService
     try {
-        await settingsdb.setSettings(req.user?.id, updatedSettings);
+        settingsService.setSettings(req.user?.id, updatedSettings);
         res.status(200).json({
             code: 200,
             status: 'success',
@@ -107,9 +92,9 @@ async function updateSettings(req, res) {
     }
 }
 
-async function getProfile(req, res) {
+function getProfile(req, res) {
     try {
-        const user = await usersdb.getUserById(req.user.id);
+        const user = usersdb.getUserById(req.user.id);
         res.status(200).json({
             code: 200,
             status: 'success',

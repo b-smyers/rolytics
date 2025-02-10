@@ -3,7 +3,7 @@ const placesService = require('@services/places.services');
 const serversService = require('@services/servers.services');
 const metricsService = require('@services/metrics.services');
 
-async function getPlayers(req, res) {
+function getPlayers(req, res) {
     const { server_id } = req.query;
 
     if (!server_id) {
@@ -17,9 +17,9 @@ async function getPlayers(req, res) {
     }
 
     // Check if the user owns the server
-    const server = await serversService.getServerById(server_id);
-    const place = await placesService.getPlaceById(server?.place_id);
-    const experience = await experiencesService.getExperienceById(place?.experience_id);
+    const server = serversService.getServerById(server_id);
+    const place = placesService.getPlaceById(server?.place_id);
+    const experience = experiencesService.getExperienceById(place?.experience_id);
 
     if (experience?.user_id !== req.user.id) {
         return res.status(403).json({
@@ -31,7 +31,7 @@ async function getPlayers(req, res) {
         });
     }
 
-    const players = await metricsService.getPlayersMetricsByServerId(server.server_id);
+    const players = metricsService.getPlayersMetricsByServerId(server.server_id);
 
     // Decode each row into JSON
     players.forEach((row, index) => {

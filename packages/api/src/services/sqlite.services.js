@@ -1,8 +1,8 @@
-const sqlite3 = require('sqlite3').verbose();
+const sqlite3 = require('better-sqlite3');
 const fs = require('fs');
 const path = require('path');
 
-const dbFile = 'database.db';
+const dbFile = process.env.NODE_ENV !== 'test' ? 'database.db' : ':memory:';
 
 // SQL schema files
 const modelFiles = [
@@ -14,58 +14,22 @@ const modelFiles = [
     path.join(__dirname, '../models', 'user_settings.models.sql'),
 ];
 
-let db;
-let initPromise;
+const db = sqlite3(dbFile);
+db.pragma('journal_mode = WAL');
+console.log('Database connected');
 
-async function initializeDatabase() {
-    if (initPromise) {
-        return initPromise;
-    }
-
-    initPromise = new Promise((resolve, reject) => {
-        const db = new sqlite3.Database(dbFile, (err) => {
-            if (err) {
-                console.error(`Error connecting to database: ${err.message}`);
-                reject(err);
-            } else {
-                console.log('Database connected');
-                resolve(db);
-            }
-        });
-    });
-
-    db = await initPromise;
+// Execute schemas
+for (const filePath of modelFiles) {
+    const schema = fs.readFileSync(filePath, 'utf-8');
 
     try {
-        for (const filePath of modelFiles) {
-            const schema = fs.readFileSync(filePath, 'utf-8');
-            await new Promise((resolve, reject) => {
-                db.exec(schema, (err) => {
-                    if (err) {
-                        console.error(`Error executing schema from ${filePath}: ${err.message}`);
-                        reject(err);
-                    } else {
-                        resolve();
-                    }
-                });
-            });
-        }
-        console.log('All schemas executed successfully');
-    } catch (err) {
-        console.error(`Error during schema execution: ${err.message}`);
-        throw err;
+        db.exec(schema);
+    } catch (error) {
+        console.error(`Model error: ${filePath}\nSQLite3 error:${error.message}`);
+        process.exit(1);
     }
-
-    return db;
 }
+console.log('All schemas executed successfully');
 
-async function getDatabase() {
-    if (db) {
-        return db; // Return if already initialized
-    }
-
-    // Initialize the database if not already done
-    return await initializeDatabase();
-}
-
-module.exports = getDatabase;
+// Export the database instance
+module.exports = db;
