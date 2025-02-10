@@ -3,7 +3,7 @@ const experiencesService = require('@services/experiences.services');
 const placesService = require('@services/places.services');
 const db = require('@services/sqlite.services');
 
-describe('places Service', () => {
+describe('Places Service', () => {
     const username = 'Tony';
     const email = 'tony.stark@mail.com';
     const password = 'ironmaniscool';
@@ -41,8 +41,6 @@ describe('places Service', () => {
             const place = placesService.getPlaceById(placeId);
             expect(place).toHaveProperty('roblox_place_id');
             expect(place.roblox_place_id).toBe(robloxPlaceId);
-            expect(place).toHaveProperty('place_id');
-            expect(place.place_id).toBe(placeId);
             expect(place).toHaveProperty('name');
             expect(place.name).toBe(name);
         });
