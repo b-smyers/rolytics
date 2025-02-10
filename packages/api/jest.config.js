@@ -2,7 +2,8 @@ module.exports = {
     verbose: true,
     detectOpenHandles: true,
     testEnvironment: 'node',
-    setupFiles: ['./tests/setup.js'],
+    setupFiles: ['./tests/jest.preSetup.js'],
+    setupFilesAfterEnv: ['./tests/jest.postSetup.js'],
     moduleNameMapper: {
         '^@api/(.*)$': '<rootDir>/src/$1',
         "@controllers/(.*)": "<rootDir>/src/controllers/$1",
