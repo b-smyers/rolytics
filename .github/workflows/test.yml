@@ -25,12 +25,12 @@ jobs:
         with:
           node-version: 20
           cache: 'pnpm'
-        
-      - name: Approve Required Builds
-        run: pnpm approve-builds
 
       - name: Install dependencies
         run: pnpm install
+
+      - name: Approve Required Builds
+        run: pnpm approve-builds
 
       - name: Run tests
         run: pnpm test
