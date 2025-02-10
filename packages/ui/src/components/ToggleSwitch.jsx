@@ -1,8 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './ToggleSwitch.css';
 
 function ToggleSwitch({ name, selected, onChange }) {
     const [state, setState] = useState(selected);
+
+    useEffect(() => {
+        setState(selected);
+    }, [selected]);
 
     return (
         <>
@@ -12,7 +16,10 @@ function ToggleSwitch({ name, selected, onChange }) {
                 id={`toggle-switch-new`}
                 type="checkbox"
                 checked={state}
-                onChange={() => {setState(!state); onChange(state);}}
+                onChange={() => {
+                    setState(!state); 
+                    onChange(!state);
+                }}
             />
             <label
                 id="toggle-switch-label"
