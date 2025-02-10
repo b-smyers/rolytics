@@ -2,7 +2,19 @@ const db = require('@services/sqlite.services');
 
 function getSettings(userId) {
     const query = `SELECT setting_key, setting_value FROM user_settings WHERE user_id = ?`;
-    return db.prepare(query).all(userId);
+    const result = db.prepare(query).all(userId);
+
+    const settings = {};
+
+    result.forEach(({ setting_key, setting_value }) => {
+        try {
+            settings[setting_key] = JSON.parse(setting_value);
+        } catch {
+            settings[setting_key] = setting_value;
+        }
+    });
+
+    return settings;
 }
 
 function setSettings(userId, settings) {

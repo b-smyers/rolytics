@@ -24,7 +24,7 @@ function validateSetting(key, value) {
 
 function getSettings(req, res) {
     try {
-        const settings = settingsService.getSettings(req.user?.id);
+        const settings = settingsService.getSettings(req.user.id);
         res.status(200).json({
             code: 200,
             status: 'success',

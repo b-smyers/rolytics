@@ -9,8 +9,9 @@ function createServer(roblox_server_id, place_id, name) {
 
 function deleteServer(server_id) {
     const query = `DELETE FROM servers WHERE server_id = ?`;
-    db.prepare(query).run(server_id);
+    const result = db.prepare(query).run(server_id);
     console.log(`Server deleted`);
+    return result.changes != 0;
 }
 
 function updateServer(server_id, { name, active }) {
@@ -24,7 +25,7 @@ function updateServer(server_id, { name, active }) {
     
     if (active !== undefined) {
         updates.push(`active = ?`);
-        values.push(!!active);
+        values.push(active ? 1 : 0);
     }
     
     if (updates.length === 0) return;

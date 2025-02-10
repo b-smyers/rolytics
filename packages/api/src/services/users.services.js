@@ -10,37 +10,37 @@ function createUser(username, email, password) {
     const stmt = db.prepare(insertQuery);
     const result = stmt.run(username, email, hashedPassword);
     
-    const userId = result.lastInsertRowid;
-    const api_key = jwt.sign({ id: userId }, process.env.JWT_API_KEY_SECRET, { algorithm: 'HS256' });
+    const id = result.lastInsertRowid;
+    const api_key = jwt.sign({ id }, process.env.JWT_API_KEY_SECRET, { algorithm: 'HS256' });
     
-    db.prepare(updateQuery).run(api_key, userId);
+    db.prepare(updateQuery).run(api_key, id);
     console.log('New user registered:', username);
     
-    return { userId, username, email };
+    return { id, username, email };
 }
 
 function deleteUser(id) {
     const query = `DELETE FROM users WHERE id = ?`;
-    db.prepare(query).run(id);
+    return db.prepare(query).run(id).changes != 0;
 }
 
 function updateUser(id, { username, email, password, api_key }) {
     const updates = [];
     const values = [];
 
-    if (username !== undefined) {
+    if (!!username) {
         updates.push('username = ?');
         values.push(username);
     }
-    if (email !== undefined) {
+    if (!!email) {
         updates.push('email = ?');
         values.push(email);
     }
-    if (password !== undefined) {
+    if (!!password) {
         updates.push('password = ?');
         values.push(bcrypt.hashSync(password, 10));
     }
-    if (api_key !== undefined) {
+    if (!!api_key) {
         updates.push('api_key = ?');
         values.push(api_key);
     }

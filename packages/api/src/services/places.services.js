@@ -9,8 +9,9 @@ function createPlace(roblox_place_id, experience_id, name) {
 
 function deletePlace(place_id) {
     const query = `DELETE FROM places WHERE place_id = ?`;
-    db.prepare(query).run(place_id);
+    const result = db.prepare(query).run(place_id);
     console.log(`Place deleted`);
+    return result.changes != 0;
 }
 
 function updatePlace(place_id, { name }) {

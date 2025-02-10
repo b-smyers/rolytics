@@ -2,7 +2,7 @@ const sqlite3 = require('better-sqlite3');
 const fs = require('fs');
 const path = require('path');
 
-const dbFile = 'database.db';
+const dbFile = process.env.NODE_ENV !== 'test' ? 'database.db' : ':memory:';
 
 // SQL schema files
 const modelFiles = [
@@ -15,6 +15,7 @@ const modelFiles = [
 ];
 
 const db = sqlite3(dbFile);
+db.pragma('journal_mode = WAL');
 console.log('Database connected');
 
 // Execute schemas
