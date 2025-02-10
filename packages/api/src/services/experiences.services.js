@@ -20,7 +20,7 @@ function deleteExperience(experience_id) {
     const stmt = db.prepare(query);
     const result = stmt.run(experience_id);
     console.log(`Deleted ${result.changes} rows.`);
-    return result.changes;
+    return result.changes != 0;
 }
 
 function updateExperience(experience_id, { name, description, page_link, thumbnail_link }) {
