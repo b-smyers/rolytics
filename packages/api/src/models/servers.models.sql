@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS servers (
     server_id INTEGER PRIMARY KEY AUTOINCREMENT, -- Internal ID
-    roblox_server_id TEXT UNIQUE, -- External ID
+    roblox_server_id INTEGER, -- External ID
     place_id INTEGER,
     name TEXT,
     active BOOLEAN DEFAULT 1,

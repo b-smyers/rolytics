@@ -41,9 +41,9 @@ function getServerById(server_id) {
     return db.prepare(query).get(server_id);
 }
 
-function getServerByRobloxServerId(roblox_server_id) {
-    const query = `SELECT * FROM servers WHERE roblox_server_id = ?`;
-    return db.prepare(query).get(roblox_server_id);
+function getServerByRobloxServerIdAndPlaceId(roblox_server_id, place_id) {
+    const query = `SELECT * FROM servers WHERE roblox_server_id = ? AND place_id = ?`;
+    return db.prepare(query).get(roblox_server_id, place_id);
 }
 
 function getServersByPlaceId(place_id, limit = 10) {
@@ -56,6 +56,6 @@ module.exports = {
     deleteServer,
     updateServer,
     getServerById,
-    getServerByRobloxServerId,
+    getServerByRobloxServerIdAndPlaceId,
     getServersByPlaceId
 };

@@ -1,4 +1,5 @@
 const metricsService = require('@services/metrics.services.js');
+const placesService = require('@services/places.services.js');
 const serversService = require('@services/servers.services.js');
 const Ajv = require("ajv");
 
@@ -33,8 +34,10 @@ function logData(req, res) {
         });
     }
 
+    // Get internal place id
+    const place = placesService.getPlaceByRobloxPlaceId(data.metadata.place.id);
     // Check if the server has been opened
-    const server = serversService.getServerByRobloxServerId(data.metadata.server.id);
+    const server = serversService.getServerByRobloxServerIdAndPlaceId(data.metadata.server.id, place.place_id);
     if (!server || !server.active) {
         return res.status(400).json({
             code: 400,

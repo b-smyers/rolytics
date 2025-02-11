@@ -54,8 +54,20 @@ function openServer(req, res) {
         });
     }
 
+    const place = placesService.getPlaceByRobloxPlaceId(roblox_place_id);
+    // Check if the place exists
+    if (!place) {
+        return res.status(400).json({
+            code: 400,
+            status: 'error',
+            data: {
+                message: 'Place does not exist'
+            }
+        });
+    }
+
     // Check if the server already exists
-    const server = serversService.getServerByRobloxServerId(roblox_server_id);
+    const server = serversService.getServerByRobloxServerIdAndPlaceId(roblox_server_id, place.place_id);
     if (server && !server.active) {
         serversService.updateServer(server.server_id, { active: true });
         console.log(`Server ${server.name}:${server.server_id} reopened`);
@@ -72,18 +84,6 @@ function openServer(req, res) {
             status: 'error',
             data: {
                 message: 'Server already exists'
-            }
-        });
-    }
-
-    // Check if the place exists
-    const place = placesService.getPlaceByRobloxPlaceId(roblox_place_id);
-    if (!place) {
-        return res.status(400).json({
-            code: 400,
-            status: 'error',
-            data: {
-                message: 'Place does not exist'
             }
         });
     }
@@ -104,21 +104,20 @@ function openServer(req, res) {
 }
 
 function closeServer(req, res) {
-    const { roblox_server_id } = req.body;
-    if (!roblox_server_id) {
+    const { roblox_server_id, roblox_place_id } = req.body;
+    if (!roblox_server_id || !roblox_place_id) {
         return res.status(400).json({
             code: 400,
             status: 'error',
             data: {
-                message: 'Missing roblox_server_id'
+                message: 'Missing roblox_server_id or roblox_place_id'
             }
         });
     }
 
+    const place = placesService.getPlaceByRobloxPlaceId(roblox_place_id);
     // Get the server by id
-    const server = serversService.getServerByRobloxServerId(roblox_server_id);
-    // Get the place by server id
-    const place = placesService.getPlaceById(server?.place_id);
+    const server = serversService.getServerByRobloxServerIdAndPlaceId(roblox_server_id, place.place_id);
     // Get the experience by place id
     const experience = experiencesService.getExperienceById(place?.experience_id);
 

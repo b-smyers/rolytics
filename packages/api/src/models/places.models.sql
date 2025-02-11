@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS places (
     place_id INTEGER PRIMARY KEY AUTOINCREMENT, -- Internal ID
-    roblox_place_id TEXT, -- External ID
+    roblox_place_id INTEGER, -- External ID
     experience_id INTEGER,
     name TEXT,
     -- Aggregated Data
