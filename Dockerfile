@@ -1,5 +1,5 @@
 FROM node:20-alpine AS base
-RUN npm install -g pnpm
+RUN npm install -g pnpm@9.12.0
 WORKDIR /app
 
 # Install dependencies
