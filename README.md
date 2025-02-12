@@ -8,6 +8,9 @@
 ## Mockup
 The webpage mockup can be found [Here](https://docs.google.com/presentation/d/116s5YVGM6NIPPU6NY0C7b-ReEaT_VP3GaT1PEz7PMvg/edit?usp=sharing)
 
+## Roblox Studio Plugin
+Official [Rolytics Plugin](https://create.roblox.com/store/asset/110416944845032/Rolytics-Analytics-Tool)
+
 ## Prerequisites
 - Node.js
 - Nginx
@@ -60,12 +63,12 @@ Portforward 443 traffic on your router to your server.
 
 ## TODO
 - [x] Implement saving analytics to sqlite databse
-- [ ] Automatically delete old analytics data
+- [x] Automatically delete old analytics data
 - [ ] Automatically delete old servers
 - [ ] Implement download data button on the experience page
 - [ ] Add place analytics page
 - [ ] Add server analytics page
-- [ ] Add rolytics luaua tool to this git repo
+- [x] Add rolytics plugin tool
 
 ## Site Layout
 - /      <--(Landing page)
@@ -81,7 +84,6 @@ Portforward 443 traffic on your router to your server.
     - /experiences
         - /connect
         - /(Experience Name)
-            - /(Server ID)
 
 ## API Layout
 - /api/v1
