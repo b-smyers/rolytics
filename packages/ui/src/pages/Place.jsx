@@ -4,16 +4,18 @@ import LineGraph from '../components/LineGraph';
 import TrendIndicator from '../components/TrendIndicator';
 import PageLayout from '../layouts/PageLayout';
 import axios from 'axios';
-import './Experience.css';
+import './Place.css';
 
-async function getExperience(experience_id) {
+async function getPlace(experience_id, place_id) {
   try {
-    const response = await axios.get('/api/v1/experiences');
-    const experiences = response.data.data.experiences;
+    const response = await axios.get(`/api/v1/places`, {
+      params: { experience_id }
+    });
+    const places = response.data.data.places;
     
-    const experience = experiences.find(exp => exp.experience_id === parseInt(experience_id));
+    const place = places.find(exp => exp.place_id === parseInt(place_id));
     
-    return experience || {};
+    return place || {};
   } catch (error) {
     if (error.response && error.response.data && error.response.data.data) {
       console.log(error.response.data.data.message);
@@ -29,7 +31,7 @@ function toDisplayString(key = "Missing") {
   return key.split(/[-_]/).map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 }
 
-function Experience() {
+function Place() {
   const navigate = useNavigate();
 
   const [sources, setSources] = useState({
@@ -41,11 +43,12 @@ function Experience() {
   });
 
   const [experience, setExperience] = useState({});
+  const [place, setPlace] = useState({});
 
-  const [places, setPlaces] = useState([]);
+  const [servers, setServers] = useState([]);
 
   // Default to first source
-  const [selectedSource, setSelectedSource] = useState(Object.keys(sources)[0]);
+  const [selectedSource, setSelectedSource] = useState(Object.keys(sources)[0] || 'none');
   // Default to first key of each source (don't show empty graph by default)
   const [selectedKeys, setSelectedKeys] = useState({
     players: [],
@@ -55,24 +58,24 @@ function Experience() {
     social: []
   });
 
-  const { experience_id } = useParams();
+  const { experience_id, place_id } = useParams();
 
-  const checkExperience = useCallback(async () => {
-    const experienceData = await getExperience(experience_id);
-    setExperience(experienceData);
-    // redirect to experiences page if experience does not exist/user does not own this experience
-    if (!experienceData.name) {
+  const checkPlace = useCallback(async () => {
+    const placeData = await getPlace(experience_id, place_id);
+    setPlace(placeData);
+    // redirect to experiences page if place does not exist/user does not own this place
+    if (!placeData.name) {
       navigate('/dashboard/experiences');
     }
-  }, [experience_id, navigate]);
+  }, [experience_id, place_id, navigate]);
 
   const fetchSourceData = async (source) => {
     // Load data from initally selected source
     // All other data will be loaded ONCE when the source is changed (further updates will be updated from the refresh button)
     // Get analytics data
     try {
-      const response = await axios.get(`/api/v1/experiences/${source}`, {
-        params: { experience_id }
+      const response = await axios.get(`/api/v1/places/${source}`, {
+        params: { place_id }
       });
       const { keys, data } = response.data.data;
 
@@ -102,12 +105,12 @@ function Experience() {
     }
   };
 
-  const fetchPlaceData = async () => {
-    // Get place data
+  const fetchServerData = async () => {
+    // Get server data
     try {
-      const response = await axios.get(`/api/v1/places?experience_id=${experience_id}`);
+      const response = await axios.get(`/api/v1/servers?place_id=${place_id}`);
       
-      setPlaces(response.data.data.places);
+      setServers(response.data.data.servers);
     } catch (error) {
       if (error.response && error.response.data && error.response.data.data) {
         console.log(error.response.data.data.message);
@@ -118,9 +121,9 @@ function Experience() {
   };
 
   useEffect(() => {
-    checkExperience();
+    checkPlace();
     fetchSourceData(selectedSource);
-    fetchPlaceData();
+    fetchServerData();
   }, []); // Run once on mount
 
 
@@ -142,8 +145,8 @@ function Experience() {
   }
   
   return (
-    <PageLayout title={experience.name || "Loading..."}>
-      <div id='experience-page'>
+    <PageLayout title={place.name || "Loading..."}>
+      <div id='place-page'>
         <div className='row'>
           <div id="source-selector-box">
             <a id={selectedSource === 'players' ? 'selected-source' : ''}
@@ -157,8 +160,8 @@ function Experience() {
             <a id={selectedSource === 'social' ? 'selected-source' : ''}
               name="social" onClick={handleSourceChange}>Social</a>
           </div>
-          <div id="experience-buttons">
-            <button onClick={() => {fetchSourceData(selectedSource); fetchPlaceData();}}>
+          <div id="place-buttons">
+            <button onClick={() => {fetchSourceData(selectedSource); fetchServerData();}}>
               <img src="/icons/circular-arrow.svg" alt="" />
             </button>
             <button>
@@ -206,7 +209,7 @@ function Experience() {
                   key={i}
                   label={toDisplayString(key)}
                   past={sources[selectedSource].data[0][key]} // Use the 2nd newest point, oldest point, or average based on your TODO decision
-                  current={sources[selectedSource].data[sources[selectedSource].data.length - 1][key]}
+                  current={sources[selectedSource].data[sources[selectedSource].data.length - 1][key] || 1}
                   upIsGood={true}
                   delta={5}
                 />
@@ -219,17 +222,17 @@ function Experience() {
           )}
         </div>
         <div className="row">
-          <div id="places-box">
-            <h2>Places</h2>
-            <table id="places-table">
+          <div id="servers-box">
+            <h2>Servers</h2>
+            <table id="servers-table">
               <tr>
-                <th>Place Name</th>
+                <th>Server Name</th>
                 <th>ID</th>
               </tr>
-              {places.map((place, i) => (
-                <tr key={i} onClick={() => navigate(`${window.location.pathname}/${place.place_id}`) } style={{ cursor: 'pointer' }}>
-                  <td>{place.name}</td>
-                  <td>{parseInt(place.roblox_place_id)}</td>
+              {servers.map((server, i) => (
+                <tr key={i}>
+                  <td>{server.name}</td>
+                  <td>{parseInt(server.roblox_server_id)}</td>
                 </tr>
               ))}
             </table>
@@ -240,4 +243,4 @@ function Experience() {
   )
 }
 
-export default Experience
+export default Place

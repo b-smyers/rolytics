@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard';
 import Settings from './pages/Settings';
 import Experiences from './pages/Experiences';
 import Experience from './pages/Experience';
+import Place from './pages/Place';
 import Connect from './pages/Connect';
 import Account from './pages/Account';
 import NotFound from './pages/NotFound';
@@ -28,7 +29,8 @@ function App() {
             <Route path="dashboard/account" element={<ProtectedRoute> <Account /> </ProtectedRoute>}/>
             <Route path="dashboard/experiences" element={<ProtectedRoute> <Experiences /> </ProtectedRoute>}/>
             <Route path="dashboard/experiences/connect" element={<ProtectedRoute> <Connect /> </ProtectedRoute>}/>
-            <Route path="dashboard/experiences/:title" element={<ProtectedRoute> <Experience /> </ProtectedRoute>}/>
+            <Route path="dashboard/experiences/:experience_id" element={<ProtectedRoute> <Experience /> </ProtectedRoute>}/>
+            <Route path="dashboard/experiences/:experience_id/:place_id" element={<ProtectedRoute> <Place /> </ProtectedRoute>}/>
 
             {/* Custom 404 Page */}
             <Route path="*" element={<NotFound />} />
