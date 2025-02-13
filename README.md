@@ -1,4 +1,4 @@
-# Roytics
+# Rolytics
 **Rolytics** is a powerful analytics and control tool designed specifically for Roblox developers. It provides deeper insights into **social interactions, player engagement, in-game purchases, and performance metrics** that go beyond the standard tools offered by Roblox. Developers can use Rolytics to optimize their experiences and better understand their player base.
 
 ## Key Features
