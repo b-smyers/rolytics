@@ -2,7 +2,8 @@ name: Deploy
 
 on:
   workflow_run:
-    workflows: ["Run Tests"]
+    workflows: ["Test"]
+    branches: [main]
     types: [completed]
 
 jobs:

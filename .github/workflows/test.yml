@@ -1,4 +1,4 @@
-name: Run Tests
+name: Test
 
 on:
   push:
@@ -30,5 +30,3 @@ jobs:
 
       - name: Run tests
         run: pnpm test
-    
-    
