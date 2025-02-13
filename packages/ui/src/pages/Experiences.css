@@ -22,6 +22,7 @@
 .experience-card img {
     height: 60%;
     width: 100%;
+    object-fit: cover;
     overflow: hidden;
 }
 
