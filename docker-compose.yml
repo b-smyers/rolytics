@@ -1,9 +1,7 @@
 services:
   nginx:
     container_name: proxy
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
+    image: bsmyers/proxy:latest
     ports:
       - 80:80
       - 443:443
@@ -23,19 +21,20 @@ services:
     depends_on:
       - api
       - ui
+    restart: always
     networks:
       - proxy_network
 
   api:
     container_name: api
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: api
-      network: host
+    image: bsmyers/api:latest
     environment:
       - NODE_ENV=production
       - HTTP_PORT=5000
+      - EXPERIENCE_STALE_TIME=0
+      - PLACE_STALE_TIME=0
+      - METRICS_MAX_AGE=259200000
+      - METRIC_CLEANUP_CRON=0 0 * * *
     ports:
       - 5000:5000
     volumes:
@@ -45,22 +44,20 @@ services:
       - type: bind
         source: ./packages/api/database.db-wal
         target: /app/packages/api/database.db-wal
+    restart: always
     networks:
       - proxy_network
 
   ui:
     container_name: ui
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: ui
-      network: host
+    image: bsmyers/ui:latest
     environment:
       - NODE_ENV=production
     ports:
       - 3000:3000
     depends_on:
       - api
+    restart: always
     networks:
       - proxy_network
 
