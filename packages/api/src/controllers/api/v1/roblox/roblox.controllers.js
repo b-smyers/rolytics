@@ -1,4 +1,3 @@
-const axios = require("axios");
 const robloxService = require("@services/roblox.services");
 
 async function getPlaceDetails(req, res) {

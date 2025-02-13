@@ -2,6 +2,7 @@ const usersService = require('@services/users.services');
 
 function login(req, res) {
     // TODO: Login with email or username
+    // eslint-disable-next-line no-unused-vars
     const { username, email, password } = req.body;
     try {
         const user = usersService.validateCredentials(username, password);

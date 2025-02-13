@@ -2,7 +2,6 @@ const usersService = require('@services/users.services');
 const experiencesService = require('@services/experiences.services');
 const placesService = require('@services/places.services');
 const serversService = require('@services/servers.services');
-const db = require('@services/sqlite.services');
 
 describe('Servers Service', () => {
     const username = 'Marty';

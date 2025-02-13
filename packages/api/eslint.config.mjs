@@ -13,10 +13,10 @@ export default [
   },
   {
     languageOptions: {
-      globals: globals.browser,
-    },
-    languageOptions: {
-      globals: globals.jest
+      globals: {
+        ...globals.browser,
+        ...globals.jest
+      }
     }
   },
   pluginJs.configs.recommended,

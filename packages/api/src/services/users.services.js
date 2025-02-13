@@ -28,19 +28,19 @@ function updateUser(id, { username, email, password, api_key }) {
     const updates = [];
     const values = [];
 
-    if (!!username) {
+    if (username) {
         updates.push('username = ?');
         values.push(username);
     }
-    if (!!email) {
+    if (email) {
         updates.push('email = ?');
         values.push(email);
     }
-    if (!!password) {
+    if (password) {
         updates.push('password = ?');
         values.push(bcrypt.hashSync(password, 10));
     }
-    if (!!api_key) {
+    if (api_key) {
         updates.push('api_key = ?');
         values.push(api_key);
     }
