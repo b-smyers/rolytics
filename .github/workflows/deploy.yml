@@ -41,6 +41,10 @@ jobs:
           script: |
             cd /home/b-smyers/rolytics
             git pull origin main
+
+            export SESSION_SECRET=${{ secrets.SESSION_SECRET }}
+            export JWT_API_KEY_SECRET=${{ secrets.JWT_API_KEY_SECRET }}
+            
             docker-compose pull
             docker-compose down
             docker-compose up -d --no-deps --remove-orphans

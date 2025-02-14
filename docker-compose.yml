@@ -35,6 +35,8 @@ services:
       - PLACE_STALE_TIME=0
       - METRICS_MAX_AGE=259200000
       - METRIC_CLEANUP_CRON=0 0 * * *
+      - SESSION_SECRET={SESSION_SECRET}
+      - JWT_API_KEY_SECRET={JWT_API_KEY_SECRET}
     ports:
       - 5000:5000
     volumes:
