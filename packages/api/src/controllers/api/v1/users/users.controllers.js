@@ -47,22 +47,21 @@ function getSettings(req, res) {
 function updateSettings(req, res) {
     const { settings } = req.body;
 
-    // Validate new setting changes
-    for (const [key, value] of Object.entries(settings)) {
-        const result = validateSetting(key, value);
-        if (!result.valid) {
-            return res.status(400).json({
-                code: 400,
-                status: 'error',
-                data: {
-                    message: result.message
-                }
-            });
-        }
-    }
-
-    // Update settingsService
     try {
+        // Validate new setting changes
+        for (const [key, value] of Object.entries(settings)) {
+            const result = validateSetting(key, value);
+            if (!result.valid) {
+                return res.status(400).json({
+                    code: 400,
+                    status: 'error',
+                    data: {
+                        message: result.message
+                    }
+                });
+            }
+        }
+
         settingsService.updateSettings(req.user.id, settings);
         res.status(200).json({
             code: 200,
