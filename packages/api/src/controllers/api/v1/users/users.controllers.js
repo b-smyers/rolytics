@@ -1,5 +1,5 @@
 const settingsService = require('@services/settings.services');
-const usersdb = require('@services/users.services');
+const usersService = require('@services/users.services');
 
 const schema = require('@schemas/settings.schemas.json');
 
@@ -34,7 +34,6 @@ function getSettings(req, res) {
             }
         });
     } catch (error) {
-        console.error('Error retrieving settings:', error);
         res.status(500).json({
             code: 500,
             status: 'error',
@@ -46,10 +45,9 @@ function getSettings(req, res) {
 }
 
 function updateSettings(req, res) {
-    const { theme, currency, abbreviateUserCounts } = req.body;
+    const { settings } = req.body;
 
     // Validate new setting changes
-    const settings = { theme, currency, abbreviateUserCounts }
     for (const [key, value] of Object.entries(settings)) {
         const result = validateSetting(key, value);
         if (!result.valid) {
@@ -63,16 +61,9 @@ function updateSettings(req, res) {
         }
     }
 
-    // Use defaults for missing settings
-    const updatedSettings = {
-        theme: theme ?? schema.theme.default,
-        currency: currency ?? schema.currency.default,
-        abbreviateUserCounts: abbreviateUserCounts ?? schema.abbreviateUserCounts.default
-    };
-
     // Update settingsService
     try {
-        settingsService.setSettings(req.user?.id, updatedSettings);
+        settingsService.updateSettings(req.user.id, settings);
         res.status(200).json({
             code: 200,
             status: 'success',
@@ -81,7 +72,6 @@ function updateSettings(req, res) {
             }
         });
     } catch (error) {
-        console.error('Error updating settings:', error);
         res.status(500).json({
             code: 500,
             status: 'error',
@@ -94,7 +84,7 @@ function updateSettings(req, res) {
 
 function getProfile(req, res) {
     try {
-        const user = usersdb.getUserById(req.user.id);
+        const user = usersService.getUserById(req.user.id);
         res.status(200).json({
             code: 200,
             status: 'success',
@@ -104,7 +94,6 @@ function getProfile(req, res) {
             }
         });
     } catch (error) {
-        console.error('Error retrieving profile:', error);
         res.status(500).json({
             code: 500,
             status: 'error',

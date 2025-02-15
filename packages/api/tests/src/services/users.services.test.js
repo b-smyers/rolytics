@@ -1,4 +1,5 @@
 const usersService = require('@services/users.services');
+const settingsService = require('@services/settings.services');
 const db = require('@services/sqlite.services');
 const bcrypt = require('bcrypt');
 
@@ -33,7 +34,13 @@ describe('Users Service', () => {
 
             expect(user).toHaveProperty('api_key');
             expect(user.api_key).not.toBeNull();
-        })
+        });
+
+        it('should add a default settings object for new accounts', () => {
+            const settings = settingsService.getSettings(1);
+
+            expect(settings.length).not.toBe(0);
+        });
     });
 
     describe('deleteUser', () => {

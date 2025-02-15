@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const settingsService = require('@services/settings.services');
 const db = require('@services/sqlite.services');
 
 function createUser(username, email, password) {
@@ -15,6 +16,9 @@ function createUser(username, email, password) {
     
     db.prepare(updateQuery).run(api_key, id);
     console.log('New user registered:', username);
+
+    // Initialize default user settings
+    settingsService.createSettings(id);
     
     return { id, username, email };
 }

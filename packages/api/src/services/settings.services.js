@@ -1,4 +1,24 @@
 const db = require('@services/sqlite.services');
+const schema = require('@schemas/settings.schemas.json');
+
+function createSettings(userId, settings) {
+    const query = `INSERT INTO user_settings (user_id, setting_key, setting_value) VALUES (?, ?, ?)`;
+
+    settings = {
+        theme: schema.theme.default,
+        currency: schema.currency.default,
+        abbreviateUserCounts: schema.abbreviateUserCounts.default,
+        ...settings
+    };    
+
+    const transaction = db.transaction(settings => {
+        Object.entries(settings).forEach(([key, value]) => {
+            db.prepare(query).run(userId, key, JSON.stringify(value));
+        });
+    });
+
+    transaction(settings);
+}
 
 function getSettings(userId) {
     const query = `SELECT setting_key, setting_value FROM user_settings WHERE user_id = ?`;
@@ -17,14 +37,15 @@ function getSettings(userId) {
     return settings;
 }
 
-function setSettings(userId, settings) {
-    const query = `INSERT INTO user_settings (user_id, setting_key, setting_value)
-                   VALUES (?, ?, ?)
-                   ON CONFLICT(user_id, setting_key) DO UPDATE SET setting_value = excluded.setting_value`;
-    
+function updateSettings(userId, settings) {
+    const query = `UPDATE user_settings SET setting_value = ? WHERE user_id = ? AND setting_key = ?`;
+
     const transaction = db.transaction(settings => {
         Object.entries(settings).forEach(([key, value]) => {
-            db.prepare(query).run(userId, key, JSON.stringify(value));
+            const result = db.prepare(query).run(JSON.stringify(value), userId, key);
+            if (result.changes === 0) {
+                console.warn(`Skipping update: Setting '${key}' does not exist for user ${userId}`);
+            }
         });
     });
 
@@ -32,6 +53,7 @@ function setSettings(userId, settings) {
 }
 
 module.exports = {
+    createSettings,
     getSettings,
-    setSettings
+    updateSettings
 };

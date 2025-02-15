@@ -34,10 +34,8 @@ function Settings() {
     e.preventDefault();
 
     try {
-      const response = await axios.post('/api/v1/users/settings', { 
-        theme,
-        currency,
-        abbreviateUserCounts
+      const response = await axios.post('/api/v1/users/settings', {
+        settings: { theme, currency, abbreviateUserCounts }
       });
 
       if (response.status === 200) {

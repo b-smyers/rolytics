@@ -27,7 +27,6 @@ function login(req, res) {
             }
         });
     } catch(error) {
-        console.error('Error logging in user:', error);
         res.status(500).json({
             code: 500,
             status: 'error',
@@ -76,7 +75,6 @@ function register(req, res) {
             }
         });
     } catch(error) {
-        console.error('Error registering user:', error);
         res.status(500).json({
             code: 500,
             status: 'error',
