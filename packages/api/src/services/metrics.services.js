@@ -18,12 +18,12 @@ function createMetric(server_id, timestamp = Date.now(), purchases, performance,
 }
 
 function deleteMetric(id) {
-    const query = `DELETE FROM metrics WHERE id = ?`;
-    return db.prepare(query).run(id).changes;
+    const query = `DELETE FROM metrics WHERE server_id = ?`;
+    return db.prepare(query).run(id).changes != 0;
 }
 
 function getMetricById(id) {
-    const query = `SELECT timestamp, server_id, purchases, performance, social, players, metadata FROM metrics WHERE id = ?`;
+    const query = `SELECT timestamp, server_id, purchases, performance, social, players, metadata FROM metrics WHERE server_id = ?`;
     return db.prepare(query).get(id);
 }
 
