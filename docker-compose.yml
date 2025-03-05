@@ -46,6 +46,10 @@ services:
       - type: bind
         source: ./packages/api/database.db-wal
         target: /app/packages/api/database.db-wal
+      - type: bind
+        source: ./packages/api/logs
+        target: /app/packages/api/logs
+
     restart: always
     networks:
       - proxy_network

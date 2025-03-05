@@ -19,6 +19,7 @@ RUN cd packages/ui && pnpm run build
 FROM deps AS api-builder
 WORKDIR /app
 COPY packages/api ./packages/api
+RUN mkdir -p /app/packages/api/logs
 RUN cd packages/api && pnpm run build
 
 # API Production Image
