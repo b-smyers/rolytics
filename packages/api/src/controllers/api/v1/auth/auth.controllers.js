@@ -108,12 +108,12 @@ function logout(req, res) {
 }
 
 function verify(req, res) {
-    const message = req.body;
+    const message = req.body || 'verified';
     res.status(200).json({
         code: 200,
         status: 'success',
         data: {
-            message: Object.keys(message).length ? message : 'verified'
+            message: message
         }
     });
 }
