@@ -12,6 +12,21 @@
     <link rel="icon" type="image/x-icon" href="/logos/rolytics.ico">
 
     <link rel="manifest" href="/site.webmanifest">
+
+    <script>
+      (function () {
+        try {
+          const savedTheme = localStorage.getItem('theme');
+          if (!savedTheme) {
+            document.documentElement.className = 'auto';
+          } else {
+            document.documentElement.className = savedTheme;
+          }
+        } catch (e) {
+          // fail silently
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

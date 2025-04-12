@@ -25,15 +25,6 @@
   --light-text-secondary: #3b3b3b;
   --light-icon-filter: brightness(0) saturate(100%) invert(23%) sepia(7%) saturate(461%) hue-rotate(201deg) brightness(97%) contrast(89%);
 
-  /* Chose theme dynamically */
-  --theme-primary: light-dark(var(--light-bg-primary), var(--dark-bg-primary));
-  --theme-secondary: light-dark(var(--light-bg-secondary), var(--dark-bg-secondary));
-  --theme-tertiary: light-dark(var(--light-bg-tertiary), var(--dark-bg-tertiary));
-  --text-primary: light-dark(var(--light-text-primary), var(--dark-text-primary));
-  --text-secondary: light-dark(var(--light-text-secondary), var(--dark-text-secondary));
-  
-  --icon-filter: var(--light-icon-filter);
-
   color: var(--text-primary);
 
   font-synthesis: none;
@@ -42,10 +33,47 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
+*, *::before, *::after {
+    transition: background-color 0.3s ease, color 0.3s ease, filter 0.3s ease;
+}
+
+/* Theme overrides */
+html.auto {
+    --theme-primary: light-dark(var(--light-bg-primary), var(--dark-bg-primary));
+    --theme-secondary: light-dark(var(--light-bg-secondary), var(--dark-bg-secondary));
+    --theme-tertiary: light-dark(var(--light-bg-tertiary), var(--dark-bg-tertiary));
+    --text-primary: light-dark(var(--light-text-primary), var(--dark-text-primary));
+    --text-secondary: light-dark(var(--light-text-secondary), var(--dark-text-secondary));
+}
+
+html.light {
+    --theme-primary: var(--light-bg-primary);
+    --theme-secondary: var(--light-bg-secondary);
+    --theme-tertiary: var(--light-bg-tertiary);
+    --text-primary: var(--light-text-primary);
+    --text-secondary: var(--light-text-secondary);
+    --icon-filter: var(--light-icon-filter);
+}
+  
+html.dark {
+    --theme-primary: var(--dark-bg-primary);
+    --theme-secondary: var(--dark-bg-secondary);
+    --theme-tertiary: var(--dark-bg-tertiary);
+    --text-primary: var(--dark-text-primary);
+    --text-secondary: var(--dark-text-secondary);
     --icon-filter: var(--dark-icon-filter);
-  }
+}
+
+@media (prefers-color-scheme: light) {
+    html.auto {
+        --icon-filter: var(--light-icon-filter);
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    html.auto {
+        --icon-filter: var(--dark-icon-filter);
+    }
 }
 
 @font-face {
