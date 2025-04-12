@@ -1,8 +1,8 @@
 {
     "theme": {
         "type": "string",
-        "allowedValues": ["Auto", "Light", "Dark"],
-        "default": "Auto"
+        "allowedValues": ["auto", "light", "dark"],
+        "default": "auto"
     },
     "currency": {
         "type": "string",
