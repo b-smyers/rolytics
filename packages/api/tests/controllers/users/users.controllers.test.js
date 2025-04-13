@@ -21,6 +21,15 @@ app.get('/settings', usersController.getSettings);
 app.post('/settings', usersController.updateSettings);
 
 describe('User Controller', () => {
+    let timestamp1 = Date.parse('2025-04-12T10:00:00Z');
+    let timestamp2 = Date.parse('2025-04-12T10:11:00Z');
+    beforeEach(() => {
+        const dateMock = jest.spyOn(Date, 'now');
+        dateMock
+            .mockReturnValueOnce(timestamp1)
+            .mockReturnValueOnce(timestamp2);
+    });
+
     afterEach(() => {
         jest.clearAllMocks();
     });
@@ -117,8 +126,13 @@ describe('User Controller', () => {
         });
     });
     describe('POST /settings', () => {
+        beforeEach(() => {
+            // Reset mock
+            Date.now.mockClear();
+        });
+
         it('should return 200 and update user settings', async () => {
-            settingsService.updateSettings.mockReturnValue(true);
+            settingsService.updateSettings.mockReturnValue(timestamp1);
 
             const res = await request(app)
                 .post('/settings')
@@ -135,7 +149,10 @@ describe('User Controller', () => {
                 code: 200,
                 status: 'success',
                 data: { 
-                    message: 'Settings updated successfully'
+                    message: 'Settings updated successfully',
+                    settings: {
+                        lastModified: timestamp1
+                    }
                 }
             });
         });

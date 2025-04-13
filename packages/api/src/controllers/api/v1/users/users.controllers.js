@@ -62,12 +62,16 @@ function updateSettings(req, res) {
             }
         }
 
-        settingsService.updateSettings(req.user.id, settings);
+        const lastModified = settingsService.updateSettings(req.user.id, settings);
+        
         res.status(200).json({
             code: 200,
             status: 'success',
             data: {
-                message: 'Settings updated successfully'
+                message: 'Settings updated successfully',
+                settings: {
+                    lastModified: lastModified
+                }
             }
         });
     } catch (error) {

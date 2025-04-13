@@ -4,11 +4,14 @@ const schema = require('@schemas/settings.schemas.json');
 function createSettings(userId, settings) {
     const query = `INSERT INTO user_settings (user_id, setting_key, setting_value) VALUES (?, ?, ?)`;
 
+    const timestamp = Date.now();
+
     settings = {
         theme: schema.theme.default,
         currency: schema.currency.default,
         abbreviateUserCounts: schema.abbreviateUserCounts.default,
-        ...settings
+        ...settings,
+        lastModified: timestamp
     };    
 
     const transaction = db.transaction(settings => {
@@ -39,6 +42,10 @@ function getSettings(userId) {
 
 function updateSettings(userId, settings) {
     const query = `UPDATE user_settings SET setting_value = ? WHERE user_id = ? AND setting_key = ?`;
+    
+    const lastModified = Date.now();
+
+    settings = { ...settings, lastModified };
 
     const transaction = db.transaction(settings => {
         Object.entries(settings).forEach(([key, value]) => {
@@ -50,6 +57,7 @@ function updateSettings(userId, settings) {
     });
 
     transaction(settings);
+    return lastModified;
 }
 
 module.exports = {

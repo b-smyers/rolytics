@@ -1,4 +1,5 @@
 const usersService = require('@services/users.services');
+const settingsService = require('@services/settings.services');
 
 function login(req, res) {
     // TODO: Login with email or username
@@ -19,11 +20,17 @@ function login(req, res) {
         // Store user info in session
         req.session.user = { id: user.id, username: user.username };
 
+        // Fetch user settings
+        const settings = settingsService.getSettings(user.id);
+
         res.status(200).json({
             code: 200,
             status: 'success',
             data: {
-                message: 'Login successful'
+                message: 'Login successful',
+                settings: {
+                    lastModified: settings.lastModified
+                }
             }
         });
     } catch(error) {

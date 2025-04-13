@@ -3,8 +3,10 @@ const express = require('express');
 const session = require('express-session');
 const authController = require('@controllers/api/v1/auth/auth.controllers');
 const usersService = require('@services/users.services');
+const settingsService = require('@services/settings.services');
 
 jest.mock('@services/users.services');
+jest.mock('@services/settings.services');
 
 const app = express();
 app.use(express.json());
@@ -15,6 +17,8 @@ app.post('/logout', authController.logout);
 app.post('/verify', authController.verify);
 
 describe('Auth Controller', () => {
+    let timestamp = Date.parse('2025-04-12T10:00:00Z');
+
     afterEach(() => {
         jest.clearAllMocks();
     });
@@ -22,6 +26,7 @@ describe('Auth Controller', () => {
     describe('POST /login', () => {
         it('should return 200 and login successfully', async () => {
             usersService.validateCredentials.mockReturnValue({ id: 1, email: "testuser@mail.com", username: 'testuser' });
+            settingsService.getSettings.mockReturnValue({ lastModified: timestamp /* other settings */ });
 
             const res = await request(app)
                 .post('/login')
@@ -31,7 +36,12 @@ describe('Auth Controller', () => {
             expect(res.body).toEqual({
                 code: 200,
                 status: 'success',
-                data: { message: 'Login successful' }
+                data: {
+                    message: 'Login successful',
+                    settings: {
+                        lastModified: timestamp
+                    }
+                }
             });
         });
 

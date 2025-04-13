@@ -21,6 +21,9 @@ function Settings() {
       setCurrency(settings.currency);
       setAbbreviateUserCounts(settings.abbreviateUserCounts);
       initialThemeRef.current = settings.theme;
+      if (settings.lastModified) {
+        localStorage.setItem('settingsLastModified', settings.lastModified);
+      }
     } catch (error) {
       if (error.response && error.response.data && error.response.data.data) {
         console.log(error.response.data.data.message);
@@ -59,6 +62,10 @@ function Settings() {
       if (response.status === 200) {
         console.log(response.data.data.message);
         settingsSavedRef.current = true;
+        const settings = response.data.data.settings
+        if (settings.lastModified) {
+          localStorage.setItem('settingsLastModified', settings.lastModified);
+        }
       }
 
     } catch (error) {

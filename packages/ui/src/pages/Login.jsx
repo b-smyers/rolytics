@@ -27,11 +27,31 @@ function Login() {
         password: password
       });
 
-      if (response.status === 200) {
-        console.log(response.data.data.message);
-        navigate('/dashboard');
-      }
+      if (response.status !== 200) { return; }
 
+      console.log(response.data.data.message);
+
+      // Compare settings timestamp
+      const serverSettingsTimestamp = response.data.data.settings.lastModified;
+      const localSettingsTimestamp = localStorage.getItem('settingsLastModified');
+      if (!localSettingsTimestamp || localSettingsTimestamp != serverSettingsTimestamp) {
+        console.log("Settings out of date");
+        // Settings out of date, fetch them
+        try {
+          const response = await axios.get('/api/v1/users/settings');
+          const settings = response.data.data.settings;
+          localStorage.setItem('settingsLastModified', settings.lastModified);
+          localStorage.setItem('theme', settings.theme);
+          document.documentElement.className = settings.theme;
+        } catch (error) {
+          if (error.response && error.response.data && error.response.data.data) {
+            console.log(error.response.data.data.message);
+          } else {
+            console.log('An unexpected error occurred');
+          }
+        }
+      }
+      navigate('/dashboard');
     } catch (error) {
       if (error.response && error.response.data && error.response.data.data) {
         console.log(error.response.data.data.message);

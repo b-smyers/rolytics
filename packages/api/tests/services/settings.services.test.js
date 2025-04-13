@@ -4,6 +4,21 @@ const db = require('@services/sqlite.services');
 const schema = require('@schemas/settings.schemas.json');
 
 describe('Settings Service', () => {
+    const defaultSettings = {
+        theme: schema.theme.default,
+        currency: schema.currency.default,
+        abbreviateUserCounts: schema.abbreviateUserCounts.default,  
+    }
+
+    let timestamp1 = Date.parse('2025-04-12T10:00:00Z');
+    let timestamp2 = Date.parse('2025-04-12T10:11:00Z');
+    beforeEach(() => {
+        const dateMock = jest.spyOn(Date, 'now');
+        dateMock
+            .mockReturnValueOnce(timestamp1)
+            .mockReturnValueOnce(timestamp2);
+    });
+
     afterEach(() => {
         jest.clearAllMocks();
     });
@@ -22,6 +37,9 @@ describe('Settings Service', () => {
             const apiKey = `key-${randomString}`;
             const result = db.prepare(query).run(username, email, password, apiKey);
             userId = result.lastInsertRowid;
+
+            // Reset mock
+            Date.now.mockClear();
         });
 
         afterEach(() => {
@@ -31,14 +49,13 @@ describe('Settings Service', () => {
         });
 
         it('should save the default settings if none are provided', () => {
-            settingsService.createSettings(userId);
+            settingsService.createSettings(userId); // Date.Now #1 
 
             const settings = settingsService.getSettings(userId);
 
             expect(settings).toEqual({
-                theme: schema.theme.default,
-                currency: schema.currency.default,
-                abbreviateUserCounts: schema.abbreviateUserCounts.default
+                ...defaultSettings,
+                lastModified: timestamp1
             });
         });
 
@@ -49,14 +66,13 @@ describe('Settings Service', () => {
                 abbreviateUserCounts: schema.abbreviateUserCounts.allowedValues[1]
             }
 
-            settingsService.createSettings(userId, modifiedSettings);
+            settingsService.createSettings(userId, modifiedSettings); // Date.Now #1
 
             const settings = settingsService.getSettings(userId);
 
             expect(settings).toEqual({
-                theme: schema.theme.allowedValues[1],
-                currency: schema.currency.allowedValues[1],
-                abbreviateUserCounts: schema.abbreviateUserCounts.allowedValues[1]
+                ...modifiedSettings,
+                lastModified: timestamp2
             });
         });
 
@@ -65,14 +81,14 @@ describe('Settings Service', () => {
                 theme: schema.theme.allowedValues[1],
             }
 
-            settingsService.createSettings(userId, modifiedSettings);
+            settingsService.createSettings(userId, modifiedSettings); // Date.Now #1
 
             const settings = settingsService.getSettings(userId);
 
             expect(settings).toEqual({
-                theme: schema.theme.allowedValues[1],
-                currency: schema.currency.default,
-                abbreviateUserCounts: schema.abbreviateUserCounts.default
+                ...defaultSettings,
+                ...modifiedSettings,
+                lastModified: timestamp1
             });
         });
     });
@@ -84,7 +100,7 @@ describe('Settings Service', () => {
             const username = 'Brendan';
             const email = 'brendan.smyers@mail.com';
             const password = 'super_secure_password';
-            const user = usersService.createUser(username, email, password);
+            const user = usersService.createUser(username, email, password); // Date.Now #1, calls c
             userId = user.id;
         });
 
@@ -97,9 +113,8 @@ describe('Settings Service', () => {
             const settings = settingsService.getSettings(userId);
 
             expect(settings).toEqual({
-                theme: schema.theme.default,
-                currency: schema.currency.default,
-                abbreviateUserCounts: schema.abbreviateUserCounts.default
+                ...defaultSettings,
+                lastModified: timestamp1
             });
         });
 
@@ -113,7 +128,10 @@ describe('Settings Service', () => {
 
             const settings = settingsService.getSettings(userId);
 
-            expect(settings).toEqual(changedSettings);
+            expect(settings).toEqual({
+                ...changedSettings,
+                lastModified: timestamp2
+            });
         });
     });
 
