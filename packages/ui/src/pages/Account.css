@@ -12,12 +12,26 @@
     height: 40px;
 }
 
-.account-entry input {
+.account-input-container {
+    display: flex;
+    gap: 5px;
+    align-items: center;
     height: 100%;
     width: 50%;
+}
+
+.account-input-container input {
+    height: 100%;
+    width: 100%;
     font-size: 1em;
     background-color: var(--theme-primary);
-    border: 0;
+    border: none;
     border-bottom: 1px solid var(--theme-secondary);
     border-radius: 10px;
+    padding-right: 40px;
+}
+
+#clipboard-button {
+    position: absolute;
+    background-color: var(--theme-secondary);
 }

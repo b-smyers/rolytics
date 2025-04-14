@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Account.css';
 import PageLayout from '../layouts/PageLayout';
+import CopyToClipboardButton from '../components/CopyToClipboardButton';
 
 function Account() {
   const [apiKey, setApiKey] = useState('API Key');
@@ -33,27 +34,34 @@ function Account() {
       <div id='account-details'>
         <div className='account-entry'>
           <h2>Username</h2>
-          <input
-            type="text"
-            value={username}
-            disabled
-          />
+          <div className="account-input-container">
+            <input
+              type="text"
+              value={username}
+              disabled
+            />
+          </div>
         </div>
         <div className='account-entry'>
           <h2>Email</h2>
-          <input
-            type="text"
-            value={email}
-            disabled
-          />
+          <div className="account-input-container">
+            <input
+              type="text"
+              value={email}
+              disabled
+            />
+          </div>
         </div>
         <div className='account-entry'>
           <h2>API Key</h2>
-          <input
-            type="text"
-            value={apiKey}
-            disabled
-          />
+          <div className="account-input-container">
+            <input
+              type="text"
+              value={apiKey}
+              disabled
+            />
+            <CopyToClipboardButton id="clipboard-button" text={apiKey} />
+          </div>
         </div>
       </div>
     </PageLayout>
