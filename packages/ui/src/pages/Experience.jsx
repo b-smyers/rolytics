@@ -222,12 +222,12 @@ function Experience() {
           <div id="places-box">
             <h2>Places</h2>
             <table id="places-table">
-              <tr>
+              <tr id="places-header-row">
                 <th>Place Name</th>
                 <th>ID</th>
               </tr>
               {places.map((place, i) => (
-                <tr key={i} onClick={() => navigate(`${window.location.pathname}/${place.place_id}`) } style={{ cursor: 'pointer' }}>
+                <tr id="places-row" key={i} onClick={() => navigate(`${window.location.pathname}/${place.place_id}`) } style={{ cursor: 'pointer' }}>
                   <td>{place.name}</td>
                   <td>{parseInt(place.roblox_place_id)}</td>
                 </tr>

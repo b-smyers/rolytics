@@ -225,12 +225,12 @@ function Place() {
           <div id="servers-box">
             <h2>Servers</h2>
             <table id="servers-table">
-              <tr>
+              <tr id="servers-header-row">
                 <th>Server Name</th>
                 <th>ID</th>
               </tr>
               {servers.map((server, i) => (
-                <tr key={i}>
+                <tr id="servers-row" key={i}>
                   <td>{server.name}</td>
                   <td>{parseInt(server.roblox_server_id)}</td>
                 </tr>

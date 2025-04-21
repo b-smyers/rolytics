@@ -19,8 +19,8 @@
 
   /* Light theme */
   --light-bg-primary: #d9d9da;
-  --light-bg-secondary: #696969;
-  --light-bg-tertiary: #ededed;
+  --light-bg-secondary: #ededed;
+  --light-bg-tertiary: #bfbfbf;
   --light-text-primary: #171717;
   --light-text-secondary: #3b3b3b;
   --light-icon-filter: brightness(0) saturate(100%) invert(23%) sepia(7%) saturate(461%) hue-rotate(201deg) brightness(97%) contrast(89%);

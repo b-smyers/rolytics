@@ -83,7 +83,13 @@
     background-position: center;
     background-size: 50px 50px;
     transform: rotate(45deg);
-    filter: invert(100%) brightness(0.2);
+    filter: var(--icon-filter) invert(100%);
+}
+
+@media (prefers-color-scheme: light) {
+    #stars {
+        filter: var(--icon-filter) invert(20%);
+    }
 }
 
 .fill-page {
