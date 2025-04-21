@@ -11,9 +11,16 @@ const limiter = rateLimit({
     windowMs: 1 * 60 * 1000, // 1 minute
     limit: 60,               // 60 requests / 1 min
     standardHeaders: 'draft-7',
-    legacyHeaders: false
+    legacyHeaders: false,
+    message: {
+        code: 429,
+        status: 'error',
+        data: {
+            message: 'Too many requests, try again later'
+        }
+    }
 });
-if (process.env.NODE_ENV !== 'development') {
+if (process.env.NODE_ENV !== 'a') {
     app.use(limiter);
 }
 app.use(bodyParser.json({ limit: '10kb' }));
