@@ -6,6 +6,7 @@ import './Login.css';
 function Login() {
   const navigate = useNavigate();
 
+  const [errorMessage, setErrorMessage] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
@@ -55,8 +56,10 @@ function Login() {
     } catch (error) {
       if (error.response && error.response.data && error.response.data.data) {
         console.log(error.response.data.data.message);
+        setErrorMessage(error.response.data.data.message);
       } else {
         console.log('An unexpected error occurred');
+        setErrorMessage('An unexpected error occurred');
       }
     }
   };
@@ -91,6 +94,7 @@ function Login() {
               required
             />
             <a href="/404">Forgot Password?</a>
+            {errorMessage && <div id="error-box">{errorMessage}</div>}
             <button id="login-button" type="submit" disabled={!isFormValid}>
               Login
             </button>
