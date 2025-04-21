@@ -2,7 +2,7 @@
     z-index: 1;
     width: 100%;
     flex: 2;
-    background: linear-gradient(transparent, transparent, var(--theme-tertiary));
+    background: linear-gradient(transparent, transparent, var(--theme-primary));
 }
 
 #header {
@@ -23,6 +23,6 @@
     z-index: 1;
     width: 100%;
     flex: 8;
-    background-color: var(--theme-tertiary);
+    background-color: var(--theme-primary);
     display: flex;
 }

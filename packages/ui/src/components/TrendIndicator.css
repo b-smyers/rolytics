@@ -5,7 +5,7 @@
     justify-content: center;
     overflow: hidden;
     padding: 10px 10px;
-    background-color: var(--theme-primary);
+    background-color: var(--theme-secondary);
     border-radius: 16px;
 }
 

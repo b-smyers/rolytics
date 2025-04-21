@@ -2,9 +2,9 @@
     z-index: 1;
     width: 400px;
     height: 620px;
-    background-color: var(--theme-primary);
+    background-color: var(--theme-secondary);
     border-radius: 16px;
-    box-shadow: 5px 5px 15px var(--theme-primary);
+    box-shadow: 5px 5px 15px var(--theme-secondary);
 }
 
 #form-box {
@@ -47,9 +47,9 @@
         height: 40px;
         margin: 15px 0px;
         font-size: 1em;
-        background-color: var(--theme-primary);
+        background-color: var(--theme-secondary);
         border: 0;
-        border-bottom: 1px solid var(--theme-secondary);
+        border-bottom: 1px solid var(--theme-tertiary);
     }
 
     input:focus {

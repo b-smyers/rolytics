@@ -10,17 +10,17 @@
   --color-secondary: #7b9de7;
 
   /* Dark theme */
-  --dark-bg-primary: #28292b;
-  --dark-bg-secondary: #424248;
-  --dark-bg-tertiary: #1b1c1f;
+  --dark-bg-primary: #1b1c1f;
+  --dark-bg-secondary: #28292b;
+  --dark-bg-tertiary: #424248;
   --dark-text-primary: #ffffff;
   --dark-text-secondary: #969698;
   --dark-icon-filter: brightness(0) saturate(100%) invert(92%) sepia(2%) saturate(98%) hue-rotate(202deg) brightness(98%) contrast(87%);
 
   /* Light theme */
-  --light-bg-primary: #ededed;
+  --light-bg-primary: #d9d9da;
   --light-bg-secondary: #696969;
-  --light-bg-tertiary: #d9d9da;
+  --light-bg-tertiary: #ededed;
   --light-text-primary: #171717;
   --light-text-secondary: #3b3b3b;
   --light-icon-filter: brightness(0) saturate(100%) invert(23%) sepia(7%) saturate(461%) hue-rotate(201deg) brightness(97%) contrast(89%);

@@ -8,7 +8,7 @@
 }
 
 #source-selector-box {
-    border-bottom: 1px solid var(--text-secondary);
+    border-bottom: 1px solid var(--text-tertiary);
     display: flex;
     flex-direction: row;
     flex: 1;
@@ -31,7 +31,7 @@
         padding: 5px;
         height: 50px;
         aspect-ratio: 1;
-        background-color: var(--theme-primary);
+        background-color: var(--theme-secondary);
     }
 
     button img {
@@ -81,7 +81,7 @@
 }
 
 #places-box {
-    background-color: var(--theme-primary);
+    background-color: var(--theme-secondary);
     border-radius: 16px;
     width: 100%;
     height: fit-content;
@@ -101,8 +101,8 @@
     justify-content: space-around;
 
     tr {
-        border-top: 1px solid var(--theme-secondary);
-        border-bottom: 1px solid var(--theme-secondary);
+        border-top: 1px solid var(--theme-tertiary);
+        border-bottom: 1px solid var(--theme-tertiary);
         padding: 5px 60px 5px 20px;
         display: flex;
         justify-content: space-between;

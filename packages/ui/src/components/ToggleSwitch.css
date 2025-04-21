@@ -8,7 +8,7 @@
     cursor: pointer;
     width: 90px;
     height: 40px;
-    background: var(--theme-primary);
+    background: var(--theme-secondary);
     border-radius: 45px;
     position: relative;
     transition: background-color .2s;
@@ -28,5 +28,5 @@
 .toggle-switch-checkbox:checked + #toggle-switch-label #toggle-switch-button {
     left: calc(100% - 2px);
     transform: translateX(calc(-100% - 4px));
-    background-color: var(--theme-secondary);
+    background-color: var(--theme-tertiary);
 }

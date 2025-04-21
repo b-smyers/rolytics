@@ -1,6 +1,6 @@
 #copy-button {
     position: relative;
-    background-color: var(--theme-primary);
+    background-color: var(--theme-secondary);
     border-radius: 10px;
     padding: 5px;
     width: auto;

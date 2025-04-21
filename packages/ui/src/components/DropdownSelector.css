@@ -5,7 +5,7 @@
     border-radius: 10px;
     padding: 10px;
     color: var(--text-primary);
-    background-color: var(--theme-primary);
+    background-color: var(--theme-secondary);
     font-size: 1em;
     font-family: 'quicksand';
     cursor: pointer;

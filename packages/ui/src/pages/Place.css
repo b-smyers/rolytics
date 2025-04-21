@@ -31,7 +31,7 @@
         padding: 5px;
         height: 50px;
         aspect-ratio: 1;
-        background-color: var(--theme-primary);
+        background-color: var(--theme-secondary);
     }
 
     button img {
@@ -46,7 +46,7 @@
     flex: 2;
     height: 400px;
     padding-bottom: 50px;
-    background-color: var(--theme-primary);
+    background-color: var(--theme-secondary);
     border-radius: 16px;
     overflow: auto;
 
@@ -81,7 +81,7 @@
 }
 
 #servers-box {
-    background-color: var(--theme-primary);
+    background-color: var(--theme-secondary);
     border-radius: 16px;
     width: 100%;
     height: fit-content;

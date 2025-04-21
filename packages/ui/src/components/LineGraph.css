@@ -1,7 +1,7 @@
 #graph-box {
     display: flex;
     flex-direction: column;
-    background-color: var(--theme-primary);
+    background-color: var(--theme-secondary);
     border-radius: 16px;
     height: 100%;
 }

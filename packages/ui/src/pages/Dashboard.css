@@ -5,7 +5,7 @@
     border-radius: 12px;
     padding: 0;
     overflow: hidden;
-    background-color: var(--theme-primary);
+    background-color: var(--theme-secondary);
     transition: transform 0.2s ease;
     display: flex;
     flex-direction: column;

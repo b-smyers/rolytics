@@ -10,7 +10,7 @@
     width: calc(100% - 25px);
     margin: 10px;
     font-size: 1em;
-    background-color: var(--theme-primary);
+    background-color: var(--theme-secondary);
     border: 0;
     border-bottom: 1px solid var(--theme-secondary);
   }

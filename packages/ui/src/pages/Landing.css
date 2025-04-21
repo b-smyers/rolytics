@@ -1,7 +1,7 @@
 #radial-background {
     height: 100%;
     width: 100%;
-    background: radial-gradient(circle at 50% 50%, var(--color-primary), var(--theme-primary));
+    background: radial-gradient(circle at 50% 50%, var(--color-primary), var(--theme-secondary));
     display: flex;
     justify-content: center;
     align-items: center;

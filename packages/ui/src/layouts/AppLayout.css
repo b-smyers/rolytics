@@ -8,7 +8,7 @@
     z-index: -1;
     height: 100%;
     width: 100%;
-    background-color: var(--theme-secondary);
+    background-color: var(--theme-tertiary);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -20,7 +20,7 @@
     z-index: 10;
     position: fixed;
     height: 100vh;
-    background-color: var(--theme-primary);
+    background-color: var(--theme-secondary);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -41,7 +41,7 @@
     display: flex;
     padding: 0.5em;
     height: 60px;
-    background-color: var(--theme-primary);
+    background-color: var(--theme-secondary);
     align-items: center; /* Vertical align */
     white-space: nowrap;
     cursor: pointer;
@@ -96,6 +96,6 @@ footer {
     width: 100%;
     line-height: 2em;
     text-align: center;
-    background-color: var(--theme-primary);
+    background-color: var(--theme-secondary);
     color: var(--text-secondary);
 }

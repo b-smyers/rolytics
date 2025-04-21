@@ -24,9 +24,9 @@
     height: 100%;
     width: 100%;
     font-size: 1em;
-    background-color: var(--theme-primary);
+    background-color: var(--theme-secondary);
     border: none;
-    border-bottom: 1px solid var(--theme-secondary);
+    border-bottom: 1px solid var(--theme-tertiary);
     border-radius: 10px;
     padding-right: 40px;
 }
