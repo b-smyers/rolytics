@@ -11,7 +11,7 @@ const CustomTooltip = ({ label, active, payload }) => {
     return (
       <div id="custom-tooltip">
         {payload.map((item, i) => (
-          <p key={i} style={{color: item.stroke}}>{toDisplayString(item.name)}: {DataFormater(item.value)}</p>
+          <p key={i} style={{color: item.stroke}}>{toDisplayString(item.name)}: {FormatQuantity(item.value)}</p>
         ))}
         <p>Time: {label}</p>
       </div>
@@ -25,7 +25,7 @@ function toDisplayString(key = "Missing") {
   return key.split(/[-_]/).map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 }
 
-const DataFormater = (number) => {
+const FormatQuantity = (number) => {
   if(number >= 1_000_000_000) {
     return Math.round(number/1000000000, 2).toString() + 'B';
   } else if(number >= 1_000_000) {
@@ -46,6 +46,23 @@ const DataFormater = (number) => {
 }
 
 function LineGraph({ label = "No Graph Label", keys = [], data = [] }) {
+  const { min, max } = data.reduce(
+    (acc, item) => {
+      keys.forEach((key) => {
+        const value = item[key];
+        if (typeof value === "number") {
+          if (value < acc.min) acc.min = value;
+          if (value > acc.max) acc.max = value;
+        }
+      });
+      return acc;
+    },
+    { min: Infinity, max: -Infinity }
+  );
+
+  const minVal = min === Infinity ? 0 : min;
+  const maxVal = max === -Infinity ? 1 : max * 1.1; // 1.1x adds some padding to the top of the graph
+  
   return (
     <div id="graph-box">
       <h2 id="graph-label">{label}</h2>
@@ -57,18 +74,18 @@ function LineGraph({ label = "No Graph Label", keys = [], data = [] }) {
         <ResponsiveContainer id="graph-container" height="100%" width="100%">
           <LineChart id="graph" data={data}>
             {keys.map((key, i) => (
-              <Line 
-                key={i} 
-                id="graph-line" 
-                type="monotone" 
-                dataKey={key} 
+              <Line
+                key={i}
+                id="graph-line"
+                type="monotone"
+                dataKey={key}
                 stroke={getColor(i)}
                 dot={{ r: 0 }}
               />
             ))}
             <CartesianGrid id="themed" />
             <XAxis id="themed-text" reversed={true} dataKey="timestamp" />
-            <YAxis id="themed-text" tickFormatter={DataFormater}/>
+            <YAxis id="themed-text" domain={[minVal, maxVal]} tickFormatter={FormatQuantity}/>
             <Tooltip content={<CustomTooltip />} />
           </LineChart>
         </ResponsiveContainer>

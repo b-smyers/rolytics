@@ -7,9 +7,14 @@
     width: 100%;
 }
 
+#graph-container {
+    padding-top: 10px;
+}
+
 #graph-label {
-    padding: 10px 0 10px 20px;
+    padding: 10px 0 5px 20px;
     font-size: 1.6em;
+    border-bottom: 2px solid var(--theme-tertiary);
 }
 
 #graph-line {
@@ -29,7 +34,7 @@
 }
 
 #custom-tooltip {
-    background-color: var(--theme-secondary);
+    background-color: var(--theme-tertiary);
     color: var(--text-primary);
     border-radius: 8px;
     padding: 10px;
