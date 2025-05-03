@@ -8,7 +8,7 @@
 }
 
 #source-selector-box {
-    border-bottom: 1px solid var(--text-tertiary);
+    border-bottom: 1px solid var(--text-secondary);
     display: flex;
     flex-direction: row;
     font-size: 25px;
@@ -135,15 +135,5 @@
 @media (max-width: 750px) {
     .row {
         display: block;
-        width: 83%;
-    }
-
-    #metric-selector-box {
-        margin-top: 20px;
-        height: fit-content;
-    }
-
-    #source-selector-box {
-        width: 100%;
     }
 }

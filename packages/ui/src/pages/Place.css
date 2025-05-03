@@ -134,15 +134,5 @@
 @media (max-width: 750px) {
     .row {
         display: block;
-        width: 83%;
-    }
-
-    #metric-selector-box {
-        margin-top: 20px;
-        height: fit-content;
-    }
-
-    #source-selector-box {
-        width: 100%;
     }
 }

@@ -153,8 +153,6 @@ function Place() {
               name="players" onClick={handleSourceChange}>Players</a>
             <a id={selectedSource === 'purchases' ? 'selected-source' : ''}
               name="purchases" onClick={handleSourceChange}>Purchases</a>
-            {/* <a id={selectedSource === 'analytics' ? 'selected-source' : ''}
-              name="analytics"  onClick={handleSourceChange}>Analytics</a> */}
             <a id={selectedSource === 'performance' ? 'selected-source' : ''}
               name="performance" onClick={handleSourceChange}>Performance</a>
             <a id={selectedSource === 'social' ? 'selected-source' : ''}
