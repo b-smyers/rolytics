@@ -144,14 +144,12 @@ function Experience() {
   return (
     <PageLayout title={experience.name || "Loading..."}>
       <div id='experience-page'>
-        <div className='row'>
+        <div id="grid-layout">
           <div id="source-selector-box">
             <a id={selectedSource === 'players' ? 'selected-source' : ''}
               name="players" onClick={handleSourceChange}>Players</a>
             <a id={selectedSource === 'purchases' ? 'selected-source' : ''}
               name="purchases" onClick={handleSourceChange}>Purchases</a>
-            {/* <a id={selectedSource === 'analytics' ? 'selected-source' : ''}
-              name="analytics"  onClick={handleSourceChange}>Analytics</a> */}
             <a id={selectedSource === 'performance' ? 'selected-source' : ''}
               name="performance" onClick={handleSourceChange}>Performance</a>
             <a id={selectedSource === 'social' ? 'selected-source' : ''}
@@ -168,27 +166,24 @@ function Experience() {
               <img src="/icons/hamburger-menu.svg" alt="" />
             </button>
           </div>
-        </div>
-        <div className="row">
-          <div style={{ flex: 7 }}>
-            <LineGraph
-              label={toDisplayString(selectedSource)}
-              keys={selectedKeys[selectedSource] || []}
-              data={sources[selectedSource]?.data || []}
-            />
-          </div>
-          <div id="metric-selector-box" style={{ flex: 2 }}>
+
+          <LineGraph
+            label={toDisplayString(selectedSource)}
+            keys={selectedKeys[selectedSource] || []}
+            data={sources[selectedSource]?.data || []}
+          />
+          <div id="metric-selector-box">
             <h2>Metrics</h2>
             {sources[selectedSource]?.keys?.length ? (
               sources[selectedSource].keys.map((key, i) => (
-                <div key={i} className="metric-selector">
+                <div key={i} id="metric-selector">
                   <input
                     type="checkbox"
                     checked={selectedKeys[selectedSource]?.includes(key) || false}
                     name={key}
                     onChange={handleKeyChange}
                   />
-                  <label id="metric-label">{toDisplayString(key)}</label>
+                  <label>{toDisplayString(key)}</label>
                 </div>
               ))
             ) : (
@@ -198,6 +193,7 @@ function Experience() {
             )}
           </div>
         </div>
+
         <div className="row">
           {sources[selectedSource]?.keys?.length > 0 && sources[selectedSource]?.data?.length > 0 ? (
             <div id="trend-indicators">

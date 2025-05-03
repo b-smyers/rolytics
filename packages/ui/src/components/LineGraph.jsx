@@ -54,7 +54,7 @@ function LineGraph({ label = "No Graph Label", keys = [], data = [] }) {
           <p>No data available</p>
         </div>
       ) : (
-        <ResponsiveContainer id="graph-container" height={400} width="100%">
+        <ResponsiveContainer id="graph-container" height="100%" width="100%">
           <LineChart id="graph" data={data}>
             {keys.map((key, i) => (
               <Line 

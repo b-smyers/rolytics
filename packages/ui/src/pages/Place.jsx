@@ -147,7 +147,7 @@ function Place() {
   return (
     <PageLayout title={place.name || "Loading..."}>
       <div id='place-page'>
-        <div className='row'>
+       <div id="grid-layout">
           <div id="source-selector-box">
             <a id={selectedSource === 'players' ? 'selected-source' : ''}
               name="players" onClick={handleSourceChange}>Players</a>
@@ -171,27 +171,23 @@ function Place() {
               <img src="/icons/hamburger-menu.svg" alt="" />
             </button>
           </div>
-        </div>
-        <div className="row">
-          <div style={{ flex: 7 }}>
-            <LineGraph
-              label={toDisplayString(selectedSource)}
-              keys={selectedKeys[selectedSource] || []}
-              data={sources[selectedSource]?.data || []}
-            />
-          </div>
-          <div id="metric-selector-box" style={{ flex: 2 }}>
+          <LineGraph
+            label={toDisplayString(selectedSource)}
+            keys={selectedKeys[selectedSource] || []}
+            data={sources[selectedSource]?.data || []}
+          />
+          <div id="metric-selector-box">
             <h2>Metrics</h2>
             {sources[selectedSource]?.keys?.length ? (
               sources[selectedSource].keys.map((key, i) => (
-                <div key={i} className="metric-selector">
+                <div key={i} id="metric-selector">
                   <input
                     type="checkbox"
                     checked={selectedKeys[selectedSource]?.includes(key) || false}
                     name={key}
                     onChange={handleKeyChange}
                   />
-                  <label id="metric-label">{toDisplayString(key)}</label>
+                  <label>{toDisplayString(key)}</label>
                 </div>
               ))
             ) : (
