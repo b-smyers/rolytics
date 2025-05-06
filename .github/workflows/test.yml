@@ -4,6 +4,13 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'package.json'
+      - 'packages/**/*.js'
+      - 'packages/**/*.json'
+      - 'packages/**/*.sql'
+      - 'packages/**/*.jsx'
+      - 'packages/**/*.css'
 
 jobs:
   test-api:
