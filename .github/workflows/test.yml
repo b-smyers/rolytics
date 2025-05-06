@@ -11,6 +11,7 @@ on:
       - 'packages/**/*.sql'
       - 'packages/**/*.jsx'
       - 'packages/**/*.css'
+      - 'packages/proxy'
 
 jobs:
   test-api:
