@@ -28,8 +28,8 @@ pnpm install
 #### nginx
 Copy the development config into `/etc/nginx/conf.d/`, and the error page into `/var/www/html/`.
 ```bash
-sudo cp nginx/configs/dev.rolytics.conf /etc/nginx/conf.d/
-sudo cp nginx/html/*.html /var/www/html/
+sudo cp packages/proxy/configs/dev.rolytics.conf /etc/nginx/conf.d/
+sudo cp packages/proxy/html/*.html /var/www/html/
 ```
 Configure, test, and start Nginx.
 ```bash
@@ -66,7 +66,7 @@ Portforward 443 traffic on your router to your server.
 - [x] Automatically delete old analytics data
 - [ ] Automatically delete old servers
 - [ ] Implement download data button on the experience page
-- [ ] Add place analytics page
+- [x] Add place analytics page
 - [ ] Add server analytics page
 - [x] Add rolytics plugin tool
 
