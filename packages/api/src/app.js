@@ -9,8 +9,8 @@ const logger = require('@services/logger.services');
 const app = express();
 app.set('trust proxy', 1);
 const limiter = rateLimit({
-    windowMs: 1 * 60 * 1000, // 1 minute
-    limit: 60,               // 60 requests / 1 min
+    windowMs: 1 * 60 * 1000, // minutes
+    limit: 90,               // requests / 1 min
     standardHeaders: 'draft-7',
     legacyHeaders: false,
     message: {
