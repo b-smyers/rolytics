@@ -1,6 +1,7 @@
 const sqlite3 = require('better-sqlite3');
 const fs = require('fs');
 const path = require('path');
+const logger = require('@services/logger.services');
 
 const dbFile = process.env.NODE_ENV !== 'test' ? 'database.db' : ':memory:';
 
@@ -16,7 +17,7 @@ const modelFiles = [
 
 const db = sqlite3(dbFile);
 db.pragma('journal_mode = WAL');
-console.log('Database connected');
+logger.info('Database connected');
 
 // Execute schemas
 for (const filePath of modelFiles) {
@@ -29,7 +30,7 @@ for (const filePath of modelFiles) {
         process.exit(1);
     }
 }
-console.log('All schemas executed successfully');
+logger.info('All schemas executed successfully');
 
 // Export the database instance
 module.exports = db;

@@ -1,6 +1,7 @@
-const metricsService = require('@services/metrics.services.js');
-const placesService = require('@services/places.services.js');
-const serversService = require('@services/servers.services.js');
+const metricsService = require('@services/metrics.services');
+const placesService = require('@services/places.services');
+const serversService = require('@services/servers.services');
+const logger = require('@services/logger.services');
 const Ajv = require("ajv");
 
 const schema = require('@schemas/data.schemas.json');
@@ -24,7 +25,7 @@ function logData(req, res) {
     // Check data against schema
     const valid = validate(data);
     if (!valid) {
-        console.log(validate.errors);
+        logger.info(validate.errors);
         return res.status(400).json({
             code: 400,
             status: 'error',

@@ -1,5 +1,6 @@
 const db = require('@services/sqlite.services');
 const schema = require('@schemas/settings.schemas.json');
+const logger = require('@services/logger.services');
 
 function createSettings(userId, settings) {
     const query = `INSERT INTO user_settings (user_id, setting_key, setting_value) VALUES (?, ?, ?)`;
@@ -21,6 +22,7 @@ function createSettings(userId, settings) {
     });
 
     transaction(settings);
+    logger.info(`Default settings initialized for user ${userId}`);
 }
 
 function getSettings(userId) {
@@ -34,9 +36,11 @@ function getSettings(userId) {
             settings[setting_key] = JSON.parse(setting_value);
         } catch {
             settings[setting_key] = setting_value;
+            logger.warn(`Failed to parse setting value for key '${setting_key}' for user ${userId}`);
         }
     });
 
+    logger.info(`Fetched settings for user ${userId}`);
     return settings;
 }
 
@@ -51,12 +55,13 @@ function updateSettings(userId, settings) {
         Object.entries(settings).forEach(([key, value]) => {
             const result = db.prepare(query).run(JSON.stringify(value), userId, key);
             if (result.changes === 0) {
-                console.warn(`Skipping update: Setting '${key}' does not exist for user ${userId}`);
+                logger.warn(`Setting update skipped because setting '${key}' does not exist for user ${userId}`);
             }
         });
     });
 
     transaction(settings);
+    logger.info(`Completed settings update for user ${userId}`);
     return lastModified;
 }
 

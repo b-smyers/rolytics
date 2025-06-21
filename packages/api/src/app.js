@@ -4,6 +4,7 @@ const { rateLimit } = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const cron = require('node-cron');
+const logger = require('@services/logger.services');
 
 const app = express();
 app.set('trust proxy', 1);
@@ -56,9 +57,9 @@ const metricsService = require('@services/metrics.services');
 // Cleanup old metrics
 if (process.env.NODE_ENV !== 'test') {
     cron.schedule(process.env.METRIC_CLEANUP_CRON, () => {
-        console.log(`[${Date.now()}]: Cleaning up old metrics...`);
+        logger.info(`Cleaning up old metrics...`);
         metricsService.deleteOldMetrics(process.env.METRIC_MAX_AGE);
-        console.log(`[${Date.now()}]: Old metrics cleaned up!`);
+        logger.info(`Old metrics cleaned up!`);
     });
 }
 

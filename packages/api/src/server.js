@@ -2,6 +2,7 @@ require('dotenv').config();
 require('module-alias/register');
 const http = require('http');
 const app = require('./app');
+const logger = require('@services/logger.services');
 
 // Setup http server
 const httpServer = http.createServer(app);
@@ -17,5 +18,5 @@ httpServer.on('clientError', (error, socket) => {
 });
 
 httpServer.listen(process.env.HTTP_PORT, () => {
-    console.log(`HTTP server listening: http://localhost:${process.env.HTTP_PORT}`)
+    logger.info(`HTTP server listening: http://localhost:${process.env.HTTP_PORT}`)
 });

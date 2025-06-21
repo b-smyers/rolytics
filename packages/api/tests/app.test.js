@@ -1,5 +1,6 @@
 const http = require('http');
 const app = require('@api/app.js');
+const logger = require('@services/logger.services');
 
 describe('Server', () => {
   let httpServer;
@@ -17,7 +18,6 @@ describe('Server', () => {
         });
 
         httpServer.listen(process.env.HTTP_PORT, () => {
-            console.log(`HTTP server listening: http://localhost:${process.env.HTTP_PORT}`)
             done();
         });
     });

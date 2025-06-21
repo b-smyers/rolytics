@@ -1,6 +1,7 @@
 const experiencesService = require('@services/experiences.services'); 
 const placesService = require('@services/places.services'); 
 const serversService = require('@services/servers.services'); 
+const logger = require('@services/logger.services');
 
 function getServers(req, res) {
     const { place_id } = req.query;
@@ -70,7 +71,7 @@ function openServer(req, res) {
     const server = serversService.getServerByRobloxServerIdAndPlaceId(roblox_server_id, place.place_id);
     if (server && !server.active) {
         serversService.updateServer(server.server_id, { active: true });
-        console.log(`Server ${server.name}:${server.server_id} reopened`);
+        logger.info(`Server ${server.name}:${server.server_id} reopened`);
         return res.status(200).json({
             code: 200,
             status: 'success',
@@ -92,7 +93,7 @@ function openServer(req, res) {
 
     serversService.createServer(roblox_server_id, place.place_id, name);
 
-    console.log(`Server ${name} opened`);
+    logger.info(`Server ${name} opened`);
 
     return res.status(200).json({
         code: 200,
@@ -134,7 +135,7 @@ function closeServer(req, res) {
 
     serversService.updateServer(server.server_id, { active: false });
 
-    console.log(`Server ${server.name}:${server.server_id} closed`);
+    logger.info(`Server ${server.name}:${server.server_id} closed`);
 
     return res.status(200).json({
         code: 200,
