@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const logger = require('@services/logger.services');
 const settingsService = require('@services/settings.services');
-const db = require('@services/sqlite.services');
+const db = require('@services/sqlite.services').default;
 
 function createUser(username, email, password) {
     const insertQuery = `INSERT INTO users (username, email, password) VALUES (?, ?, ?)`;

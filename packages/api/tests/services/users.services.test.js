@@ -1,6 +1,6 @@
 const usersService = require('@services/users.services');
 const settingsService = require('@services/settings.services');
-const db = require('@services/sqlite.services');
+const db = require('@services/sqlite.services').default;
 const bcrypt = require('bcrypt');
 
 describe('Users Service', () => {

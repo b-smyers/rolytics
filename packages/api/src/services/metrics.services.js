@@ -1,4 +1,4 @@
-const db = require('@services/sqlite.services');
+const db = require('@services/sqlite.services').default;
 const placesService = require('@services/places.services');
 const serversService = require('@services/servers.services');
 const logger = require('@services/logger.services');

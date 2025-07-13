@@ -33,4 +33,8 @@ module.exports = {
       {},
     ],
   },
+  transformIgnorePatterns: [
+    "/node_modules/",
+    "<rootDir>/tests/.*\\.js$",
+  ],
 }

@@ -1,10 +1,13 @@
-const express = require('express');
-const session = require('express-session');
-const { rateLimit } = require('express-rate-limit');
-const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
-const cron = require('node-cron');
-const logger = require('@services/logger.services');
+import express, { Request, Response } from 'express';
+import session from 'express-session';
+import { rateLimit } from 'express-rate-limit';
+import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
+import cron from 'node-cron';
+import logger from '@services/logger.services';
+import logTraffic from '@services/logTraffic.services';
+import apiRoutes from '@routes/api/v1/api.routes';
+import metricsService from '@services/metrics.services';
 
 const app = express();
 app.set('trust proxy', 1);
@@ -27,7 +30,7 @@ if (process.env.NODE_ENV !== 'a') {
 app.use(bodyParser.json({ limit: '10kb' }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET as string,
     resave: false,
     saveUninitialized: true,
     cookie: { 
@@ -38,13 +41,13 @@ app.use(session({
     }
 }));
 app.use(cookieParser());
-app.use(require('@services/logTraffic.services'));
+app.use(logTraffic);
 
 // Routes
-app.use('/api/v1', require('@routes/api/v1/api.routes'));
+app.use('/api/v1', apiRoutes);
 
 // Serve custom 404
-app.use('/api', (req, res) => {
+app.use('/api', (req: Request, res: Response) => {
     res.status(404).json({
         status: 'error',
         messsage: 'Unknown endpoint',
@@ -53,14 +56,13 @@ app.use('/api', (req, res) => {
     });
 });
 
-const metricsService = require('@services/metrics.services');
 // Cleanup old metrics
 if (process.env.NODE_ENV !== 'test') {
-    cron.schedule(process.env.METRIC_CLEANUP_CRON, () => {
+    cron.schedule(process.env.METRIC_CLEANUP_CRON as string, () => {
         logger.info(`Cleaning up old metrics...`);
         metricsService.deleteOldMetrics(process.env.METRIC_MAX_AGE);
         logger.info(`Old metrics cleaned up!`);
     });
 }
 
-module.exports = app;
+export default app;

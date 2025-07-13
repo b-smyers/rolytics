@@ -1,4 +1,4 @@
-const db = require('@services/sqlite.services');
+const db = require('@services/sqlite.services').default;
 const logger = require('@services/logger.services');
 
 function createExperience(roblox_experience_id, user_id, name, description, page_link, thumbnail_link) {
