@@ -9,6 +9,11 @@ const schema = require('@schemas/settings.schemas.json');
 jest.mock('@services/users.services');
 jest.mock('@services/settings.services');
 
+// Add manual mocks for all used service functions
+usersService.getUserById = jest.fn();
+settingsService.getSettings = jest.fn();
+settingsService.updateSettings = jest.fn();
+
 const app = express();
 app.use(express.json());
 app.use(session({ secret: 'test', resave: false, saveUninitialized: true }));

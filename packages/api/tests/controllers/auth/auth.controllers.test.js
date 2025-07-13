@@ -8,6 +8,13 @@ const settingsService = require('@services/settings.services');
 jest.mock('@services/users.services');
 jest.mock('@services/settings.services');
 
+// Add manual mocks for all used service functions
+usersService.validateCredentials = jest.fn();
+usersService.getUsersByUsername = jest.fn();
+usersService.getUsersByEmail = jest.fn();
+usersService.createUser = jest.fn();
+settingsService.getSettings = jest.fn();
+
 const app = express();
 app.use(express.json());
 app.use(session({ secret: 'test', resave: false, saveUninitialized: true }));

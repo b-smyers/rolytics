@@ -1,6 +1,5 @@
 const http = require('http');
-const app = require('@api/app.js');
-const logger = require('@services/logger.services');
+const app = require('@api/app');
 
 describe('Server', () => {
   let httpServer;
