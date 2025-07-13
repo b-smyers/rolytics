@@ -1,9 +1,9 @@
 const request = require('supertest');
 const express = require('express');
 const session = require('express-session');
-const usersController = require('@controllers/api/v1/users/users.controllers');
-const usersService = require('@services/users.services');
-const settingsService = require('@services/settings.services');
+const usersController = require('@controllers/api/v1/users/users.controllers').default;
+const usersService = require('@services/users.services').default;
+const settingsService = require('@services/settings.services').default;
 const schema = require('@schemas/settings.schemas.json');
 
 jest.mock('@services/users.services');

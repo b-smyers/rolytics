@@ -1,10 +1,10 @@
-const settingsService = require('@services/settings.services');
-const usersService = require('@services/users.services');
+import { Request, Response } from 'express';
+import settingsService from '@services/settings.services';
+import usersService from '@services/users.services';
+import schema from '@schemas/settings.schemas.json';
 
-const schema = require('@schemas/settings.schemas.json');
-
-function validateSetting(key, value) {
-    const setting = schema[key];
+function validateSetting(key: string, value: any): { valid: boolean; message?: string } {
+    const setting = (schema as any)[key];
     if (!setting) {
         return { valid: false, message: `Unknown setting: ${key}` };
     }
@@ -22,7 +22,17 @@ function validateSetting(key, value) {
     return { valid: true };
 }
 
-function getSettings(req, res) {
+function getSettings(req: Request, res: Response) {
+    if (!req.user?.id) {
+        return res.status(401).json({
+            code: 401,
+            status: 'error',
+            data: {
+                message: 'Unauthorized'
+            }
+        });
+    }
+
     try {
         const settings = settingsService.getSettings(req.user.id);
         res.status(200).json({
@@ -44,7 +54,17 @@ function getSettings(req, res) {
     }
 }
 
-function updateSettings(req, res) {
+function updateSettings(req: Request, res: Response) {
+    if (!req.user?.id) {
+        return res.status(401).json({
+            code: 401,
+            status: 'error',
+            data: {
+                message: 'Unauthorized'
+            }
+        });
+    }
+
     const { settings } = req.body;
 
     try {
@@ -63,7 +83,7 @@ function updateSettings(req, res) {
         }
 
         const lastModified = settingsService.updateSettings(req.user.id, settings);
-        
+
         res.status(200).json({
             code: 200,
             status: 'success',
@@ -85,7 +105,17 @@ function updateSettings(req, res) {
     }
 }
 
-function getProfile(req, res) {
+function getProfile(req: Request, res: Response) {
+    if (!req.user?.id) {
+        return res.status(401).json({
+            code: 401,
+            status: 'error',
+            data: {
+                message: 'Unauthorized'
+            }
+        });
+    }
+    
     try {
         const user = usersService.getUserById(req.user.id);
         res.status(200).json({
@@ -107,8 +137,10 @@ function getProfile(req, res) {
     }
 }
 
-module.exports = {
+const usersController = {
     getSettings,
     updateSettings,
     getProfile
-}
+};
+
+export default usersController;

@@ -9,7 +9,8 @@
     "copy-assets": "cp -r src/models dist/models && cp -r src/schemas dist/schemas",
     "clean": "rm -rf dist",
     "lint": "eslint . --ext .ts,.tsx",
-    "test": "jest --verbose tests"
+    "test": "jest --verbose tests",
+    "test:watch": "jest --verbose tests --watchAll"
   },
   "author": "",
   "license": "ISC",
