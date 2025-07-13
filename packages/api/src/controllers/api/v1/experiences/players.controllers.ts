@@ -1,8 +1,20 @@
+import { Request, Response } from "express";
+
 const experiencesService = require('@services/experiences.services');
 const placesService = require('@services/places.services');
 const metricsService = require('@services/metrics.services');
 
-function getPlayers(req, res) {
+function getPlayers(req: Request, res: Response) {
+    if (!req.user?.id) {
+        return res.status(401).json({
+            code: 401,
+            status: 'error',
+            data: {
+                message: 'Unauthorized'
+            }
+        });
+    }
+
     const { experience_id } = req.query;
 
     if (!experience_id) {
@@ -29,14 +41,26 @@ function getPlayers(req, res) {
     }
 
     // If the data is stale, recompute it
+    const EXPERIENCE_STALE_TIME_MS = Number(process.env.EXPERIENCE_STALE_TIME ?? 0);
+    if (Number.isNaN(EXPERIENCE_STALE_TIME_MS)) {
+        throw new Error("EXPERIENCE_STALE_TIME must be a valid number in milliseconds");
+    }
+
+    const PLACE_STALE_TIME_MS = Number(process.env.PLACE_STALE_TIME ?? 0);
+    if (Number.isNaN(PLACE_STALE_TIME_MS)) {
+        throw new Error("PLACE_STALE_TIME must be a valid number in milliseconds");
+    }
+
     const lastComputedAt = new Date(experience.last_computed_at);
-    if (lastComputedAt < new Date(Date.now() - process.env.EXPERIENCE_STALE_TIME)) {
+    const isExperienceStale = lastComputedAt < new Date(Date.now() - EXPERIENCE_STALE_TIME_MS)
+    if (isExperienceStale) {
         // Check if any of the places are stale
         const places = placesService.getPlacesByExperienceId(experience_id);
         // Re-aggregate place if stale
         for (const place of places) {
             const lastComputedAt = new Date(place.last_computed_at);
-            if (lastComputedAt < new Date(Date.now() - process.env.PLACE_STALE_TIME)) {
+            const isPlaceStale = lastComputedAt < new Date(Date.now() - PLACE_STALE_TIME_MS)
+            if (isPlaceStale) {
                 metricsService.aggregatePlaceMetrics(place.place_id);
             }
         }
@@ -60,6 +84,8 @@ function getPlayers(req, res) {
     });
 }
 
-module.exports = {
+const playersController = {
     getPlayers,
 }
+
+export default playersController;

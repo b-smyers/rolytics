@@ -1,22 +1,22 @@
 import { Router } from 'express';
 
-import { getExperiences, connectExperience, disconnectExperience } from '@controllers/api/v1/experiences/experiences.controllers';
-import { getAnalytics } from '@controllers/api/v1/experiences/analytics.controllers';
-import { getPerformance } from '@controllers/api/v1/experiences/performance.controllers';
-import { getPlayers } from '@controllers/api/v1/experiences/players.controllers';
-import { getPurchases } from '@controllers/api/v1/experiences/purchases.controllers';
-import { getSocial } from '@controllers/api/v1/experiences/social.controllers';
+import experiencesController from '@controllers/api/v1/experiences/experiences.controllers';
+import analyticsController from '@controllers/api/v1/experiences/analytics.controllers';
+import performanceController from '@controllers/api/v1/experiences/performance.controllers';
+import playersController from '@controllers/api/v1/experiences/players.controllers';
+import purchasesController from '@controllers/api/v1/experiences/purchases.controllers';
+import socialController from '@controllers/api/v1/experiences/social.controllers';
 
 const router = Router();
 
-router.get('/', getExperiences);
-router.post('/connect', connectExperience);
-router.post('/disconnect', disconnectExperience);
+router.get('/', experiencesController.getExperiences);
+router.post('/connect', experiencesController.connectExperience);
+router.post('/disconnect', experiencesController.disconnectExperience);
 
-router.get('/analytics', getAnalytics);
-router.get('/performance', getPerformance);
-router.get('/players', getPlayers);
-router.get('/purchases', getPurchases);
-router.get('/social', getSocial);
+router.get('/analytics', analyticsController.getAnalytics);
+router.get('/performance', performanceController.getPerformance);
+router.get('/players', playersController.getPlayers);
+router.get('/purchases', purchasesController.getPurchases);
+router.get('/social', socialController.getSocial);
 
 export default router;

@@ -17,6 +17,8 @@ function getPlaces(req: Request, res: Response) {
     })
 }
 
-module.exports = {
+const placesController = {
     getPlaces
 }
+
+export default placesController;

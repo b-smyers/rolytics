@@ -70,6 +70,8 @@ function getPlayers(req: Request, res: Response) {
     });
 }
 
-module.exports = {
+const playersController = {
     getPlayers,
 }
+
+export default playersController;

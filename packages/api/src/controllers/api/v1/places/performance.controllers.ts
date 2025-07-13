@@ -70,6 +70,8 @@ function getPerformance(req: Request, res: Response) {
     });
 }
 
-module.exports = {
+const performanceController = {
     getPerformance,
 }
+
+export default performanceController;

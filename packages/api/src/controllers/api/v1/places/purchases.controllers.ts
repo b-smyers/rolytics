@@ -70,6 +70,8 @@ function getPurchases(req: Request, res: Response) {
     });
 }
 
-module.exports = {
+const purchasesController = {
     getPurchases,
 }
+
+export default purchasesController;

@@ -70,6 +70,8 @@ function getSocial(req: Request, res: Response) {
     });
 }
 
-module.exports = {
+const socialController = {
     getSocial,
 }
+
+export default socialController;
