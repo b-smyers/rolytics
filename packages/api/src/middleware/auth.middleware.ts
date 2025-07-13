@@ -1,7 +1,8 @@
-const jwt = require('jsonwebtoken');
+import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
 
-const checkSession = (req, res, next) => {
-    if (req.session.user) {
+const checkSession = (req: Request, res: Response, next: NextFunction) => {
+    if (req.session?.user) {
         req.user = req.session.user;
         next();
     } else {
@@ -15,7 +16,7 @@ const checkSession = (req, res, next) => {
     }
 };
 
-const checkJWTToken = (req, res, next) => {
+const checkJWTToken = (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers['authorization'];
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return res.status(401).json({
@@ -30,7 +31,7 @@ const checkJWTToken = (req, res, next) => {
 
     if (token) {
         // Verify JWT token
-        jwt.verify(token, process.env.JWT_API_KEY_SECRET, { algorithms: ['HS256'] }, (err, decoded) => {
+        jwt.verify(token, process.env.JWT_API_KEY_SECRET as string, { algorithms: ['HS256'] }, (err: any, decoded: any) => {
             if (err) {
                 if (err.name === 'TokenExpiredError') {
                     return res.status(401).json({
@@ -64,11 +65,11 @@ const checkJWTToken = (req, res, next) => {
     }
 };
 
-const authenticate = (req, res, next) => {
+const authenticate = (req: Request, res: Response, next: NextFunction) => {
     if (req.headers['authorization']) {
         // External request
         checkJWTToken(req, res, next);
-    } else if (req.session.user) {
+    } else if (req.session?.user) {
         // Internal request
         checkSession(req, res, next);
     } else {
@@ -82,6 +83,4 @@ const authenticate = (req, res, next) => {
     }
 };
 
-module.exports = {
-    authenticate
-};
+export { authenticate };
