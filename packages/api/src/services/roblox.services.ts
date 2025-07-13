@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from 'axios';
+import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import logger from '@services/logger.services';
 
 const client: AxiosInstance = axios.create({
@@ -11,14 +11,14 @@ const client: AxiosInstance = axios.create({
 async function getMediaThumbnails(experienceId: string | number, imageIds: (string | number)[]): Promise<string[]> {
     if (imageIds.length === 0) { 
         logger.warn(`getMediaThumbnails: Empty imageIds array provided for experienceId ${experienceId}`);
-        return []; 
+        return Promise.resolve([]);
     }
     // DOCS: https://thumbnails.roblox.com//docs/index.html
     const imageSize = '768x432'; // 768x432, 576x324, 480x270, 384x216, 256x144
     const url = `https://thumbnails.roblox.com/v1/games/${experienceId}/thumbnails`;
 
     try {
-        const response = await client.get(url, {
+        const response: AxiosResponse = await client.get(url, {
             params: {
                 thumbnailIds: imageIds,
                 size: imageSize,
@@ -26,10 +26,10 @@ async function getMediaThumbnails(experienceId: string | number, imageIds: (stri
             }
         });
         logger.info(`Fetched media thumbnails for experienceId ${experienceId} with ${imageIds.length} thumbnailIds`);
-        return response.data?.data.map((thumbnail: any) => thumbnail.imageUrl);
+        return (response.data?.data || []).map((thumbnail: any) => thumbnail.imageUrl);
     } catch (error: any) {
         logger.error(`getMediaThumbnails: Error fetching thumbnails for experienceId ${experienceId} - ${error.message}`);
-        return [];
+        return Promise.resolve([]);
     }
 }
 
