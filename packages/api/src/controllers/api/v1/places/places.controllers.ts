@@ -1,6 +1,8 @@
+import { Request, Response } from "express";
+
 const placesService = require('@services/places.services'); 
 
-function getPlaces(req, res) {
+function getPlaces(req: Request, res: Response) {
     const { experience_id } = req.query;
 
     const rows = placesService.getPlacesByExperienceId(experience_id);

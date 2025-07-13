@@ -1,8 +1,20 @@
+import { Request, Response } from "express";
+
 const experiencesService = require('@services/experiences.services');
 const placesService = require('@services/places.services');
 const metricsService = require('@services/metrics.services');
 
-function getPurchases(req, res) {
+function getPlayers(req: Request, res: Response) {
+    if (!req.user?.id) {
+        return res.status(401).json({
+            code: 401,
+            status: 'error',
+            data: {
+                message: 'Unauthorized'
+            }
+        });
+    }
+
     const { place_id } = req.query;
 
     if (!place_id) {
@@ -30,28 +42,34 @@ function getPurchases(req, res) {
     }
 
     // If the data is stale, recompute it
+    const PLACE_STALE_TIME_MS = Number(process.env.PLACE_STALE_TIME ?? 0);
+
+    if (Number.isNaN(PLACE_STALE_TIME_MS)) {
+        throw new Error("PLACE_STALE_TIME must be a valid number in milliseconds");
+    }
     const lastComputedAt = new Date(place.last_computed_at);
-    if (lastComputedAt < new Date(Date.now() - process.env.PLACE_STALE_TIME)) {
+    const isStale = lastComputedAt.getTime() < Date.now() - PLACE_STALE_TIME_MS;
+    if (isStale) {
         metricsService.aggregatePlaceMetrics(place_id);
     }
 
     place = placesService.getPlaceById(place_id);
-    const purchases = JSON.parse(place.purchases);
+    const players = JSON.parse(place.players);
 
     // Get keys (exclude 'timestamp')
-    const keys = purchases && purchases[0] ? Object.keys(purchases[0]).filter(key => key !== 'timestamp') : [];
+    const keys = players && players[0] ? Object.keys(players[0]).filter(key => key !== 'timestamp') : [];
 
     return res.status(200).json({
         code: 200,
         status: 'success',
         data: {
-            message: 'Purchases data successfully retrieved',
+            message: 'Players data successfully retrieved',
             keys,
-            data: purchases
+            data: players
         }
     });
 }
 
 module.exports = {
-    getPurchases,
+    getPlayers,
 }
