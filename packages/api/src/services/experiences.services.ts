@@ -1,7 +1,24 @@
-const db = require('@services/sqlite.services').default;
-const logger = require('@services/logger.services');
+import db from '@services/sqlite.services';
+import logger from '@services/logger.services';
 
-function createExperience(roblox_experience_id, user_id, name, description, page_link, thumbnail_link) {
+interface Experience {
+    experience_id: number;
+    roblox_experience_id: string;
+    user_id: number;
+    name: string;
+    description: string;
+    page_link: string;
+    thumbnail_link: string;
+}
+
+function createExperience(
+    roblox_experience_id: string,
+    user_id: number,
+    name: string,
+    description: string,
+    page_link: string,
+    thumbnail_link: string
+): number {
     const query = `INSERT INTO experiences (roblox_experience_id, user_id, name, description, page_link, thumbnail_link) VALUES (?, ?, ?, ?, ?, ?)`;
     const stmt = db.prepare(query);
     const result = stmt.run(
@@ -13,10 +30,10 @@ function createExperience(roblox_experience_id, user_id, name, description, page
         thumbnail_link
     );
     logger.info(`Experience '${name}' created for user ID ${user_id} with Roblox Experience ID ${roblox_experience_id}`);
-    return result.lastInsertRowid;
+    return result.lastInsertRowid as number;
 }
 
-function deleteExperience(experience_id) {
+function deleteExperience(experience_id: number): boolean {
     const query = `DELETE FROM experiences WHERE experience_id = ?`;
     const stmt = db.prepare(query);
     const result = stmt.run(experience_id);
@@ -27,12 +44,15 @@ function deleteExperience(experience_id) {
         logger.warn(`Attempted to delete non-existent experience with ID ${experience_id}`);
     }
 
-    return result.changes != 0;
+    return result.changes !== 0;
 }
 
-function updateExperience(experience_id, { name, description, page_link, thumbnail_link }) {
-    const fields = [];
-    const values = [];
+function updateExperience(
+    experience_id: number,
+    { name, description, page_link, thumbnail_link }: { name?: string; description?: string; page_link?: string; thumbnail_link?: string }
+): number {
+    const fields: string[] = [];
+    const values: any[] = [];
     
     if (name !== undefined) {
         fields.push(`name = ?`);
@@ -62,13 +82,13 @@ function updateExperience(experience_id, { name, description, page_link, thumbna
     const stmt = db.prepare(query);
     const result = stmt.run(...values);
     logger.info(`Experience with ID ${experience_id} updated with fields: [${fields.map(f => f.split(' ')[0]).join(', ')}]`);
-    return result.changes;
+    return result.changes as number;
 }
 
-function getExperienceById(experience_id) {
+function getExperienceById(experience_id: number): Experience | undefined {
     const query = `SELECT * FROM experiences WHERE experience_id = ?`;
     const stmt = db.prepare(query);
-    const experience = stmt.get(experience_id);
+    const experience = stmt.get(experience_id) as Experience | undefined;
 
     if (experience) {
         logger.info(`Fetched experience with ID ${experience_id}`);
@@ -79,25 +99,25 @@ function getExperienceById(experience_id) {
     return experience;
 }
 
-function getExperiencesByUserId(user_id, limit = 10) {
+function getExperiencesByUserId(user_id: number, limit: number = 10): Experience[] {
     const query = `SELECT * FROM experiences WHERE user_id = ? LIMIT ?`;
     const stmt = db.prepare(query);
-    const experiences = stmt.all(user_id, limit);
+    const experiences = stmt.all(user_id, limit) as Experience[];
 
     logger.info(`Fetched ${experiences.length} experience(s) for user ID ${user_id} with limit ${limit}`);
     return experiences;
 }
 
-function getExperienceCountByUserId(user_id) {
+function getExperienceCountByUserId(user_id: number): number {
     const query = `SELECT COUNT(*) AS count FROM experiences WHERE user_id = ?`;
     const stmt = db.prepare(query);
-    const count = stmt.get(user_id).count;
+    const count = (stmt.get(user_id) as { count: number }).count;
 
     logger.info(`Fetched experience count (${count}) for user ID ${user_id}`);
     return count;
 }
 
-module.exports = {
+const experiencesService = {
     createExperience,
     deleteExperience,
     updateExperience,
@@ -105,3 +125,5 @@ module.exports = {
     getExperiencesByUserId,
     getExperienceCountByUserId
 };
+
+export default experiencesService;

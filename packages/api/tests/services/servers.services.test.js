@@ -1,7 +1,7 @@
-const usersService = require('@services/users.services');
-const experiencesService = require('@services/experiences.services');
-const placesService = require('@services/places.services');
-const serversService = require('@services/servers.services');
+const usersService = require('@services/users.services').default;
+const experiencesService = require('@services/experiences.services').default;
+const placesService = require('@services/places.services').default;
+const serversService = require('@services/servers.services').default;
 
 describe('Servers Service', () => {
     const username = 'Marty';

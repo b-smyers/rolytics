@@ -60,7 +60,7 @@ app.use('/api', (req: Request, res: Response) => {
 if (process.env.NODE_ENV !== 'test') {
     cron.schedule(process.env.METRIC_CLEANUP_CRON as string, () => {
         logger.info(`Cleaning up old metrics...`);
-        metricsService.deleteOldMetrics(process.env.METRIC_MAX_AGE);
+        metricsService.deleteOldMetrics(process.env.METRIC_MAX_AGE as unknown as number);
         logger.info(`Old metrics cleaned up!`);
     });
 }

@@ -1,4 +1,4 @@
-const experiencesService = require('@services/experiences.services.js');
+const experiencesService = require('@services/experiences.services');
 const placesService = require('@services/places.services');
 const metricsService = require('@services/metrics.services');
 

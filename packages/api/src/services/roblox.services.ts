@@ -1,14 +1,14 @@
-const axios = require('axios');
-const logger = require('@services/logger.services');
+import axios, { AxiosInstance } from 'axios';
+import logger from '@services/logger.services';
 
-const client = axios.create({
+const client: AxiosInstance = axios.create({
     timeout: 1500,
     headers: {
         'Content-Type': 'application/json'
     }
-})
+});
 
-async function getMediaThumbnails(experienceId, imageIds) {
+async function getMediaThumbnails(experienceId: string | number, imageIds: (string | number)[]): Promise<string[]> {
     if (imageIds.length === 0) { 
         logger.warn(`getMediaThumbnails: Empty imageIds array provided for experienceId ${experienceId}`);
         return []; 
@@ -26,14 +26,14 @@ async function getMediaThumbnails(experienceId, imageIds) {
             }
         });
         logger.info(`Fetched media thumbnails for experienceId ${experienceId} with ${imageIds.length} thumbnailIds`);
-        return response.data?.data.map(thumbnail => thumbnail.imageUrl);
-    } catch (error) {
+        return response.data?.data.map((thumbnail: any) => thumbnail.imageUrl);
+    } catch (error: any) {
         logger.error(`getMediaThumbnails: Error fetching thumbnails for experienceId ${experienceId} - ${error.message}`);
         return [];
     }
 }
 
-async function getExperienceMedia(experienceId) {
+async function getExperienceMedia(experienceId: string | number): Promise<any> {
     // DOCS: https://games.roblox.com//docs/index.html
     const url = `https://games.roblox.com/v2/games/${experienceId}/media`;
 
@@ -41,13 +41,13 @@ async function getExperienceMedia(experienceId) {
         const response = await client.get(url);
         logger.info(`Fetched experience media for experienceId ${experienceId}`);
         return response.data;
-    } catch (error) {
+    } catch (error: any) {
         logger.error(`getExperienceMedia: Error fetching media for experienceId ${experienceId} - ${error.message}`);
         throw error;
     }
 }
 
-async function getExperienceDetails(experienceId) {
+async function getExperienceDetails(experienceId: string | number): Promise<any> {
     // DOCS: https://develop.roblox.com//docs/index.html
     const url = `https://develop.roblox.com/v1/universes/${experienceId}`;
 
@@ -55,13 +55,13 @@ async function getExperienceDetails(experienceId) {
         const response = await client.get(url);
         logger.info(`Fetched experience details for experienceId ${experienceId}`);
         return response.data;
-    } catch (error) {
+    } catch (error: any) {
         logger.error(`getExperienceDetails: Error fetching details for experienceId ${experienceId} - ${error.message}`);
         throw error;
     }
 }
 
-async function getExperienceIdfromPlaceId(placeId) {
+async function getExperienceIdfromPlaceId(placeId: string | number): Promise<any> {
     // DOCS: 
     const url = `https://apis.roblox.com/universes/v1/places/${placeId}/universe`;
 
@@ -69,13 +69,13 @@ async function getExperienceIdfromPlaceId(placeId) {
         const response = await client.get(url);
         logger.info(`Fetched universeId from placeId ${placeId}`);
         return response.data.universeId;
-    } catch (error) {
+    } catch (error: any) {
         logger.error(`getExperienceIdfromPlaceId: Error fetching universeId for placeId ${placeId} - ${error.message}`);
         throw error;
     }
 }
 
-async function getPlacesByRobloxExperienceId(experienceId) {
+async function getPlacesByRobloxExperienceId(experienceId: string | number): Promise<any[]> {
     // DOCS: https://develop.roblox.com//docs/index.html?urls.primaryName=Develop%20Api%20v1
     const url = `https://develop.roblox.com/v1/universes/${experienceId}/places`;
 
@@ -83,16 +83,18 @@ async function getPlacesByRobloxExperienceId(experienceId) {
         const response = await client.get(url);
         logger.info(`Fetched places for experienceId ${experienceId} with ${response.data.data.length} place(s)`);
         return response.data.data;
-    } catch (error) {
+    } catch (error: any) {
         logger.error(`getPlacesByRobloxExperienceId: Error fetching places for experienceId ${experienceId} - ${error.message}`);
         throw error;
     }
 }
 
-module.exports = {
+const robloxService = {
     getMediaThumbnails,
     getExperienceMedia,
     getExperienceDetails,
     getExperienceIdfromPlaceId,
     getPlacesByRobloxExperienceId
-}
+};
+
+export default robloxService;

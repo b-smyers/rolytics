@@ -1,8 +1,16 @@
-const db = require('@services/sqlite.services').default;
-const schema = require('@schemas/settings.schemas.json');
-const logger = require('@services/logger.services');
+import db from '@services/sqlite.services';
+import schema from '@schemas/settings.schemas.json';
+import logger from '@services/logger.services';
 
-function createSettings(userId, settings) {
+type Settings = {
+    theme?: string;
+    currency?: string;
+    abbreviateUserCounts?: boolean;
+    lastModified?: number;
+    [key: string]: any;
+};
+
+function createSettings(userId: number, settings: Settings = {}): void {
     const query = `INSERT INTO user_settings (user_id, setting_key, setting_value) VALUES (?, ?, ?)`;
 
     const timestamp = Date.now();
@@ -13,9 +21,9 @@ function createSettings(userId, settings) {
         abbreviateUserCounts: schema.abbreviateUserCounts.default,
         ...settings,
         lastModified: timestamp
-    };    
+    };
 
-    const transaction = db.transaction(settings => {
+    const transaction = db.transaction((settings: Settings) => {
         Object.entries(settings).forEach(([key, value]) => {
             db.prepare(query).run(userId, key, JSON.stringify(value));
         });
@@ -25,13 +33,13 @@ function createSettings(userId, settings) {
     logger.info(`Default settings initialized for user ${userId}`);
 }
 
-function getSettings(userId) {
+function getSettings(userId: number): Settings {
     const query = `SELECT setting_key, setting_value FROM user_settings WHERE user_id = ?`;
     const result = db.prepare(query).all(userId);
 
-    const settings = {};
+    const settings: Settings = {};
 
-    result.forEach(({ setting_key, setting_value }) => {
+    (result as Array<{ setting_key: string; setting_value: string }>).forEach(({ setting_key, setting_value }) => {
         try {
             settings[setting_key] = JSON.parse(setting_value);
         } catch {
@@ -44,14 +52,14 @@ function getSettings(userId) {
     return settings;
 }
 
-function updateSettings(userId, settings) {
+function updateSettings(userId: number, settings: Settings): number {
     const query = `UPDATE user_settings SET setting_value = ? WHERE user_id = ? AND setting_key = ?`;
-    
+
     const lastModified = Date.now();
 
     settings = { ...settings, lastModified };
 
-    const transaction = db.transaction(settings => {
+    const transaction = db.transaction((settings: Settings) => {
         Object.entries(settings).forEach(([key, value]) => {
             const result = db.prepare(query).run(JSON.stringify(value), userId, key);
             if (result.changes === 0) {
@@ -65,8 +73,10 @@ function updateSettings(userId, settings) {
     return lastModified;
 }
 
-module.exports = {
+const settingsService = {
     createSettings,
     getSettings,
     updateSettings
 };
+
+export default settingsService;

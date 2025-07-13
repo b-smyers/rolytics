@@ -1,5 +1,5 @@
-const usersService = require('@services/users.services');
-const settingsService = require('@services/settings.services');
+const usersService = require('@services/users.services').default;
+const settingsService = require('@services/settings.services').default;
 const db = require('@services/sqlite.services').default;
 const bcrypt = require('bcrypt');
 
