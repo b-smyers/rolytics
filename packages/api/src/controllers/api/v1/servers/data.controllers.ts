@@ -1,3 +1,5 @@
+import { Request, Response } from "express";
+
 const metricsService = require('@services/metrics.services');
 const placesService = require('@services/places.services');
 const serversService = require('@services/servers.services');
@@ -9,7 +11,7 @@ const schema = require('@schemas/data.schemas.json');
 const ajv = new Ajv();
 const validate = ajv.compile(schema);
 
-function logData(req, res) {
+function logData(req: Request, res: Response) {
     // Check if the req.body exists
     const data = req.body;
     if (!data) {
@@ -69,6 +71,8 @@ function logData(req, res) {
     });
 }
 
-module.exports = {
+const dataController = {
     logData
-}
+};
+
+export default dataController;

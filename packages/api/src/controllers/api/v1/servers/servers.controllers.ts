@@ -1,9 +1,21 @@
-const experiencesService = require('@services/experiences.services'); 
-const placesService = require('@services/places.services'); 
-const serversService = require('@services/servers.services'); 
+import { Request, Response } from "express";
+
+const experiencesService = require('@services/experiences.services');
+const placesService = require('@services/places.services');
+const serversService = require('@services/servers.services');
 const logger = require('@services/logger.services');
 
-function getServers(req, res) {
+function getServers(req: Request, res: Response) {
+    if (!req.user?.id) {
+        return res.status(401).json({
+            code: 401,
+            status: 'error',
+            data: {
+                message: 'Unauthorized'
+            }
+        });
+    }
+
     const { place_id } = req.query;
 
     if (!place_id) {
@@ -42,7 +54,17 @@ function getServers(req, res) {
     });
 }
 
-function openServer(req, res) {
+function openServer(req: Request, res: Response) {
+    if (!req.user?.id) {
+        return res.status(401).json({
+            code: 401,
+            status: 'error',
+            data: {
+                message: 'Unauthorized'
+            }
+        });
+    }
+
     const { roblox_server_id, roblox_place_id, name } = req.body;
 
     if (!roblox_server_id || !roblox_place_id || !name) {
@@ -88,7 +110,7 @@ function openServer(req, res) {
             }
         });
     }
-    
+
     // TODO: Need check to make sure server is part of place
 
     serversService.createServer(roblox_server_id, place.place_id, name);
@@ -104,7 +126,17 @@ function openServer(req, res) {
     });
 }
 
-function closeServer(req, res) {
+function closeServer(req: Request, res: Response) {
+    if (!req.user?.id) {
+        return res.status(401).json({
+            code: 401,
+            status: 'error',
+            data: {
+                message: 'Unauthorized'
+            }
+        });
+    }
+
     const { roblox_server_id, roblox_place_id } = req.body;
     if (!roblox_server_id || !roblox_place_id) {
         return res.status(400).json({
@@ -146,8 +178,10 @@ function closeServer(req, res) {
     });
 }
 
-module.exports = {
+const serversController = {
     getServers,
     openServer,
     closeServer
-}
+};
+
+export default serversController;

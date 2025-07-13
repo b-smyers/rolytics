@@ -1,24 +1,24 @@
 import { Router } from 'express';
 
-import { getServers, openServer, closeServer } from '@controllers/api/v1/servers/servers.controllers';
-import { logData } from '@controllers/api/v1/servers/data.controllers';
-import { getAnalytics } from '@controllers/api/v1/servers/analytics.controllers';
-import { getPerformance } from '@controllers/api/v1/servers/performance.controllers';
-import { getPlayers } from '@controllers/api/v1/servers/players.controllers';
-import { getPurchases } from '@controllers/api/v1/servers/purchases.controllers';
-import { getSocial } from '@controllers/api/v1/servers/social.controllers';
+import serversController from '@controllers/api/v1/servers/servers.controllers';
+import dataController from '@controllers/api/v1/servers/data.controllers';
+import analyticsController from '@controllers/api/v1/servers/analytics.controllers';
+import performanceController from '@controllers/api/v1/servers/performance.controllers';
+import playersController from '@controllers/api/v1/servers/players.controllers';
+import purchasesController from '@controllers/api/v1/servers/purchases.controllers';
+import socialController from '@controllers/api/v1/servers/social.controllers';
 
 const router = Router();
 
-router.get('/', getServers);
-router.post('/open', openServer);
-router.post('/close', closeServer);
-router.post('/data', logData);
+router.get('/', serversController.getServers);
+router.post('/open', serversController.openServer);
+router.post('/close', serversController.closeServer);
+router.post('/data', dataController.logData);
 
-router.get('/analytics', getAnalytics);
-router.get('/performance', getPerformance);
-router.get('/players', getPlayers);
-router.get('/purchases', getPurchases);
-router.get('/social', getSocial);
+router.get('/analytics', analyticsController.getAnalytics);
+router.get('/performance', performanceController.getPerformance);
+router.get('/players', playersController.getPlayers);
+router.get('/purchases', purchasesController.getPurchases);
+router.get('/social', socialController.getSocial);
 
 export default router;

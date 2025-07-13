@@ -1,9 +1,21 @@
+import { Request, Response } from "express";
+
 const experiencesService = require('@services/experiences.services');
 const placesService = require('@services/places.services');
 const serversService = require('@services/servers.services');
 const metricsService = require('@services/metrics.services');
 
-function getPlayers(req, res) {
+function getPerformance(req: Request, res: Response) {
+    if (!req.user?.id) {
+        return res.status(401).json({
+            code: 401,
+            status: 'error',
+            data: {
+                message: 'Unauthorized'
+            }
+        });
+    }
+
     const { server_id } = req.query;
 
     if (!server_id) {
@@ -31,27 +43,29 @@ function getPlayers(req, res) {
         });
     }
 
-    const players = metricsService.getPlayersMetricsByServerId(server.server_id);
+    const performance = metricsService.getPerformanceMetricsByServerId(server.server_id);
 
     // Decode each row into JSON
-    players.forEach((row, index) => {
-        players[index] = JSON.parse(row.players);
+    performance.forEach((row: any, index: string) => {
+        performance[index] = JSON.parse(row.performance);
     });
 
     // Create list of keys
-    const keys = players && players[0] ? Object.keys(players[0]) : [];
+    const keys = performance && performance[0] ? Object.keys(performance[0]) : [];
 
     return res.status(200).json({
         code: 200,
         status: 'success',
         data: {
-            message: 'Players data successfully retrieved',
+            message: 'Performance data successfully retrieved',
             keys,
-            players
+            performance
         }
     })
 }
 
-module.exports = {
-    getPlayers
+const performanceController = {
+    getPerformance
 }
+
+export default performanceController;

@@ -1,9 +1,21 @@
+import { Request, Response } from "express";
+
 const experiencesService = require('@services/experiences.services');
 const placesService = require('@services/places.services');
 const serversService = require('@services/servers.services');
 const metricsService = require('@services/metrics.services');
 
-function getPerformance(req, res) {
+function getSocial(req: Request, res: Response) {
+    if (!req.user?.id) {
+        return res.status(401).json({
+            code: 401,
+            status: 'error',
+            data: {
+                message: 'Unauthorized'
+            }
+        });
+    }
+
     const { server_id } = req.query;
 
     if (!server_id) {
@@ -31,27 +43,29 @@ function getPerformance(req, res) {
         });
     }
 
-    const performance = metricsService.getPerformanceMetricsByServerId(server.server_id);
+    const social = metricsService.getSocialMetricsByServerId(server.server_id);
 
     // Decode each row into JSON
-    performance.forEach((row, index) => {
-        performance[index] = JSON.parse(row.performance);
+    social.forEach((row: any, index: string) => {
+        social[index] = JSON.parse(row.social);
     });
 
     // Create list of keys
-    const keys = performance && performance[0] ? Object.keys(performance[0]) : [];
+    const keys = social && social[0] ? Object.keys(social[0]) : [];
 
     return res.status(200).json({
         code: 200,
         status: 'success',
         data: {
-            message: 'Performance data successfully retrieved',
+            message: 'Social data successfully retrieved',
             keys,
-            performance
+            social
         }
     })
 }
 
-module.exports = {
-    getPerformance
-}
+const socialController = {
+    getSocial
+};
+
+export default socialController;

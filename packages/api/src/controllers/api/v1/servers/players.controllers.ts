@@ -1,9 +1,21 @@
+import { Request, Response } from "express";
+
 const experiencesService = require('@services/experiences.services');
 const placesService = require('@services/places.services');
 const serversService = require('@services/servers.services');
 const metricsService = require('@services/metrics.services');
 
-function getPurchases(req, res) {
+function getPlayers(req: Request, res: Response) {
+    if (!req.user?.id) {
+        return res.status(401).json({
+            code: 401,
+            status: 'error',
+            data: {
+                message: 'Unauthorized'
+            }
+        });
+    }
+
     const { server_id } = req.query;
 
     if (!server_id) {
@@ -31,27 +43,29 @@ function getPurchases(req, res) {
         });
     }
 
-    const purchases = metricsService.getPurchasesMetricsByServerId(server.server_id);
+    const players = metricsService.getPlayersMetricsByServerId(server.server_id);
 
     // Decode each row into JSON
-    purchases.forEach((row, index) => {
-        purchases[index] = JSON.parse(row.purchases);
+    players.forEach((row: any, index: string) => {
+        players[index] = JSON.parse(row.players);
     });
 
     // Create list of keys
-    const keys = purchases && purchases[0] ? Object.keys(purchases[0]) : [];
+    const keys = players && players[0] ? Object.keys(players[0]) : [];
 
     return res.status(200).json({
         code: 200,
         status: 'success',
         data: {
-            message: 'Purchase data successfully retrieved',
+            message: 'Players data successfully retrieved',
             keys,
-            purchases
+            players
         }
     })
 }
 
-module.exports = {
-    getPurchases
+const playersController = {
+    getPlayers
 }
+
+export default playersController;
