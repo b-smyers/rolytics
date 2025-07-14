@@ -1,7 +1,9 @@
+import { Request, Response } from "express";
+
 const usersService = require('@services/users.services');
 const settingsService = require('@services/settings.services');
 
-function login(req, res) {
+function login(req: Request, res: Response) {
     // TODO: Login with email or username
     // eslint-disable-next-line no-unused-vars
     const { username, email, password } = req.body;
@@ -44,7 +46,7 @@ function login(req, res) {
     }
 }
 
-function register(req, res) {
+function register(req: Request, res: Response) {
     const { username, email, password } = req.body;
 
     try {
@@ -92,7 +94,7 @@ function register(req, res) {
     }
 }
 
-function logout(req, res) {
+function logout(req: Request, res: Response) {
     req.session.destroy(err => {
         if (err) {
             return res.status(500).json({
@@ -114,7 +116,7 @@ function logout(req, res) {
     });
 }
 
-function verify(req, res) {
+function verify(req: Request, res: Response) {
     const message = req.body || 'verified';
     res.status(200).json({
         code: 200,
@@ -125,9 +127,11 @@ function verify(req, res) {
     });
 }
 
-module.exports = {
+const authController = {
     login,
     register,
     logout,
     verify,
-}
+};
+
+export default authController;

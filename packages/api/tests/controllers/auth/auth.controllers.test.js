@@ -1,7 +1,7 @@
 const request = require('supertest');
 const express = require('express');
 const session = require('express-session');
-const authController = require('@controllers/api/v1/auth/auth.controllers');
+const authController = require('@controllers/api/v1/auth/auth.controllers').default;
 const usersService = require('@services/users.services');
 const settingsService = require('@services/settings.services');
 
