@@ -5,7 +5,7 @@
   "scripts": {
     "start": "pnpm --filter api build && node dist/server.js",
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "build": "tsc && pnpm --filter api copy-assets",
+    "build": "pnpm --filter api clean && tsc && pnpm --filter api copy-assets",
     "copy-assets": "cp -r src/models dist/models && cp -r src/schemas dist/schemas",
     "clean": "rm -rf dist",
     "lint": "eslint . --ext .ts,.tsx",
