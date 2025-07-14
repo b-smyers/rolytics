@@ -55,51 +55,51 @@ function getMetricById(id: number): any {
     return metric;
 }
 
-function getMetricsByServerId(server_id: number, limit: number = 20): any[] {
+function getMetricsByServerId(server_id: number, limit = 20): any[] {
     const query = `SELECT timestamp, server_id, purchases, performance, social, players, metadata FROM metrics WHERE server_id = ? ORDER BY timestamp DESC LIMIT ?`;
     const metrics = db.prepare(query).all(server_id, limit);
     logger.info(`Fetched ${metrics.length} metrics for server ID ${server_id} with limit ${limit}`);
     return metrics;
 }
 
-function getPerformanceMetricsByServerId(server_id: number, limit: number = 20): any[] {
+function getPerformanceMetricsByServerId(server_id: number, limit = 20): any[] {
     const query = `SELECT performance FROM metrics WHERE server_id = ? ORDER BY timestamp DESC LIMIT ?`;
     const metrics = db.prepare(query).all(server_id, limit);
     logger.info(`Fetched ${metrics.length} performance metrics for server ID ${server_id}`);
     return metrics;
 }
 
-function getPurchasesMetricsByServerId(server_id: number, limit: number = 20): any[] {
+function getPurchasesMetricsByServerId(server_id: number, limit = 20): any[] {
     const query = `SELECT purchases FROM metrics WHERE server_id = ? ORDER BY timestamp DESC LIMIT ?`;
     const metrics = db.prepare(query).all(server_id, limit);
     logger.info(`Fetched ${metrics.length} purchase metrics for server ID ${server_id}`);
     return metrics;
 }
 
-function getSocialMetricsByServerId(server_id: number, limit: number = 20): any[] {
+function getSocialMetricsByServerId(server_id: number, limit = 20): any[] {
     const query = `SELECT social FROM metrics WHERE server_id = ? ORDER BY timestamp DESC LIMIT ?`;
     const metrics = db.prepare(query).all(server_id, limit);
     logger.info(`Fetched ${metrics.length} social metrics for server ID ${server_id}`);
     return metrics;
 }
 
-function getPlayersMetricsByServerId(server_id: number, limit: number = 20): any[] {
+function getPlayersMetricsByServerId(server_id: number, limit = 20): any[] {
     const query = `SELECT players FROM metrics WHERE server_id = ? ORDER BY timestamp DESC LIMIT ?`;
     const metrics = db.prepare(query).all(server_id, limit);
     logger.info(`Fetched ${metrics.length} player metrics for server ID ${server_id}`);
     return metrics;
 }
 
-function getMetadataMetricsByServerId(server_id: number, limit: number = 20): any[] {
+function getMetadataMetricsByServerId(server_id: number, limit = 20): any[] {
     const query = `SELECT metadata FROM metrics WHERE server_id = ? ORDER BY timestamp DESC LIMIT ?`;
     const metrics = db.prepare(query).all(server_id, limit);
     logger.info(`Fetched ${metrics.length} metadata metrics for server ID ${server_id}`);
     return metrics;
 }
 
-function aggregatePlaceMetrics(place_id: number, server_limit: number = 100): void {
+function aggregatePlaceMetrics(place_id: number, server_limit = 100): void {
     logger.info(`Aggregating metrics for Place ID ${place_id} (server limit: ${server_limit})`);
-    const servers = serversService.getServersByPlaceId(place_id, server_limit) as Array<{ server_id: number }>;
+    const servers = serversService.getServersByPlaceId(place_id, server_limit) as { server_id: number }[];
     const metrics = servers.flatMap(server => getMetricsByServerId(server.server_id, 100));
 
     const aggregatedMetrics: Record<string, any> = {};
@@ -108,7 +108,7 @@ function aggregatePlaceMetrics(place_id: number, server_limit: number = 100): vo
         const aggregatedData: Record<string, any> = {};
 
         for (const [metric, schemaEntry] of Object.entries(schema as Record<string, { aggregation: string }>)) {
-            let valuesByTimestamp: Record<string, any[]> = {};
+            const valuesByTimestamp: Record<string, any[]> = {};
             metrics.forEach((metricRow: any) => {
                 const timestamp = metricRow.timestamp;
                 const metricData = metricRow[metricType];
@@ -140,9 +140,9 @@ function aggregatePlaceMetrics(place_id: number, server_limit: number = 100): vo
     logger.info(`Aggregated metrics updated for Place ID ${place_id}`);
 }
 
-function aggregateExperienceMetrics(experience_id: number, place_limit: number = 100): void {
+function aggregateExperienceMetrics(experience_id: number, place_limit = 100): void {
     logger.info(`Aggregating metrics for Experience ID ${experience_id} (place limit: ${place_limit})`);
-    const places = placesService.getPlacesByExperienceId(experience_id, place_limit) as Array<Record<string, any>>;
+    const places = placesService.getPlacesByExperienceId(experience_id, place_limit) as Record<string, any>[];
     const aggregatedMetrics: Record<string, any> = {};
 
     for (const [metricType, schema] of Object.entries(aggregateSchema as Record<string, any>)) {
@@ -150,7 +150,7 @@ function aggregateExperienceMetrics(experience_id: number, place_limit: number =
         const aggregatedData: Record<string, any> = {};
 
         for (const [metric, schemaEntry] of Object.entries(schema as Record<string, { aggregation: string }>)) {
-            let valuesByTimestamp: Record<string, any[]> = {};
+            const valuesByTimestamp: Record<string, any[]> = {};
             places.forEach((place: any) => {
                 const metricData = place[metricType];
                 if (!metricData) return;

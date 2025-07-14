@@ -76,7 +76,7 @@ function getPlaceByRobloxPlaceId(roblox_place_id: string): Place | undefined {
     return place;
 }
 
-function getPlacesByExperienceId(experience_id: number, limit: number = 10): Place[] {
+function getPlacesByExperienceId(experience_id: number, limit = 10): Place[] {
     const query = `SELECT place_id, roblox_place_id, experience_id, name, purchases, performance, social, players, metadata, last_computed_at FROM places WHERE experience_id = ? LIMIT ?`;
     const places: Place[] = db.prepare(query).all(experience_id, limit) as Place[];
 

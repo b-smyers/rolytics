@@ -99,7 +99,7 @@ function getExperienceById(experience_id: number): Experience | undefined {
     return experience;
 }
 
-function getExperiencesByUserId(user_id: number, limit: number = 10): Experience[] {
+function getExperiencesByUserId(user_id: number, limit = 10): Experience[] {
     const query = `SELECT * FROM experiences WHERE user_id = ? LIMIT ?`;
     const stmt = db.prepare(query);
     const experiences = stmt.all(user_id, limit) as Experience[];

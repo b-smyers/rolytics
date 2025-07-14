@@ -2,13 +2,13 @@ import db from '@services/sqlite.services';
 import schema from '@schemas/settings.schemas.json';
 import logger from '@services/logger.services';
 
-type Settings = {
+interface Settings {
     theme?: string;
     currency?: string;
     abbreviateUserCounts?: boolean;
     lastModified?: number;
     [key: string]: any;
-};
+}
 
 function createSettings(userId: number, settings: Settings = {}): void {
     const query = `INSERT INTO user_settings (user_id, setting_key, setting_value) VALUES (?, ?, ?)`;
@@ -39,7 +39,7 @@ function getSettings(userId: number): Settings {
 
     const settings: Settings = {};
 
-    (result as Array<{ setting_key: string; setting_value: string }>).forEach(({ setting_key, setting_value }) => {
+    (result as { setting_key: string; setting_value: string }[]).forEach(({ setting_key, setting_value }) => {
         try {
             settings[setting_key] = JSON.parse(setting_value);
         } catch {

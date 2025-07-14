@@ -103,13 +103,13 @@ function validateCredentials(
     }
 }
 
-function getUsersByUsername(username: string, limit: number = 10): User[] {
+function getUsersByUsername(username: string, limit = 10): User[] {
     logger.info(`Fetching users by username: '${username}' with limit ${limit}`);
     const query = `SELECT id, username, email, api_key FROM users WHERE username = ? LIMIT ?`;
     return db.prepare(query).all(username, limit) as User[];
 }
 
-function getUsersByEmail(email: string, limit: number = 10): User[] {
+function getUsersByEmail(email: string, limit = 10): User[] {
     logger.info(`Fetching users by email: '${email}' with limit ${limit}`);
     const query = `SELECT id, username, email, api_key FROM users WHERE email = ? LIMIT ?`;
     return db.prepare(query).all(email, limit) as User[];

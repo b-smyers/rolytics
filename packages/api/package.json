@@ -8,7 +8,7 @@
     "build": "pnpm --filter api clean && tsc && pnpm --filter api copy-assets",
     "copy-assets": "cp -r src/models dist/models && cp -r src/schemas dist/schemas",
     "clean": "rm -rf dist",
-    "lint": "eslint . --ext .ts,.tsx",
+    "lint": "eslint --config eslint.config.mjs --ext .ts,.js src",
     "test": "jest --verbose tests",
     "test:watch": "jest --verbose tests --watchAll"
   },
@@ -60,6 +60,7 @@
     "ts-jest": "^29.4.0",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.36.0"
   }
 }

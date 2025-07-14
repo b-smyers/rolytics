@@ -84,7 +84,7 @@ function getServerByRobloxServerIdAndPlaceId(roblox_server_id: string, place_id:
     return server;
 }
 
-function getServersByPlaceId(place_id: number, limit: number = 10): Server[] {
+function getServersByPlaceId(place_id: number, limit = 10): Server[] {
     const query = `SELECT * FROM servers WHERE place_id = ? LIMIT ?`;
     const servers: Server[] = db.prepare(query).all(place_id, limit) as Server[];
 
