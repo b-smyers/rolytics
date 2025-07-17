@@ -18,7 +18,7 @@ module.exports = {
     '@schemas/(.*)': '<rootDir>/src/schemas/$1',
   },
   collectCoverageFrom: [
-    './**/*.{js}',
+    'src/**/*.{js,jsx,ts,tsx}',
   ],
   testPathIgnorePatterns: [
     '/node_modules/',

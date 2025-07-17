@@ -9,8 +9,9 @@
     "copy-assets": "cp -r src/models dist/models && cp -r src/schemas dist/schemas",
     "clean": "rm -rf dist",
     "lint": "eslint --config eslint.config.mjs --ext .ts,.js src",
-    "test": "jest --verbose tests",
-    "test:watch": "jest --verbose tests --watchAll"
+    "test": "jest tests",
+    "test:watch": "jest tests --watchAll",
+    "test:coverage": "jest test --coverage"
   },
   "author": "",
   "license": "ISC",
