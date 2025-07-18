@@ -3,14 +3,7 @@ import jwt from 'jsonwebtoken';
 import logger from '@services/logger.services';
 import settingsService from '@services/settings.services';
 import db from '@services/sqlite.services';
-
-interface User {
-    id: number;
-    username: string;
-    email: string;
-    api_key?: string;
-    password?: string;
-}
+import { User } from 'types/user';
 
 function createUser(username: string, email: string, password: string): { id: number, username: string, email: string } {
     const insertQuery = `INSERT INTO users (username, email, password) VALUES (?, ?, ?)`;
@@ -85,13 +78,13 @@ function updateUser(
 function validateCredentials(
     username: string,
     password: string
-): false | { id: number; username: string; email: string } {
+): User | undefined {
     const query = `SELECT id, username, email, password FROM users WHERE username = ?`;
     const row = db.prepare(query).get(username) as User | undefined;
 
     if (!row) {
         logger.warn(`Login failed because username '${username}' not found`);
-        return false;
+        return;
     }
 
     if (bcrypt.compareSync(password, row.password!)) {
@@ -99,7 +92,7 @@ function validateCredentials(
         return { id: row.id, username: row.username, email: row.email };
     } else {
         logger.info(`A user ${row.id} failed to login, incorrect username or password`);
-        return false;
+        return;
     }
 }
 

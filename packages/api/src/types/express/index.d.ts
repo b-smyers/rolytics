@@ -1,20 +1,16 @@
 import 'express';
+import { RequestUser, SessionUser } from '../controllers/auth';
 
 declare global {
   namespace Express {
     interface Request {
-      user?: {
-        id: number;
-      };
+      user?: RequestUser
     }
   }
 }
 
 declare module 'express-session' {
   interface SessionData {
-    user?: {
-      id: number;
-      username?: string;
-    };
+    user?: SessionUser
   }
 }

@@ -2,8 +2,8 @@ const request = require('supertest');
 const express = require('express');
 const session = require('express-session');
 const authController = require('@controllers/api/v1/auth/auth.controllers').default;
-const usersService = require('@services/users.services');
-const settingsService = require('@services/settings.services');
+const usersService = require('@services/users.services').default;
+const settingsService = require('@services/settings.services').default;
 
 jest.mock('@services/users.services');
 jest.mock('@services/settings.services');
@@ -29,7 +29,7 @@ describe('Auth Controller', () => {
     afterEach(() => {
         jest.clearAllMocks();
     });
-    
+
     describe('POST /login', () => {
         it('should return 200 and login successfully', async () => {
             usersService.validateCredentials.mockReturnValue({ id: 1, email: "testuser@mail.com", username: 'testuser' });
@@ -63,7 +63,7 @@ describe('Auth Controller', () => {
             expect(res.body).toEqual({
                 code: 401,
                 status: 'error',
-                data: { message: 'Invalid credentials' }
+                data: { message: 'Invalid Credentials' }
             });
         });
 
@@ -193,7 +193,7 @@ describe('Auth Controller', () => {
             expect(res.body).toEqual({
                 code: 200,
                 status: 'success',
-                data: { message: { message: 'test message' } }
+                data: { message: 'test message' }
             });
         });
 
@@ -206,7 +206,7 @@ describe('Auth Controller', () => {
             expect(res.body).toEqual({
                 code: 200,
                 status: 'success',
-                data: { message: 'verified' }
+                data: { message: 'OK' }
             });
         });
     });

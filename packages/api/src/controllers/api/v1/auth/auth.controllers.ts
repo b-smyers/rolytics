@@ -1,136 +1,80 @@
+import { Unauthorized, OK, InternalServerError, NotImplemented, BadRequest } from "@lib/api-response";
+import { LoginBody, LoginWithUsername, LogoutBody, RegisterBody, VerifyBody } from "types/controllers/auth";
 import { Request, Response } from "express";
+import usersService from "services/users.services";
+import settingsService from 'services/settings.services';
 
-const usersService = require('@services/users.services');
-const settingsService = require('@services/settings.services');
 
-function login(req: Request, res: Response) {
-    // TODO: Login with email or username
-    const { username, email, password } = req.body;
-    try {
-        const user = usersService.validateCredentials(username, password);
-        if (!user) {
-            return res.status(401).json({
-                code: 401,
-                status: 'error',
-                data: {
-                    message: 'Invalid credentials'
-                }
-            });
+function isLoginWithUsername(body: LoginBody): body is LoginWithUsername {
+    return typeof (body as LoginWithUsername).username === 'string';
+}
+
+function login(req: Request<{}, {}, LoginBody>, res: Response) {
+    const body = req.body;
+    
+    if (isLoginWithUsername(body)) {
+        try {
+            const user = usersService.validateCredentials(body.username, body.password);
+            if (!user) {
+                return res.status(401).json(Unauthorized('Invalid Credentials'));
+            }
+            
+            req.session.user = { id: user.id, username: user.username };
+            
+            const settings = settingsService.getSettings(user.id);
+            
+            return res.status(200).json(OK('Login successful', { settings }));
+        } catch (error) {
+            return res.status(500).json(InternalServerError('Login failed unexpectedly'));
         }
-
-        // Store user info in session
-        req.session.user = { id: user.id, username: user.username };
-
-        // Fetch user settings
-        const settings = settingsService.getSettings(user.id);
-
-        res.status(200).json({
-            code: 200,
-            status: 'success',
-            data: {
-                message: 'Login successful',
-                settings: {
-                    lastModified: settings.lastModified
-                }
-            }
-        });
-    } catch(error) {
-        res.status(500).json({
-            code: 500,
-            status: 'error',
-            data: {
-                message: 'Login failed unexpectedly'
-            }
-        });
+    } else {
+        // TODO: Login with email
+        return res.status(501).json(NotImplemented());
     }
 }
 
-function register(req: Request, res: Response) {
+function register(req: Request<{}, {}, RegisterBody>, res: Response) {
     const { username, email, password } = req.body;
 
     try {
         const usersWithUsername = usersService.getUsersByUsername(username);
         if (usersWithUsername?.length > 0) {
-            return res.status(400).json({
-                code: 400,
-                status: 'error',
-                data: {
-                    message: 'Username already in use'
-                }
-            });
+            return res.status(400).json(BadRequest('Username already in use'));
         }
 
         const usersWithEmail = usersService.getUsersByEmail(email);
         if (usersWithEmail?.length > 0) {
-            return res.status(400).json({
-                code: 400,
-                status: 'error',
-                data: {
-                    message: 'Email already in use'
-                }
-            });
+            return res.status(400).json(BadRequest('Email already in use'));
         }
-        
+
         // email & username
         const userInfo = usersService.createUser(username, email, password);
 
-        res.status(200).json({
-            code: 200,
-            status: 'success',
-            data: {
-                message: 'Registration successful',
-                userInfo: userInfo
-            }
-        });
-    } catch(error) {
-        res.status(500).json({
-            code: 500,
-            status: 'error',
-            data: {
-                message: 'Registration failed unexpectedly'
-            }
-        });
+
+        return res.status(200).json(OK('Registration successful', { userInfo }));
+    } catch (error) {
+        return res.status(500).json(InternalServerError('Registration failed unexpectedly'));
     }
 }
 
-function logout(req: Request, res: Response) {
+function logout(req: Request<{}, {}, LogoutBody>, res: Response) {
     req.session.destroy(err => {
         if (err) {
-            return res.status(500).json({
-                code: 500,
-                status: 'error',
-                data: {
-                    message: 'Logout failed unexpectedly'
-                }
-            });
+            return res.status(500).json(InternalServerError('Logout failed unexpectedly'));
         }
         res.clearCookie('refreshToken');
-        res.status(200).json({
-            code: 200,
-            status: 'success',
-            data: {
-                message: 'Logout successful'
-            }
-        });
+        return res.status(200).json(OK('Logout successful'));
     });
 }
 
-function verify(req: Request, res: Response) {
-    const message = req.body || 'verified';
-    res.status(200).json({
-        code: 200,
-        status: 'success',
-        data: {
-            message: message
-        }
-    });
+function verify(req: Request<{}, {}, VerifyBody>, res: Response) {
+    const { message } = req.body || 'verified';
+    return res.status(200).json(OK(message));
 }
 
-const authController = {
+export default {
     login,
     register,
     logout,
     verify,
 };
-
-export default authController;

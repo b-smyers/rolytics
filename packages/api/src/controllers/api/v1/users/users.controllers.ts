@@ -1,3 +1,4 @@
+import { BadRequest, InternalServerError, OK, Unauthorized } from '@lib/api-response';
 import { Request, Response } from 'express';
 import settingsService from '@services/settings.services';
 import usersService from '@services/users.services';
@@ -24,45 +25,20 @@ function validateSetting(key: string, value: any): { valid: boolean; message?: s
 
 function getSettings(req: Request, res: Response) {
     if (!req.user?.id) {
-        return res.status(401).json({
-            code: 401,
-            status: 'error',
-            data: {
-                message: 'Unauthorized'
-            }
-        });
+        return res.status(401).json(Unauthorized());
     }
 
     try {
         const settings = settingsService.getSettings(req.user.id);
-        res.status(200).json({
-            code: 200,
-            status: 'success',
-            data: {
-                message: 'Settings successfully retrieved',
-                settings: settings
-            }
-        });
+        return res.status(200).json(OK('Settings successfully retrieved', { settings }));
     } catch (error) {
-        res.status(500).json({
-            code: 500,
-            status: 'error',
-            data: {
-                message: 'Failed to retrieve settings'
-            }
-        });
+        return res.status(500).json(InternalServerError('Failed to retrieve settings'));
     }
 }
 
 function updateSettings(req: Request, res: Response) {
     if (!req.user?.id) {
-        return res.status(401).json({
-            code: 401,
-            status: 'error',
-            data: {
-                message: 'Unauthorized'
-            }
-        });
+        return res.status(401).json(Unauthorized());
     }
 
     const { settings } = req.body;
@@ -72,75 +48,33 @@ function updateSettings(req: Request, res: Response) {
         for (const [key, value] of Object.entries(settings)) {
             const result = validateSetting(key, value);
             if (!result.valid) {
-                return res.status(400).json({
-                    code: 400,
-                    status: 'error',
-                    data: {
-                        message: result.message
-                    }
-                });
+                return res.status(400).json(BadRequest(result.message));
             }
         }
 
         const lastModified = settingsService.updateSettings(req.user.id, settings);
 
-        res.status(200).json({
-            code: 200,
-            status: 'success',
-            data: {
-                message: 'Settings updated successfully',
-                settings: {
-                    lastModified: lastModified
-                }
-            }
-        });
+        return res.status(200).json(OK('Settings updated successfully', { settings: { lastModified }}));
     } catch (error) {
-        res.status(500).json({
-            code: 500,
-            status: 'error',
-            data: {
-                message: 'Failed to update settings'
-            }
-        });
+        return res.status(500).json(InternalServerError('Failed to update settings'));
     }
 }
 
 function getProfile(req: Request, res: Response) {
     if (!req.user?.id) {
-        return res.status(401).json({
-            code: 401,
-            status: 'error',
-            data: {
-                message: 'Unauthorized'
-            }
-        });
+        return res.status(401).json(Unauthorized());
     }
     
     try {
         const user = usersService.getUserById(req.user.id);
-        res.status(200).json({
-            code: 200,
-            status: 'success',
-            data: {
-                message: 'Profile retrieved successfully',
-                profile: user
-            }
-        });
+        return res.status(200).json(OK('Profile retrieved successfully', { profile: user }));
     } catch (error) {
-        res.status(500).json({
-            code: 500,
-            status: 'error',
-            data: {
-                message: 'Failed to retrieve profile'
-            }
-        });
+        return res.status(500).json(InternalServerError('Failed to retrieve profile'));
     }
 }
 
-const usersController = {
+export default {
     getSettings,
     updateSettings,
     getProfile
-};
-
-export default usersController;
+}

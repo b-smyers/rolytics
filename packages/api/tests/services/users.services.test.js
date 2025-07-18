@@ -163,18 +163,18 @@ describe('Users Service', () => {
             expect(result.username).toBe(username);
         });
 
-        it('should return false if username is wrong', () => {
+        it('should return undefined if username is wrong', () => {
             const incorrectUsername = 'wrongUsername';
             const result = usersService.validateCredentials(incorrectUsername, password);
 
-            expect(result).toBe(false);
+            expect(result).toBe(undefined);
         });
 
-        it('should return false if password is wrong', () => {
+        it('should return undefined if password is wrong', () => {
             const incorrectPassword = 'wrongPassword';
             const result = usersService.validateCredentials(username, incorrectPassword);
 
-            expect(result).toBe(false);
+            expect(result).toBe(undefined);
         });
     });
 });

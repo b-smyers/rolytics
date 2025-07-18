@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { Unauthorized } from '@lib/api-response';
 import jwt from 'jsonwebtoken';
 
 const checkSession = (req: Request, res: Response, next: NextFunction) => {
@@ -6,26 +7,14 @@ const checkSession = (req: Request, res: Response, next: NextFunction) => {
         req.user = req.session.user;
         next();
     } else {
-        res.status(401).json({
-            code: 401,
-            status: 'error',
-            data: {
-                message: 'Session expired'
-            }
-        });
+        res.status(401).json(Unauthorized('Session expired'));
     }
 };
 
 const checkJWTToken = (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers['authorization'];
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).json({
-            code: 401,
-            status: 'error',
-            data: {
-                message: 'Missing token'
-            }
-        });
+        return res.status(401).json(Unauthorized('Token missing'));
     }
     const token = authHeader.split(' ')[1]; // Extract token from 'Bearer <token>'
 
@@ -34,34 +23,16 @@ const checkJWTToken = (req: Request, res: Response, next: NextFunction) => {
         jwt.verify(token, process.env.JWT_API_KEY_SECRET as string, { algorithms: ['HS256'] }, (err: any, decoded: any) => {
             if (err) {
                 if (err.name === 'TokenExpiredError') {
-                    return res.status(401).json({
-                        code: 401,
-                        status: 'error',
-                        data: {
-                            message: 'Token expired'
-                        }
-                    });
+                    return res.status(401).json(Unauthorized('Token expired'));
                 }
-                return res.status(403).json({
-                    code: 403,
-                    status: 'error',
-                    data: {
-                        message: 'Token invalid'
-                    }
-                });
+                return res.status(401).json(Unauthorized('Token invalid'));
             }
-            
+
             req.user = decoded;
             next();
         });
     } else {
-        return res.status(401).json({
-            code: 401,
-            status: 'error',
-            data: {
-                message: 'Token missing'
-            }
-        });
+        return res.status(401).json(Unauthorized('Token missing'));
     }
 };
 
@@ -73,13 +44,7 @@ const authenticate = (req: Request, res: Response, next: NextFunction) => {
         // Internal request
         checkSession(req, res, next);
     } else {
-        res.status(401).json({
-            code: 401,
-            status: 'error',
-            data: {
-                message: 'Authentication failed'
-            }
-        });
+        res.status(401).json(Unauthorized());
     }
 };
 

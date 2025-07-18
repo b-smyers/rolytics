@@ -1,12 +1,11 @@
+import { BadRequest, OK } from "@lib/api-response";
 import { Request, Response } from "express";
-
-const metricsService = require('@services/metrics.services');
-const placesService = require('@services/places.services');
-const serversService = require('@services/servers.services');
-const logger = require('@services/logger.services');
-const Ajv = require("ajv");
-
-const schema = require('@schemas/data.schemas.json');
+import metricsService from '@services/metrics.services';
+import placesService from '@services/places.services';
+import serversService from '@services/servers.services';
+import logger from '@services/logger.services';
+import Ajv from "ajv";
+import schema from '@schemas/data.schemas.json';
 
 const ajv = new Ajv();
 const validate = ajv.compile(schema);
@@ -15,26 +14,14 @@ function logData(req: Request, res: Response) {
     // Check if the req.body exists
     const data = req.body;
     if (!data) {
-        return res.status(400).json({
-            code: 400,
-            status: 'error',
-            data: {
-                message: 'Missing data'
-            }
-        });
+        return res.status(400).json(BadRequest('Missing data'));
     }
 
     // Check data against schema
     const valid = validate(data);
     if (!valid) {
         logger.info(validate.errors);
-        return res.status(400).json({
-            code: 400,
-            status: 'error',
-            data: {
-                message: 'Invalid data'
-            }
-        });
+        return res.status(400).json(BadRequest('Invalid data'));
     }
 
     // Get internal place id
@@ -42,13 +29,7 @@ function logData(req: Request, res: Response) {
     // Check if the server has been opened
     const server = serversService.getServerByRobloxServerIdAndPlaceId(data.metadata.server.id, place.place_id);
     if (!server || !server.active) {
-        return res.status(400).json({
-            code: 400,
-            status: 'error',
-            data: {
-                message: 'Server not opened'
-            }
-        });
+        return res.status(400).json(BadRequest('Server not opened'));
     }
 
     const {
@@ -62,17 +43,9 @@ function logData(req: Request, res: Response) {
     // Write payload
     metricsService.createMetric(server.server_id, metadata.timestamp, purchases, performance, social, players, metadata);
 
-    res.status(200).json({
-        code: 200,
-        status: 'success',
-        data: {
-            message: 'Data successfully recieved'
-        }
-    });
+    res.status(200).json(OK('Data successfully recieved'));
 }
 
-const dataController = {
-    logData
+export default {
+    logData,
 };
-
-export default dataController;

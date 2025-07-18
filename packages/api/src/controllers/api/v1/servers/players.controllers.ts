@@ -1,31 +1,19 @@
+import { BadRequest, OK, Unauthorized } from "@lib/api-response";
 import { Request, Response } from "express";
-
-const experiencesService = require('@services/experiences.services');
-const placesService = require('@services/places.services');
-const serversService = require('@services/servers.services');
-const metricsService = require('@services/metrics.services');
+import experiencesService from '@services/experiences.services';
+import placesService from '@services/places.services';
+import serversService from '@services/servers.services';
+import metricsService from '@services/metrics.services';
 
 function getPlayers(req: Request, res: Response) {
     if (!req.user?.id) {
-        return res.status(401).json({
-            code: 401,
-            status: 'error',
-            data: {
-                message: 'Unauthorized'
-            }
-        });
+        return res.status(401).json(Unauthorized());
     }
 
     const { server_id } = req.query;
 
     if (!server_id) {
-        return res.status(400).json({
-            code: 400,
-            status: 'error',
-            data: {
-                message: 'Missing server ID'
-            }
-        });
+        return res.status(400).json(BadRequest('Missing server ID'));
     }
 
     // Check if the user owns the server
@@ -34,13 +22,7 @@ function getPlayers(req: Request, res: Response) {
     const experience = experiencesService.getExperienceById(place?.experience_id);
 
     if (experience?.user_id !== req.user.id) {
-        return res.status(403).json({
-            code: 403,
-            status: 'error',
-            data: {
-                message: 'Unauthorized'
-            }
-        });
+        return res.status(401).json(Unauthorized());
     }
 
     const players = metricsService.getPlayersMetricsByServerId(server.server_id);
@@ -53,19 +35,9 @@ function getPlayers(req: Request, res: Response) {
     // Create list of keys
     const keys = players && players[0] ? Object.keys(players[0]) : [];
 
-    return res.status(200).json({
-        code: 200,
-        status: 'success',
-        data: {
-            message: 'Players data successfully retrieved',
-            keys,
-            players
-        }
-    })
+    return res.status(200).json(OK('Players data successfully retrieved', { keys, data: players }));
 }
 
-const playersController = {
-    getPlayers
+export default {
+    getPlayers,
 }
-
-export default playersController;

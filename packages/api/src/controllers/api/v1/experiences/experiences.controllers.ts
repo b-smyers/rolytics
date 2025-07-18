@@ -1,41 +1,21 @@
+import { BadRequest, NotImplemented, OK, Unauthorized } from "@lib/api-response";
 import { Request, Response } from "express";
-
-const experiencesService = require('@services/experiences.services');
-const placesService = require('@services/places.services');
-const robloxService = require('@services/roblox.services');
+import experiencesService from '@services/experiences.services';
+import placesService from '@services/places.services';
+import robloxService from '@services/roblox.services';
 
 function getExperiences(req: Request, res: Response) {
     if (!req.user?.id) {
-        return res.status(401).json({
-            code: 401,
-            status: 'error',
-            data: {
-                message: 'Unauthorized'
-            }
-        });
+        return res.status(401).json(Unauthorized());
     }
 
-    const rows = experiencesService.getExperiencesByUserId(req.user.id);
-
-    return res.status(200).json({
-        code: 200,
-        status: 'success',
-        data: {
-            message: 'Experiences successfully retrieved',
-            experiences: rows
-        }
-    })
+    const experiences = experiencesService.getExperiencesByUserId(req.user.id);
+    return res.status(200).json(OK('Experiences successfully retrieved', { experiences }));
 }
 
 async function connectExperience(req: Request, res: Response) {
     if (!req.user?.id) {
-        return res.status(401).json({
-            code: 401,
-            status: 'error',
-            data: {
-                message: 'Unauthorized'
-            }
-        });
+        return res.status(401).json(Unauthorized());
     }
 
     let {
@@ -47,41 +27,19 @@ async function connectExperience(req: Request, res: Response) {
     } = req.body;
 
     if (!roblox_experience_id || !page_link || !name) {
-        return res.status(400).json({
-            code: 400,
-            status: 'error',
-            data: {
-                message: 'Missing roblox_experience_id, page_link, or name'
-            }
-        });
+        return res.status(400).json(BadRequest('Missing roblox_experience_id, page_link, or name'));
     }
 
     description = description || "";
     thumbnail_link = thumbnail_link || "";
 
-    const userId = req.user.id || false;
-
-    if (!userId) {
-        return res.status(400).json({
-            code: 400,
-            status: 'error',
-            data: {
-                message: 'Unauthorized'
-            }
-        });
-    }
+    const userId = req.user.id;
 
     // Check account experience cap
     const experienceCount = experiencesService.getExperienceCountByUserId(userId);
 
     if (experienceCount >= 5) { // TODO: Arbitrary limit for now
-        return res.status(400).json({
-            code: 400,
-            status: 'error',
-            data: {
-                message: 'Experience connection limit reached'
-            }
-        });
+        return res.status(400).json(BadRequest('Experience connection limit reached'));
     }
 
     // Check for pre-existing experience
@@ -90,13 +48,7 @@ async function connectExperience(req: Request, res: Response) {
     const hasExistingExperience = existingExperiences.some((experience: any) => experience.roblox_experience_id === roblox_experience_id);
 
     if (hasExistingExperience) {
-        return res.status(400).json({
-            code: 400,
-            status: 'error',
-            data: {
-                message: 'Experience already connected'
-            }
-        });
+        return res.status(400).json(BadRequest('Experience already connected'));
     }
 
     const experience_id = experiencesService.createExperience(roblox_experience_id, userId, name, description, page_link, thumbnail_link);
@@ -109,23 +61,15 @@ async function connectExperience(req: Request, res: Response) {
         }));
     }
 
-    return res.status(200).json({
-        code: 200,
-        status: 'success',
-        data: {
-            message: 'Experience successfully connected'
-        }
-    })
+    return res.status(200).json(OK('Experience successfully connected'));
 }
 
 function disconnectExperience(req: Request, res: Response) {
-    return res.status(501).json({ message: 'Route not implemented' });
+    return res.status(501).json(NotImplemented());
 }
 
-const experiencesController = {
+export default {
     getExperiences,
     connectExperience,
     disconnectExperience,
 }
-
-export default experiencesController;

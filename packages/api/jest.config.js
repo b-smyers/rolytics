@@ -16,6 +16,7 @@ module.exports = {
     '@routes/(.*)': '<rootDir>/src/routes/$1',
     '@services/(.*)': '<rootDir>/src/services/$1',
     '@schemas/(.*)': '<rootDir>/src/schemas/$1',
+    '@lib/(.*)': '<rootDir>/src/lib/$1',
   },
   collectCoverageFrom: [
     'src/**/*.{js,jsx,ts,tsx}',

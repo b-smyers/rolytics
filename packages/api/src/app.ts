@@ -1,3 +1,4 @@
+import { NotFound, TooManyRequests } from '@lib/api-response';
 import express, { Request, Response } from 'express';
 import session from 'express-session';
 import { rateLimit } from 'express-rate-limit';
@@ -16,13 +17,7 @@ const limiter = rateLimit({
     limit: 90,               // requests / 1 min
     standardHeaders: 'draft-7',
     legacyHeaders: false,
-    message: {
-        code: 429,
-        status: 'error',
-        data: {
-            message: 'Too many requests, try again later'
-        }
-    }
+    message: TooManyRequests()
 });
 if (process.env.NODE_ENV !== 'a') {
     app.use(limiter);
@@ -48,12 +43,7 @@ app.use('/api/v1', apiRoutes);
 
 // Serve custom 404
 app.use('/api', (req: Request, res: Response) => {
-    res.status(404).json({
-        status: 'error',
-        messsage: 'Unknown endpoint',
-        code: 404,
-        data: null
-    });
+    res.status(404).json(NotFound('Unknown endpoint'));
 });
 
 // Cleanup old metrics

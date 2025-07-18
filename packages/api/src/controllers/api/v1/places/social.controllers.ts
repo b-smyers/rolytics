@@ -1,30 +1,18 @@
+import { BadRequest, OK, Unauthorized } from "@lib/api-response";
 import { Request, Response } from "express";
-
-const experiencesService = require('@services/experiences.services');
-const placesService = require('@services/places.services');
-const metricsService = require('@services/metrics.services');
+import experiencesService from '@services/experiences.services';
+import placesService from '@services/places.services';
+import metricsService from '@services/metrics.services';
 
 function getSocial(req: Request, res: Response) {
     if (!req.user?.id) {
-        return res.status(401).json({
-            code: 401,
-            status: 'error',
-            data: {
-                message: 'Unauthorized'
-            }
-        });
+        return res.status(401).json(Unauthorized());
     }
 
     const { place_id } = req.query;
 
     if (!place_id) {
-        return res.status(400).json({
-            code: 400,
-            status: 'error',
-            data: {
-                message: 'Missing place ID'
-            }
-        });
+        return res.status(400).json(BadRequest('Missing place ID'));
     }
 
     // Check if the user owns the place
@@ -32,13 +20,7 @@ function getSocial(req: Request, res: Response) {
     const experience = experiencesService.getExperienceById(place?.experience_id);
 
     if (experience?.user_id !== req.user.id) {
-        return res.status(403).json({
-            code: 403,
-            status: 'error',
-            data: {
-                message: 'Unauthorized'
-            }
-        });
+        return res.status(401).json(Unauthorized());
     }
 
     // If the data is stale, recompute it
@@ -59,15 +41,7 @@ function getSocial(req: Request, res: Response) {
     // Get keys (exclude 'timestamp')
     const keys = social && social[0] ? Object.keys(social[0]).filter(key => key !== 'timestamp') : [];
 
-    return res.status(200).json({
-        code: 200,
-        status: 'success',
-        data: {
-            message: 'Social data successfully retrieved',
-            keys,
-            data: social
-        }
-    });
+    return res.status(200).json(OK('Social data successfully retrieved', { keys, data: social }));
 }
 
 const socialController = {
