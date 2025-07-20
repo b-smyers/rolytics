@@ -1,18 +1,6 @@
+import { DBPlace, Place } from 'types/place';
 import db from '@services/sqlite.services';
 import logger from '@services/logger.services';
-
-interface Place {
-    place_id: number;
-    roblox_place_id: string;
-    experience_id: number;
-    name: string;
-    purchases?: string;
-    performance?: string;
-    social?: string;
-    players?: string;
-    metadata?: string;
-    last_computed_at?: number;
-}
 
 function createPlace(roblox_place_id: string, experience_id: number, name: string): number {
     const query = `INSERT INTO places (roblox_place_id, experience_id, name) VALUES (?, ?, ?)`;
@@ -52,7 +40,7 @@ function updatePlace(place_id: number, { name }: { name?: string }): void {
 
 function getPlaceById(place_id: number): Place | undefined {
     const query = `SELECT place_id, roblox_place_id, experience_id, name, purchases, performance, social, players, metadata, last_computed_at FROM places WHERE place_id = ?`;
-    const place: Place = db.prepare(query).get(place_id) as Place;
+    const place: DBPlace = db.prepare(query).get(place_id) as DBPlace;
 
     if (place) {
         logger.info(`Fetched place with ID ${place_id}`);
@@ -60,12 +48,12 @@ function getPlaceById(place_id: number): Place | undefined {
         logger.warn(`No place found with ID ${place_id}`);
     }
 
-    return place;
+    return place as Place;
 }
 
 function getPlaceByRobloxPlaceId(roblox_place_id: string): Place | undefined {
     const query = `SELECT place_id, roblox_place_id, experience_id, name, purchases, performance, social, players, metadata, last_computed_at FROM places WHERE roblox_place_id = ?`;
-    const place: Place = db.prepare(query).get(roblox_place_id) as Place;
+    const place: DBPlace = db.prepare(query).get(roblox_place_id) as DBPlace;
 
     if (place) {
         logger.info(`Fetched place with Roblox Place ID ${roblox_place_id}`);
@@ -73,19 +61,23 @@ function getPlaceByRobloxPlaceId(roblox_place_id: string): Place | undefined {
         logger.warn(`No place found with Roblox Place ID ${roblox_place_id}`);
     }
 
-    return place;
+    return place as Place;
 }
 
-function getPlacesByExperienceId(experience_id: number, limit = 10): Place[] {
+function getPlacesByExperienceId(experience_id: number, limit: number = 10): Place[] | undefined {
     const query = `SELECT place_id, roblox_place_id, experience_id, name, purchases, performance, social, players, metadata, last_computed_at FROM places WHERE experience_id = ? LIMIT ?`;
-    const places: Place[] = db.prepare(query).all(experience_id, limit) as Place[];
+    const places: DBPlace[] = db.prepare(query).all(experience_id, limit) as DBPlace[];
 
-    logger.info(`Fetched ${places.length} place(s) for Experience ID ${experience_id} with limit ${limit}`);
+    if (places) {
+        logger.info(`Fetched ${places.length} place(s) for Experience ID ${experience_id} with limit ${limit}`);
+    } else {
+        logger.info(`No place(s) for experience ID '${experience_id}' with limit ${limit}`);
+    }
 
-    return places;
+    return places as Place[];
 }
 
-const placesService = {
+export default {
     createPlace,
     deletePlace,
     updatePlace,
@@ -93,5 +85,3 @@ const placesService = {
     getPlaceByRobloxPlaceId,
     getPlacesByExperienceId
 };
-
-export default placesService;

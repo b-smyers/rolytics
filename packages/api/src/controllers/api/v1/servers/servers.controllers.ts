@@ -1,4 +1,4 @@
-import { BadRequest, OK, Unauthorized } from "@lib/api-response";
+import { BadRequest, NotFound, OK, Unauthorized } from "@lib/api-response";
 import { Request, Response } from "express";
 import experiencesService from '@services/experiences.services';
 import placesService from '@services/places.services';
@@ -10,7 +10,8 @@ function getServers(req: Request, res: Response) {
         return res.status(401).json(Unauthorized());
     }
 
-    const { place_id } = req.query;
+    const params = req.query;
+    const place_id: number = Number(params.place_id);
 
     if (!place_id) {
         return res.status(400).json(BadRequest('Missing experience place_id'));
@@ -18,9 +19,16 @@ function getServers(req: Request, res: Response) {
 
     const place = placesService.getPlaceById(place_id);
 
-    const experience = experiencesService.getExperienceById(place?.experience_id);
+    if (!place) {
+        return res.status(404).json(NotFound());
+    }
+
+    const experience = experiencesService.getExperienceById(place.experience_id);
     // Make sure they own the experience
-    if (!experience || experience.user_id !== req.user.id) {
+    if (!experience) {
+        return res.status(404).json(NotFound());
+    }
+    if (experience.user_id !== req.user.id) {
         return res.status(401).json(Unauthorized());
     }
 
@@ -76,10 +84,20 @@ function closeServer(req: Request, res: Response) {
     }
 
     const place = placesService.getPlaceByRobloxPlaceId(roblox_place_id);
+
+    if (!place) {
+        return res.status(404).json(NotFound());
+    }
+
     // Get the server by id
     const server = serversService.getServerByRobloxServerIdAndPlaceId(roblox_server_id, place.place_id);
+
+    if (!server) {
+        return res.status(404).json(NotFound());
+    }
+
     // Get the experience by place id
-    const experience = experiencesService.getExperienceById(place?.experience_id);
+    const experience = experiencesService.getExperienceById(place.experience_id);
 
     // Check if the user is the owner of the experience
     if (experience?.user_id !== req.user.id) {

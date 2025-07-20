@@ -69,20 +69,20 @@ describe('Metrics Service', () => {
 
             const metric = metricsService.getMetricById(metricId);
             expect(metric).toHaveProperty('timestamp');
-            expect(metric.timestamp).toBe(timestamp);
+            expect(metric.timestamp).toEqual(timestamp);
             expect(metric).toHaveProperty('server_id');
-            expect(metric.server_id).toBe(serverId);
+            expect(metric.server_id).toEqual(serverId);
             // Check metrics
             expect(metric).toHaveProperty('purchases');
-            expect(metric.purchases).toBe(JSON.stringify(data.purchases));
+            expect(metric.purchases).toEqual(data.purchases);
             expect(metric).toHaveProperty('performance');
-            expect(metric.performance).toBe(JSON.stringify(data.performance));
+            expect(metric.performance).toEqual(data.performance);
             expect(metric).toHaveProperty('social');
-            expect(metric.social).toBe(JSON.stringify(data.social));
+            expect(metric.social).toEqual(data.social);
             expect(metric).toHaveProperty('players');
-            expect(metric.players).toBe(JSON.stringify(data.players));
+            expect(metric.players).toEqual(data.players);
             expect(metric).toHaveProperty('metadata');
-            expect(metric.metadata).toBe(JSON.stringify(data.metadata));
+            expect(metric.metadata).toEqual(data.metadata);
         });
     });
     

@@ -1,5 +1,5 @@
 import { Unauthorized, OK, InternalServerError, NotImplemented, BadRequest } from "@lib/api-response";
-import { LoginBody, LoginWithUsername, LogoutBody, RegisterBody, VerifyBody } from "types/controllers/auth";
+import { LoginBody, LoginWithUsername, LogoutBody, RegisterBody, VerifyBody } from "types/auth";
 import { Request, Response } from "express";
 import usersService from "services/users.services";
 import settingsService from 'services/settings.services';
@@ -38,12 +38,12 @@ function register(req: Request<{}, {}, RegisterBody>, res: Response) {
 
     try {
         const usersWithUsername = usersService.getUsersByUsername(username);
-        if (usersWithUsername?.length > 0) {
+        if (usersWithUsername && usersWithUsername.length > 0) {
             return res.status(400).json(BadRequest('Username already in use'));
         }
 
         const usersWithEmail = usersService.getUsersByEmail(email);
-        if (usersWithEmail?.length > 0) {
+        if (usersWithEmail && usersWithEmail.length > 0) {
             return res.status(400).json(BadRequest('Email already in use'));
         }
 

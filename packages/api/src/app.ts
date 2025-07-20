@@ -19,7 +19,7 @@ const limiter = rateLimit({
     legacyHeaders: false,
     message: TooManyRequests()
 });
-if (process.env.NODE_ENV !== 'a') {
+if (process.env.NODE_ENV !== 'development') {
     app.use(limiter);
 }
 app.use(bodyParser.json({ limit: '10kb' }));

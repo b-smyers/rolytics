@@ -9,7 +9,8 @@ function getSocial(req: Request, res: Response) {
         return res.status(401).json(Unauthorized());
     }
 
-    const { experience_id } = req.query;
+    const params = req.query;
+    const experience_id: number = Number(params.experience_id);
 
     if (!experience_id) {
         return res.status(400).json(BadRequest('Missing experience ID'));
@@ -38,19 +39,21 @@ function getSocial(req: Request, res: Response) {
     if (isExperienceStale) {
         // Check if any of the places are stale
         const places = placesService.getPlacesByExperienceId(experience_id);
-        // Re-aggregate place if stale
-        for (const place of places) {
-            const lastComputedAt = new Date(place.last_computed_at);
-            const isPlaceStale = lastComputedAt < new Date(Date.now() - PLACE_STALE_TIME_MS)
-            if (isPlaceStale) {
-                metricsService.aggregatePlaceMetrics(place.place_id);
+        if (places) {
+            // Re-aggregate place if stale
+            for (const place of places) {
+                const lastComputedAt = new Date(place.last_computed_at);
+                const isPlaceStale = lastComputedAt < new Date(Date.now() - PLACE_STALE_TIME_MS)
+                if (isPlaceStale) {
+                    metricsService.aggregatePlaceMetrics(place.place_id);
+                }
             }
         }
         metricsService.aggregateExperienceMetrics(experience_id);
     }
 
     experience = experiencesService.getExperienceById(experience_id);
-    const social = JSON.parse(experience.social);
+    const social = JSON.parse(experience!.social);
 
     // Get keys (exclude 'timestamp')
     const keys = social && social[0] ? Object.keys(social[0]).filter(key => key !== 'timestamp') : [];

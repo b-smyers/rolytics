@@ -1,15 +1,6 @@
+import { DBExperience, Experience } from 'types/experience';
 import db from '@services/sqlite.services';
 import logger from '@services/logger.services';
-
-interface Experience {
-    experience_id: number;
-    roblox_experience_id: string;
-    user_id: number;
-    name: string;
-    description: string;
-    page_link: string;
-    thumbnail_link: string;
-}
 
 function createExperience(
     roblox_experience_id: string,
@@ -20,8 +11,7 @@ function createExperience(
     thumbnail_link: string
 ): number {
     const query = `INSERT INTO experiences (roblox_experience_id, user_id, name, description, page_link, thumbnail_link) VALUES (?, ?, ?, ?, ?, ?)`;
-    const stmt = db.prepare(query);
-    const result = stmt.run(
+    const result = db.prepare(query).run(
         roblox_experience_id,
         user_id,
         name.substring(0, 50),
@@ -29,31 +19,30 @@ function createExperience(
         page_link,
         thumbnail_link
     );
-    logger.info(`Experience '${name}' created for user ID ${user_id} with Roblox Experience ID ${roblox_experience_id}`);
+    logger.info(`Experience '${name}' created for user ID '${user_id}' with Roblox Experience ID '${roblox_experience_id}'`);
     return result.lastInsertRowid as number;
 }
 
 function deleteExperience(experience_id: number): boolean {
     const query = `DELETE FROM experiences WHERE experience_id = ?`;
-    const stmt = db.prepare(query);
-    const result = stmt.run(experience_id);
+    const changes = db.prepare(query).run(experience_id).changes;
 
-    if (result.changes > 0) {
-        logger.info(`Experience with ID ${experience_id} deleted`);
+    if (changes > 0) {
+        logger.info(`Experience with ID '${experience_id}' deleted`);
     } else {
-        logger.warn(`Attempted to delete non-existent experience with ID ${experience_id}`);
+        logger.warn(`Attempted to delete non-existent experience with ID '${experience_id}'`);
     }
 
-    return result.changes !== 0;
+    return changes !== 0;
 }
 
 function updateExperience(
     experience_id: number,
     { name, description, page_link, thumbnail_link }: { name?: string; description?: string; page_link?: string; thumbnail_link?: string }
-): number {
+): void {
     const fields: string[] = [];
-    const values: any[] = [];
-    
+    const values: string[] = [];
+
     if (name !== undefined) {
         fields.push(`name = ?`);
         values.push(name.substring(0, 50));
@@ -70,54 +59,55 @@ function updateExperience(
         fields.push(`thumbnail_link = ?`);
         values.push(thumbnail_link);
     }
-    
+
     if (fields.length === 0) {
-        logger.warn(`No updates provided for experience ID ${experience_id}`);
-        return 0; // No updates to make
+        logger.warn(`No updates provided for experience ID '${experience_id}'`);
+        return;
     }
-    
+
     const query = `UPDATE experiences SET ${fields.join(', ')} WHERE experience_id = ?`;
-    values.push(experience_id);
-    
-    const stmt = db.prepare(query);
-    const result = stmt.run(...values);
-    logger.info(`Experience with ID ${experience_id} updated with fields: [${fields.map(f => f.split(' ')[0]).join(', ')}]`);
-    return result.changes as number;
+    values.push(String(experience_id));
+
+    db.prepare(query).run(...values);
+    logger.info(`Experience with ID '${experience_id}' updated with fields: [${fields.map(f => f.split(' ')[0]).join(', ')}]`);
 }
 
 function getExperienceById(experience_id: number): Experience | undefined {
     const query = `SELECT * FROM experiences WHERE experience_id = ?`;
-    const stmt = db.prepare(query);
-    const experience = stmt.get(experience_id) as Experience | undefined;
+    const experience = db.prepare(query).get(experience_id) as DBExperience | undefined;
 
     if (experience) {
-        logger.info(`Fetched experience with ID ${experience_id}`);
+        logger.info(`Fetched experience with ID '${experience_id}'`);
     } else {
-        logger.warn(`No experience found with ID ${experience_id}`);
+        logger.warn(` experience found with ID '${experience_id}'`);
     }
 
-    return experience;
+    return experience as Experience;
 }
 
-function getExperiencesByUserId(user_id: number, limit = 10): Experience[] {
+function getExperiencesByUserId(user_id: number, limit = 10): Experience[] | undefined {
     const query = `SELECT * FROM experiences WHERE user_id = ? LIMIT ?`;
-    const stmt = db.prepare(query);
-    const experiences = stmt.all(user_id, limit) as Experience[];
+    const experiences = db.prepare(query).all(user_id, limit) as DBExperience[] | undefined;
 
-    logger.info(`Fetched ${experiences.length} experience(s) for user ID ${user_id} with limit ${limit}`);
-    return experiences;
+    if (experiences) {
+        logger.info(`Fetched ${experiences.length} experience(s) for user ID '${user_id}' with limit ${limit}`);
+    } else {
+        logger.info(`No experience(s) for user ID '${user_id}' with limit ${limit}`);
+    }
+    
+    return experiences as Experience[];
 }
 
-function getExperienceCountByUserId(user_id: number): number {
+function getExperienceCountByUserId(userId: number): number {
     const query = `SELECT COUNT(*) AS count FROM experiences WHERE user_id = ?`;
-    const stmt = db.prepare(query);
-    const count = (stmt.get(user_id) as { count: number }).count;
+    const row = db.prepare(query).get(userId) as { count: number };
+    const count = row.count;
 
-    logger.info(`Fetched experience count (${count}) for user ID ${user_id}`);
+    logger.info(`Fetched experience count (${count}) for user ID '${userId}'`);
     return count;
 }
 
-const experiencesService = {
+export default {
     createExperience,
     deleteExperience,
     updateExperience,
@@ -125,5 +115,3 @@ const experiencesService = {
     getExperiencesByUserId,
     getExperienceCountByUserId
 };
-
-export default experiencesService;

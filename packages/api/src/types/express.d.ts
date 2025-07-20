@@ -1,5 +1,5 @@
 import 'express';
-import { RequestUser, SessionUser } from '../controllers/auth';
+import { RequestUser, SessionUser } from './auth';
 
 declare global {
   namespace Express {

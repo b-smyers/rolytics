@@ -1,3 +1,4 @@
+import { FunctionCallInfo, LoggerSeverity } from 'types/logging';
 import path from 'path';
 import fs from 'fs';
 
@@ -15,40 +16,49 @@ function getTimestamp(): string {
         .replace(/\..+/, match => match.slice(0, 4)); // keep ms only (3 digits)
 }
 
-function getCallInfo() {
+function getCallInfo(): FunctionCallInfo {
     const originalPrepareStackTrace = Error.prepareStackTrace;
     Error.prepareStackTrace = (_, stack) => stack;
     const err = new Error();
     const stack = err.stack as unknown as NodeJS.CallSite[];
     Error.prepareStackTrace = originalPrepareStackTrace;
 
+    if (!stack || !stack[3]) {
+        return {
+            function: '<unknown>',
+            file: '<unknown>',
+            line: '<unknown>'
+        };
+    }
+
     const caller = stack[3];
-    const functionName = caller ? (caller.getFunctionName?.() || caller.getMethodName?.()) || '<anonymous>' : '<unknown>';
-    const filePath = caller?.getFileName?.() || '<unknown>';
+
+    const filePath = caller.getFileName() || '<unknown>';
     const fileName = path.basename(filePath);
-    const lineNumber = caller?.getLineNumber?.() || '<unknown>';
+    const functionName = caller.getFunctionName() || caller.getMethodName() || '<anonymous>';
+    const lineNumber = String(caller.getLineNumber()) || '<unknown>';
 
     return {
-        "function": functionName,
-        "file": fileName,
-        "line": lineNumber
+        file: fileName,
+        function: functionName,
+        line: lineNumber
     };
 }
 
-function shouldLog(level: string): boolean {
-    const logLevel = process.env.LOG_LEVEL as keyof typeof levels;
+function shouldLog(level: LoggerSeverity): boolean {
+    const logLevel = process.env.LOG_LEVEL as LoggerSeverity;
     const levels: Record<string, number> = {
-        'error': 0,
-        'warn': 1,
-        'info': 2,
-        'debug': 3
+        'debug': 0,
+        'info': 1,
+        'warn': 2,
+        'error': 3,
     };
-    return levels[level] <= levels[logLevel];
+    return levels[level] >= levels[logLevel];
 }
 
-function log(level: string, message: string): void {
-    const timestamp = getTimestamp();
-    const info = getCallInfo();
+function log(level: LoggerSeverity, message: string): void {
+    const timestamp: string = getTimestamp();
+    const info: FunctionCallInfo = getCallInfo();
 
     const logMessage = `[${timestamp}] ${level.toUpperCase()} [${info.function}@${info.file}:${info.line}]: ${message}\n`;
 
@@ -68,11 +78,9 @@ function log(level: string, message: string): void {
     }
 }
 
-const logger = {
+export default {
     info: (message: string) => log('info', message),
     warn: (message: string) => log('warn', message),
     error: (message: string) => log('error', message),
     debug: (message: string) => log('debug', message)
 };
-
-export default logger;

@@ -1,4 +1,4 @@
-import { BadRequest, OK, Unauthorized } from "@lib/api-response";
+import { BadRequest, NotFound, OK, Unauthorized } from "@lib/api-response";
 import { Request, Response } from "express";
 import experiencesService from '@services/experiences.services';
 import placesService from '@services/places.services';
@@ -9,7 +9,8 @@ function getPurchases(req: Request, res: Response) {
         return res.status(401).json(Unauthorized());
     }
 
-    const { place_id } = req.query;
+    const params = req.query;
+    const place_id: number = Number(params.place_id);
 
     if (!place_id) {
         return res.status(400).json(BadRequest('Missing Place ID'));
@@ -17,7 +18,12 @@ function getPurchases(req: Request, res: Response) {
 
     // Check if the user owns the place
     let place = placesService.getPlaceById(place_id);
-    const experience = experiencesService.getExperienceById(place?.experience_id);
+
+    if (!place) {
+        return res.status(404).json(NotFound());
+    }
+
+    const experience = experiencesService.getExperienceById(place.experience_id);
 
     if (experience?.user_id !== req.user.id) {
         return res.status(401).json(Unauthorized());
@@ -36,7 +42,7 @@ function getPurchases(req: Request, res: Response) {
     }
 
     place = placesService.getPlaceById(place_id);
-    const purchases = JSON.parse(place.purchases);
+    const purchases = JSON.parse(place!.purchases);
 
     // Get keys (exclude 'timestamp')
     const keys = purchases && purchases[0] ? Object.keys(purchases[0]).filter(key => key !== 'timestamp') : [];

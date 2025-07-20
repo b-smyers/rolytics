@@ -44,8 +44,9 @@ async function connectExperience(req: Request, res: Response) {
 
     // Check for pre-existing experience
     const existingExperiences = experiencesService.getExperiencesByUserId(userId);
+
     // Make sure roblox_experience_id is not in existingExperiences
-    const hasExistingExperience = existingExperiences.some((experience: any) => experience.roblox_experience_id === roblox_experience_id);
+    const hasExistingExperience = existingExperiences?.some((experience: any) => experience.roblox_experience_id === roblox_experience_id);
 
     if (hasExistingExperience) {
         return res.status(400).json(BadRequest('Experience already connected'));
