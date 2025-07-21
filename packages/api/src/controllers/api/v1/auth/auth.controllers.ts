@@ -69,8 +69,12 @@ function logout(req: Request<{}, {}, LogoutBody>, res: Response) {
 }
 
 function verify(req: Request<{}, {}, VerifyBody>, res: Response) {
-  const { message } = req.body || "verified";
-  return res.status(200).json(OK(message));
+  const message = req.body?.message;
+  if (message) {
+    return res.status(200).json(OK(message));
+  } else {
+    return res.status(200).json(OK());
+  }
 }
 
 export default {

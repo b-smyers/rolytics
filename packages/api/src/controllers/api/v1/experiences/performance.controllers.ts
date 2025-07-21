@@ -1,4 +1,4 @@
-import { BadRequest, OK, Unauthorized } from "@lib/api-response";
+import { BadRequest, NotFound, OK, Unauthorized } from "@lib/api-response";
 import { Request, Response } from "express";
 import experiencesService from "@services/experiences.services";
 import placesService from "@services/places.services";
@@ -19,7 +19,11 @@ function getPerformance(req: Request, res: Response) {
   // Check if the user owns the experience
   let experience = experiencesService.getExperienceById(experience_id);
 
-  if (experience?.user_id !== req.user.id) {
+  if (!experience) {
+    return res.status(404).json(NotFound());
+  }
+
+  if (experience.user_id !== req.user.id) {
     return res.status(401).json(Unauthorized());
   }
 
