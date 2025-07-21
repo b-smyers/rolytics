@@ -1,12 +1,12 @@
-const request = require('supertest');
-const express = require('express');
-const session = require('express-session');
-const authController = require('@controllers/api/v1/auth/auth.controllers').default;
-const usersService = require('@services/users.services').default;
-const settingsService = require('@services/settings.services').default;
+const request = require("supertest");
+const express = require("express");
+const session = require("express-session");
+const authController = require("@controllers/api/v1/auth/auth.controllers").default;
+const usersService = require("@services/users.services").default;
+const settingsService = require("@services/settings.services").default;
 
-jest.mock('@services/users.services');
-jest.mock('@services/settings.services');
+jest.mock("@services/users.services");
+jest.mock("@services/settings.services");
 
 // Add manual mocks for all used service functions
 usersService.validateCredentials = jest.fn();
@@ -24,7 +24,7 @@ app.post('/logout', authController.logout);
 app.post('/verify', authController.verify);
 
 describe('Auth Controller', () => {
-    let timestamp = Date.parse('2025-04-12T10:00:00Z');
+    let timestamp = Date.parse("2025-04-12T10:00:00Z");
 
     afterEach(() => {
         jest.clearAllMocks();
@@ -36,7 +36,7 @@ describe('Auth Controller', () => {
             settingsService.getSettings.mockReturnValue({ lastModified: timestamp /* other settings */ });
 
             const res = await request(app)
-                .post('/login')
+                .post("/login")
                 .send({ username: 'testuser', password: 'password' });
 
             expect(res.statusCode).toEqual(200);
@@ -56,7 +56,7 @@ describe('Auth Controller', () => {
             usersService.validateCredentials.mockReturnValue(false);
 
             const res = await request(app)
-                .post('/login')
+                .post("/login")
                 .send({ username: 'testuser', password: 'wrongpassword' });
 
             expect(res.statusCode).toEqual(401);
@@ -68,10 +68,10 @@ describe('Auth Controller', () => {
         });
 
         it('should return 500 for server error', async () => {
-            usersService.validateCredentials.mockImplementation(() => { throw new Error('Server error'); });
+            usersService.validateCredentials.mockImplementation(() => { throw new Error("Server error"); });
 
             const res = await request(app)
-                .post('/login')
+                .post("/login")
                 .send({ username: 'testuser', password: 'password' });
 
             expect(res.statusCode).toEqual(500);
@@ -90,7 +90,7 @@ describe('Auth Controller', () => {
             usersService.createUser.mockReturnValue({ id: 1, username: 'testuser', email: 'test@example.com' });
 
             const res = await request(app)
-                .post('/register')
+                .post("/register")
                 .send({ username: 'testuser', email: 'test@example.com', password: 'password' });
 
             expect(res.statusCode).toEqual(200);
@@ -108,7 +108,7 @@ describe('Auth Controller', () => {
             usersService.getUsersByUsername.mockReturnValue([{ id: 1, username: 'testuser' }]);
 
             const res = await request(app)
-                .post('/register')
+                .post("/register")
                 .send({ username: 'testuser', email: 'test@example.com', password: 'password' });
 
             expect(res.statusCode).toEqual(400);
@@ -124,7 +124,7 @@ describe('Auth Controller', () => {
             usersService.getUsersByEmail.mockReturnValue([{ id: 1, email: 'test@example.com' }]);
 
             const res = await request(app)
-                .post('/register')
+                .post("/register")
                 .send({ username: 'testuser', email: 'test@example.com', password: 'password' });
 
             expect(res.statusCode).toEqual(400);
@@ -136,10 +136,10 @@ describe('Auth Controller', () => {
         });
 
         it('should return 500 for server error', async () => {
-            usersService.getUsersByUsername.mockImplementation(() => { throw new Error('Server error'); });
+            usersService.getUsersByUsername.mockImplementation(() => { throw new Error("Server error"); });
 
             const res = await request(app)
-                .post('/register')
+                .post("/register")
                 .send({ username: 'testuser', email: 'test@example.com', password: 'password' });
 
             expect(res.statusCode).toEqual(500);
@@ -154,7 +154,7 @@ describe('Auth Controller', () => {
     describe('POST /logout', () => {
         it('should return 200 and logout successfully', async () => {
             const res = await request(app)
-                .post('/logout')
+                .post("/logout")
                 .send();
 
             expect(res.statusCode).toEqual(200);
@@ -167,11 +167,11 @@ describe('Auth Controller', () => {
 
         it('should return 500 for server error during logout', async () => {
             jest.spyOn(session.Session.prototype, 'destroy').mockImplementation(function (callback) {
-                callback(new Error('Server error'));
+                callback(new Error("Server error"));
             });
 
             const res = await request(app)
-                .post('/logout')
+                .post("/logout")
                 .send();
 
             expect(res.statusCode).toEqual(500);
@@ -186,7 +186,7 @@ describe('Auth Controller', () => {
     describe('POST /verify', () => {
         it('should return 200 and verify successfully with message', async () => {
             const res = await request(app)
-                .post('/verify')
+                .post("/verify")
                 .send({ message: 'test message' });
 
             expect(res.statusCode).toEqual(200);
@@ -199,7 +199,7 @@ describe('Auth Controller', () => {
 
         it('should return 200 and verify successfully without message', async () => {
             const res = await request(app)
-                .post('/verify')
+                .post("/verify")
                 .send();
 
             expect(res.statusCode).toEqual(200);

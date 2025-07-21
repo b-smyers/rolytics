@@ -1,7 +1,7 @@
-const usersService = require('@services/users.services').default;
-const settingsService = require('@services/settings.services').default;
-const db = require('@services/sqlite.services').default;
-const schema = require('@schemas/settings.schemas.json');
+const usersService = require("@services/users.services").default;
+const settingsService = require("@services/settings.services").default;
+const db = require("@services/sqlite.services").default;
+const schema = require("@schemas/settings.schemas.json");
 
 describe('Settings Service', () => {
     const defaultSettings = {
@@ -10,8 +10,8 @@ describe('Settings Service', () => {
         abbreviateUserCounts: schema.abbreviateUserCounts.default,  
     }
 
-    let timestamp1 = Date.parse('2025-04-12T10:00:00Z');
-    let timestamp2 = Date.parse('2025-04-12T10:11:00Z');
+    let timestamp1 = Date.parse("2025-04-12T10:00:00Z");
+    let timestamp2 = Date.parse("2025-04-12T10:11:00Z");
     beforeEach(() => {
         const dateMock = jest.spyOn(Date, 'now');
         dateMock
@@ -162,11 +162,11 @@ describe('Settings Service', () => {
 
             const settings = settingsService.getSettings(userId);
 
-            expect(settings).toHaveProperty('theme');
+            expect(settings).toHaveProperty("theme");
             expect(settings.theme).toBe(changedSettings.theme);
-            expect(settings).toHaveProperty('currency');
+            expect(settings).toHaveProperty("currency");
             expect(settings.currency).toBe(changedSettings.currency);
-            expect(settings).toHaveProperty('abbreviateUserCounts');
+            expect(settings).toHaveProperty("abbreviateUserCounts");
             expect(settings.abbreviateUserCounts).toBe(changedSettings.abbreviateUserCounts);
         });
     });

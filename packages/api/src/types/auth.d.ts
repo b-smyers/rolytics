@@ -6,19 +6,10 @@ export interface SessionUser {
 export type RequestUser = SessionUser;
 
 // === /auth/login ===
-export interface LoginWithUsername {
+export interface LoginBody {
   username: string;
-  email?: never; // mutually exclusive
   password: string;
 }
-
-export interface LoginWithEmail {
-  username?: never; // mutually exclusive
-  email: string;
-  password: string;
-}
-
-export type LoginBody = LoginWithUsername | LoginWithEmail;
 
 // === /auth/register ===
 export interface RegisterBody {

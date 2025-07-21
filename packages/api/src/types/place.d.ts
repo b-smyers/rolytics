@@ -11,4 +11,4 @@ export interface DBPlace {
   last_computed_at: number;
 }
 
-export type Place = DBPlace; 
+export type Place = DBPlace;

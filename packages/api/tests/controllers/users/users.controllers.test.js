@@ -1,13 +1,13 @@
-const request = require('supertest');
-const express = require('express');
-const session = require('express-session');
-const usersController = require('@controllers/api/v1/users/users.controllers').default;
-const usersService = require('@services/users.services').default;
-const settingsService = require('@services/settings.services').default;
-const schema = require('@schemas/settings.schemas.json');
+const request = require("supertest");
+const express = require("express");
+const session = require("express-session");
+const usersController = require("@controllers/api/v1/users/users.controllers").default;
+const usersService = require("@services/users.services").default;
+const settingsService = require("@services/settings.services").default;
+const schema = require("@schemas/settings.schemas.json");
 
-jest.mock('@services/users.services');
-jest.mock('@services/settings.services');
+jest.mock("@services/users.services");
+jest.mock("@services/settings.services");
 
 // Add manual mocks for all used service functions
 usersService.getUserById = jest.fn();
@@ -26,8 +26,8 @@ app.get('/settings', usersController.getSettings);
 app.post('/settings', usersController.updateSettings);
 
 describe('User Controller', () => {
-    let timestamp1 = Date.parse('2025-04-12T10:00:00Z');
-    let timestamp2 = Date.parse('2025-04-12T10:11:00Z');
+    let timestamp1 = Date.parse("2025-04-12T10:00:00Z");
+    let timestamp2 = Date.parse("2025-04-12T10:11:00Z");
     beforeEach(() => {
         const dateMock = jest.spyOn(Date, 'now');
         dateMock
@@ -49,7 +49,7 @@ describe('User Controller', () => {
             });
 
             const res = await request(app)
-                .get('/profile')
+                .get("/profile")
                 .send();
 
             expect(res.statusCode).toEqual(200);
@@ -69,10 +69,10 @@ describe('User Controller', () => {
         });
 
         it('should return 500 for server error', async () => {
-            usersService.getUserById.mockImplementation(() => { throw new Error('Server error'); });
+            usersService.getUserById.mockImplementation(() => { throw new Error("Server error"); });
 
             const res = await request(app)
-                .get('/profile')
+                .get("/profile")
                 .send();
 
             expect(res.statusCode).toEqual(500);
@@ -95,7 +95,7 @@ describe('User Controller', () => {
             });
 
             const res = await request(app)
-                .get('/settings')
+                .get("/settings")
                 .send();
 
             expect(res.statusCode).toEqual(200);
@@ -114,10 +114,10 @@ describe('User Controller', () => {
         });
 
         it('should return 500 for server error', async () => {
-            settingsService.getSettings.mockImplementation(() => { throw new Error('Server error'); });
+            settingsService.getSettings.mockImplementation(() => { throw new Error("Server error"); });
 
             const res = await request(app)
-                .get('/settings')
+                .get("/settings")
                 .send();
 
             expect(res.statusCode).toEqual(500);
@@ -140,7 +140,7 @@ describe('User Controller', () => {
             settingsService.updateSettings.mockReturnValue(timestamp1);
 
             const res = await request(app)
-                .post('/settings')
+                .post("/settings")
                 .send({
                     settings: {
                         theme: schema.theme.default,
@@ -164,7 +164,7 @@ describe('User Controller', () => {
 
         it('should return 400 for unknown setting key', async () => {
             const res = await request(app)
-                .post('/settings')
+                .post("/settings")
                 .send({
                     settings: {
                         unknownKey: 'value'
@@ -183,7 +183,7 @@ describe('User Controller', () => {
 
         it('should return 400 for invalid setting key type', async () => {
             const res = await request(app)
-                .post('/settings')
+                .post("/settings")
                 .send({
                     settings: {
                         theme: 123 // should be a string
@@ -202,7 +202,7 @@ describe('User Controller', () => {
 
         it('should return 400 for non-allowed setting value', async () => {
             const res = await request(app)
-                .post('/settings')
+                .post("/settings")
                 .send({
                     settings: {
                         theme: 'invalidTheme' // not in allowed values
@@ -214,16 +214,16 @@ describe('User Controller', () => {
                 code: 400,
                 status: 'error',
                 data: { 
-                    message: `Invalid value for theme: allowed values are ${schema.theme.allowedValues.join(', ')}`
+                    message: `Invalid value for theme: allowed values are ${schema.theme.allowedValues.join(", ")}`
                 }
             });
         });
 
         it('should return 500 for server error', async () => {
-            settingsService.updateSettings.mockImplementation(() => { throw new Error('Server error'); });
+            settingsService.updateSettings.mockImplementation(() => { throw new Error("Server error"); });
 
             const res = await request(app)
-                .post('/settings')
+                .post("/settings")
                 .send({
                     settings: {
                         theme: schema.theme.default,

@@ -1,17 +1,17 @@
 {
-    "theme": {
-        "type": "string",
-        "allowedValues": ["auto", "light", "dark"],
-        "default": "auto"
-    },
-    "currency": {
-        "type": "string",
-        "allowedValues": ["R$", "USD", "EUR"],
-        "default": "R$"
-    },
-    "abbreviateUserCounts": {
-        "type": "boolean",
-        "allowedValues": [true, false],
-        "default": true
-    }
+  "theme": {
+    "type": "string",
+    "allowedValues": ["auto", "light", "dark"],
+    "default": "auto"
+  },
+  "currency": {
+    "type": "string",
+    "allowedValues": ["R$", "USD", "EUR"],
+    "default": "R$"
+  },
+  "abbreviateUserCounts": {
+    "type": "boolean",
+    "allowedValues": [true, false],
+    "default": true
+  }
 }

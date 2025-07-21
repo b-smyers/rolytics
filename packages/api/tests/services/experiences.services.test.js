@@ -1,5 +1,5 @@
-const usersService = require('@services/users.services').default;
-const experiencesService = require('@services/experiences.services').default;
+const usersService = require("@services/users.services").default;
+const experiencesService = require("@services/experiences.services").default;
 
 describe('Experiences Service', () => {
     const username = 'John';
@@ -41,17 +41,17 @@ describe('Experiences Service', () => {
             expect(experienceId).toBe(1);
 
             const experience = experiencesService.getExperienceById(experienceId);
-            expect(experience).toHaveProperty('roblox_experience_id');
+            expect(experience).toHaveProperty("roblox_experience_id");
             expect(experience.roblox_experience_id).toBe(robloxExperienceId);
-            expect(experience).toHaveProperty('user_id');
+            expect(experience).toHaveProperty("user_id");
             expect(experience.user_id).toBe(userId);
-            expect(experience).toHaveProperty('name');
+            expect(experience).toHaveProperty("name");
             expect(experience.name).toBe(name);     
-            expect(experience).toHaveProperty('description');
+            expect(experience).toHaveProperty("description");
             expect(experience.description).toBe(description);
-            expect(experience).toHaveProperty('page_link');
+            expect(experience).toHaveProperty("page_link");
             expect(experience.page_link).toBe(pageLink);
-            expect(experience).toHaveProperty('thumbnail_link');
+            expect(experience).toHaveProperty("thumbnail_link");
             expect(experience.thumbnail_link).toBe(thumbnailLink);
         });
     });

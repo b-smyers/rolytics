@@ -1,16 +1,16 @@
-import 'express';
-import { RequestUser, SessionUser } from './auth';
+import "express";
+import { RequestUser, SessionUser } from "./auth";
 
 declare global {
   namespace Express {
     interface Request {
-      user?: RequestUser
+      user?: RequestUser;
     }
   }
 }
 
-declare module 'express-session' {
+declare module "express-session" {
   interface SessionData {
-    user?: SessionUser
+    user?: SessionUser;
   }
 }

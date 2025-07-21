@@ -1,7 +1,7 @@
-const usersService = require('@services/users.services').default;
-const settingsService = require('@services/settings.services').default;
-const db = require('@services/sqlite.services').default;
-const bcrypt = require('bcrypt');
+const usersService = require("@services/users.services").default;
+const settingsService = require("@services/settings.services").default;
+const db = require("@services/sqlite.services").default;
+const bcrypt = require("bcrypt");
 
 describe('Users Service', () => {
     describe('createUser', () => {
@@ -18,21 +18,21 @@ describe('Users Service', () => {
 
             const user = usersService.createUser(username, email, password);
 
-            expect(user).toHaveProperty('id');
+            expect(user).toHaveProperty("id");
             expect(user.id).toBe(1);
             userId = user.id;
 
-            expect(user).toHaveProperty('username');
+            expect(user).toHaveProperty("username");
             expect(user.username).toBe(username);
 
-            expect(user).toHaveProperty('email')
+            expect(user).toHaveProperty("email")
             expect(user.email).toBe(email);
         });
 
         it('should create an api key for new accounts', () => {
             const user = usersService.getUserById(1);
 
-            expect(user).toHaveProperty('api_key');
+            expect(user).toHaveProperty("api_key");
             expect(user.api_key).not.toBeNull();
         });
 
@@ -153,13 +153,13 @@ describe('Users Service', () => {
             const result = usersService.validateCredentials(username, password);
 
             expect(result).toBeTruthy();
-            expect(result).toHaveProperty('id');
+            expect(result).toHaveProperty("id");
             expect(result.id).toBe(userId);
 
-            expect(result).toHaveProperty('email');
+            expect(result).toHaveProperty("email");
             expect(result.email).toBe(email);
 
-            expect(result).toHaveProperty('username');
+            expect(result).toHaveProperty("username");
             expect(result.username).toBe(username);
         });
 

@@ -76,7 +76,7 @@ export interface Players {
       [k: string]: unknown;
     };
     average_account_age: number;
-  }
+  };
 }
 
 export interface Metadata {
@@ -122,7 +122,7 @@ export interface Metadata {
     country_eu?: boolean;
     region_code?: string;
     country_iso?: string;
-  }
+  };
 }
 
 // Parsed metrics

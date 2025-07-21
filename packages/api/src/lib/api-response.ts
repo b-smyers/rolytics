@@ -1,21 +1,21 @@
 import { ApiResponse, ResponseStatus } from "types/api-response";
 
 function inferResponseStatus(code: number): ResponseStatus {
-  return code >= 200 && code < 300 ? 'success' : 'error';
+  return code >= 200 && code < 300 ? "success" : "error";
 }
 
 export function createResponse<T extends object = {}>(
   code: number,
   message: string,
-  data?: T
+  data?: T,
 ): ApiResponse<T> {
   return {
     code,
     status: inferResponseStatus(code),
     data: {
       message,
-      ...(data ?? {}) as T
-    }
+      ...((data ?? {}) as T),
+    },
   };
 }
 
@@ -31,10 +31,10 @@ export function createResponse<T extends object = {}>(
 export function OK(message?: string): ApiResponse<{}>;
 export function OK<T extends object>(message: string, data: T): ApiResponse<T>;
 export function OK<T extends object>(
-  message: string = 'OK',
-  data?: T
+  message: string = "OK",
+  data?: T,
 ): ApiResponse<T | {}> {
-  return createResponse(200, message, data ?? {} as T);
+  return createResponse(200, message, data ?? ({} as T));
 }
 
 /**
@@ -45,12 +45,15 @@ export function OK<T extends object>(
  * @returns An API response object.
  */
 export function Created(message?: string): ApiResponse<{}>;
-export function Created<T extends object>(message: string, data: T): ApiResponse<T>;
 export function Created<T extends object>(
-  message: string = 'Created',
-  data?: T
+  message: string,
+  data: T,
+): ApiResponse<T>;
+export function Created<T extends object>(
+  message: string = "Created",
+  data?: T,
 ): ApiResponse<T | {}> {
-  return createResponse(201, message, data ?? {} as T);
+  return createResponse(201, message, data ?? ({} as T));
 }
 
 // === Client Error Responses ===
@@ -63,12 +66,15 @@ export function Created<T extends object>(
  * @returns An API response object.
  */
 export function BadRequest(message?: string): ApiResponse<{}>;
-export function BadRequest<T extends object>(message: string, data: T): ApiResponse<T>;
 export function BadRequest<T extends object>(
-  message: string = 'Bad Request',
-  data?: T
+  message: string,
+  data: T,
+): ApiResponse<T>;
+export function BadRequest<T extends object>(
+  message: string = "Bad Request",
+  data?: T,
 ): ApiResponse<T | {}> {
-  return createResponse(400, message, data ?? {} as T);
+  return createResponse(400, message, data ?? ({} as T));
 }
 
 /**
@@ -79,12 +85,15 @@ export function BadRequest<T extends object>(
  * @returns An API response object.
  */
 export function Unauthorized(message?: string): ApiResponse<{}>;
-export function Unauthorized<T extends object>(message: string, data: T): ApiResponse<T>;
 export function Unauthorized<T extends object>(
-  message: string = 'Unauthorized',
-  data?: T
+  message: string,
+  data: T,
+): ApiResponse<T>;
+export function Unauthorized<T extends object>(
+  message: string = "Unauthorized",
+  data?: T,
 ): ApiResponse<T | {}> {
-  return createResponse(401, message, data ?? {} as T);
+  return createResponse(401, message, data ?? ({} as T));
 }
 
 /**
@@ -95,12 +104,15 @@ export function Unauthorized<T extends object>(
  * @returns An API response object.
  */
 export function Forbidden(message?: string): ApiResponse<{}>;
-export function Forbidden<T extends object>(message: string, data: T): ApiResponse<T>;
 export function Forbidden<T extends object>(
-  message: string = 'Forbidden',
-  data?: T
+  message: string,
+  data: T,
+): ApiResponse<T>;
+export function Forbidden<T extends object>(
+  message: string = "Forbidden",
+  data?: T,
 ): ApiResponse<T | {}> {
-  return createResponse(403, message, data ?? {} as T);
+  return createResponse(403, message, data ?? ({} as T));
 }
 
 /**
@@ -111,12 +123,15 @@ export function Forbidden<T extends object>(
  * @returns An API response object.
  */
 export function NotFound(message?: string): ApiResponse<{}>;
-export function NotFound<T extends object>(message: string, data: T): ApiResponse<T>;
 export function NotFound<T extends object>(
-  message: string = 'Not Found',
-  data?: T
+  message: string,
+  data: T,
+): ApiResponse<T>;
+export function NotFound<T extends object>(
+  message: string = "Not Found",
+  data?: T,
 ): ApiResponse<T | {}> {
-  return createResponse(404, message, data ?? {} as T);
+  return createResponse(404, message, data ?? ({} as T));
 }
 
 /**
@@ -127,12 +142,15 @@ export function NotFound<T extends object>(
  * @returns An API response object.
  */
 export function TooManyRequests(message?: string): ApiResponse<{}>;
-export function TooManyRequests<T extends object>(message: string, data: T): ApiResponse<T>;
 export function TooManyRequests<T extends object>(
-  message: string = 'Too Many Requests, Try Again Later',
-  data?: T
+  message: string,
+  data: T,
+): ApiResponse<T>;
+export function TooManyRequests<T extends object>(
+  message: string = "Too Many Requests, Try Again Later",
+  data?: T,
 ): ApiResponse<T | {}> {
-  return createResponse(429, message, data ?? {} as T);
+  return createResponse(429, message, data ?? ({} as T));
 }
 
 // === Server Error Responses ===
@@ -145,12 +163,15 @@ export function TooManyRequests<T extends object>(
  * @returns An API response object.
  */
 export function InternalServerError(message?: string): ApiResponse<{}>;
-export function InternalServerError<T extends object>(message: string, data: T): ApiResponse<T>;
 export function InternalServerError<T extends object>(
-  message: string = 'Internal Server Error',
-  data?: T
+  message: string,
+  data: T,
+): ApiResponse<T>;
+export function InternalServerError<T extends object>(
+  message: string = "Internal Server Error",
+  data?: T,
 ): ApiResponse<T | {}> {
-  return createResponse(500, message, data ?? {} as T);
+  return createResponse(500, message, data ?? ({} as T));
 }
 
 /**
@@ -161,10 +182,13 @@ export function InternalServerError<T extends object>(
  * @returns An API response object.
  */
 export function NotImplemented(message?: string): ApiResponse<{}>;
-export function NotImplemented<T extends object>(message: string, data: T): ApiResponse<T>;
 export function NotImplemented<T extends object>(
-  message: string = 'Not Implemented',
-  data?: T
+  message: string,
+  data: T,
+): ApiResponse<T>;
+export function NotImplemented<T extends object>(
+  message: string = "Not Implemented",
+  data?: T,
 ): ApiResponse<T | {}> {
-  return createResponse(501, message, data ?? {} as T);
+  return createResponse(501, message, data ?? ({} as T));
 }

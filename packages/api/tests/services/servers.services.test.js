@@ -1,7 +1,7 @@
-const usersService = require('@services/users.services').default;
-const experiencesService = require('@services/experiences.services').default;
-const placesService = require('@services/places.services').default;
-const serversService = require('@services/servers.services').default;
+const usersService = require("@services/users.services").default;
+const experiencesService = require("@services/experiences.services").default;
+const placesService = require("@services/places.services").default;
+const serversService = require("@services/servers.services").default;
 
 describe('Servers Service', () => {
     const username = 'Marty';
@@ -45,11 +45,11 @@ describe('Servers Service', () => {
             expect(serverId).toBe(1);
 
             const server = serversService.getServerById(serverId);
-            expect(server).toHaveProperty('roblox_server_id');
+            expect(server).toHaveProperty("roblox_server_id");
             expect(server.roblox_server_id).toBe(robloxServerId);
-            expect(server).toHaveProperty('place_id');
+            expect(server).toHaveProperty("place_id");
             expect(server.place_id).toBe(placeId);
-            expect(server).toHaveProperty('name');
+            expect(server).toHaveProperty("name");
             expect(server.name).toBe(name);
         });
     });
