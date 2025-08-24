@@ -6,6 +6,7 @@ import {
 } from "@lib/api-response";
 import { Request, Response } from "express";
 import robloxService from "@services/roblox.services";
+import logger from "@services/logger.services";
 
 async function getPlaceDetails(req: Request, res: Response) {
   const { placeId } = req.body;
@@ -19,7 +20,7 @@ async function getPlaceDetails(req: Request, res: Response) {
     const experienceId: string | number = await robloxService
       .getExperienceIdfromPlaceId(placeId)
       .catch((error: any) => {
-        console.error(error);
+        logger.error(error);
         return res.status(404).json(NotFound("Experience not found"));
       });
 
@@ -29,7 +30,7 @@ async function getPlaceDetails(req: Request, res: Response) {
     const details: any = await robloxService
       .getExperienceDetails(experienceId)
       .catch((error: any) => {
-        console.error(error);
+        logger.error(error);
         return res.status(404).json(NotFound("Experience details not found"));
       });
 
@@ -39,7 +40,7 @@ async function getPlaceDetails(req: Request, res: Response) {
     const media: any = await robloxService
       .getExperienceMedia(experienceId)
       .catch((error: any) => {
-        console.error(error);
+        logger.error(error);
         return res.status(404).json(NotFound("Experience media not found"));
       });
 
@@ -57,7 +58,7 @@ async function getPlaceDetails(req: Request, res: Response) {
         imageIds,
       );
     } catch (error) {
-      console.error(error);
+      logger.error(`Unable to fetch image URLs: ${error}`);
       return res.status(404).json(NotFound("Experience images not found"));
     }
 
@@ -72,10 +73,7 @@ async function getPlaceDetails(req: Request, res: Response) {
       }),
     );
   } catch (error: any) {
-    console.error("Unexpected error:", {
-      message: error.message,
-      stack: error.stack,
-    });
+    logger.error(`Unexpected error: ${error.message}`);
     return res.status(500).json(InternalServerError());
   }
 }
