@@ -202,7 +202,7 @@ function Place() {
                 <TrendIndicator
                   key={i}
                   label={toDisplayString(key)}
-                  past={sources[selectedSource].data[0][key]} // Use the 2nd newest point, oldest point, or average based on your TODO decision
+                  past={sources[selectedSource].data[0][key]}
                   current={sources[selectedSource].data[sources[selectedSource].data.length - 1][key] || 1}
                   upIsGood={true}
                   delta={5}
