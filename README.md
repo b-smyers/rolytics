@@ -12,12 +12,27 @@ The webpage mockup can be found [Here](https://docs.google.com/presentation/d/11
 Official [Rolytics Plugin](https://create.roblox.com/store/asset/110416944845032/Rolytics-Analytics-Tool)
 
 ## Prerequisites
-- Node.js
+- Node.js (see [.nvmrc](.nvmrc))
 - Nginx
 - Docker or docker-compose (production)
 
 ## Development
 ### 1) Shared Setup
+#### nvm (optional)
+Install [nvm](https://github.com/nvm-sh/nvm) if you haven't
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+# Reopen your terminal or run:
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+```
+
+Use nvm to sync the project node version
+```bash
+nvm use
+```
+
 #### pnpm
 Install pnpm & the project packages.
 ```bash
@@ -58,7 +73,7 @@ sudo docker-compose up -d
 ```
 
 ## Troubleshooting
-Use freedns to route a free subdomain to your external IP on port 443 (https)
+Use freedns to route a free subdomain to your external IP on port 443 (https).
 Portforward 443 traffic on your router to your server.
 
 ## TODO

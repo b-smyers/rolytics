@@ -4,9 +4,10 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "start": "pnpm --filter=ui build && vite preview --host",
+    "start": "pnpm --filter ui build && vite preview --host",
     "dev": "vite",
-    "build": "vite build",
+    "build": "pnpm --filter ui clean && vite build",
+    "clean": "rm -rf dist",
     "lint": "eslint .",
     "test": "echo \"[ UI ]: No test step\""
   },

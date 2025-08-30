@@ -6,4 +6,4 @@ process.env.EXPERIENCE_STALE_TIME = 60000;
 process.env.PLACE_STALE_TIME = 60000;
 process.env.METRIC_MAX_AGE = 259200000;
 process.env.METRIC_CLEANUP_CRON = '0 0 * * *';
-require('dotenv').config();
+require("dotenv").config();

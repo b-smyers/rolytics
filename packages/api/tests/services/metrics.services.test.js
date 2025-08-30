@@ -1,8 +1,8 @@
-const usersService = require('@services/users.services');
-const experiencesService = require('@services/experiences.services');
-const placesService = require('@services/places.services');
-const serversService = require('@services/servers.services');
-const metricsService = require('@services/metrics.services');
+const usersService = require("@services/users.services").default;
+const experiencesService = require("@services/experiences.services").default;
+const placesService = require("@services/places.services").default;
+const serversService = require("@services/servers.services").default;
+const metricsService = require("@services/metrics.services").default;
 
 describe('Metrics Service', () => {
     const username = 'testuser';
@@ -68,21 +68,21 @@ describe('Metrics Service', () => {
             expect(metricId).toBe(1);
 
             const metric = metricsService.getMetricById(metricId);
-            expect(metric).toHaveProperty('timestamp');
-            expect(metric.timestamp).toBe(timestamp);
-            expect(metric).toHaveProperty('server_id');
-            expect(metric.server_id).toBe(serverId);
+            expect(metric).toHaveProperty("timestamp");
+            expect(metric.timestamp).toEqual(timestamp);
+            expect(metric).toHaveProperty("server_id");
+            expect(metric.server_id).toEqual(serverId);
             // Check metrics
-            expect(metric).toHaveProperty('purchases');
-            expect(metric.purchases).toBe(JSON.stringify(data.purchases));
-            expect(metric).toHaveProperty('performance');
-            expect(metric.performance).toBe(JSON.stringify(data.performance));
-            expect(metric).toHaveProperty('social');
-            expect(metric.social).toBe(JSON.stringify(data.social));
-            expect(metric).toHaveProperty('players');
-            expect(metric.players).toBe(JSON.stringify(data.players));
-            expect(metric).toHaveProperty('metadata');
-            expect(metric.metadata).toBe(JSON.stringify(data.metadata));
+            expect(metric).toHaveProperty("purchases");
+            expect(metric.purchases).toEqual(data.purchases);
+            expect(metric).toHaveProperty("performance");
+            expect(metric.performance).toEqual(data.performance);
+            expect(metric).toHaveProperty("social");
+            expect(metric.social).toEqual(data.social);
+            expect(metric).toHaveProperty("players");
+            expect(metric.players).toEqual(data.players);
+            expect(metric).toHaveProperty("metadata");
+            expect(metric.metadata).toEqual(data.metadata);
         });
     });
     

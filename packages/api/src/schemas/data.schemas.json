@@ -1,145 +1,172 @@
 {
-    "type": "object",
-    "properties": {
-        "purchases": {
-            "type": "object",
-            "properties": {
-                "passes":             { "type": "integer" },
-                "developer_products": { "type": "integer" },
-                "subscriptions":      { "type": "integer" }
-            },
-            "required": ["passes", "developer_products", "subscriptions"],
-            "additionalProperties": false
-        },
-        "performance": {
-            "type": "object",
-            "properties": {
-                "memory":            { "type": "number" },
-                "data_send":         { "type": "number" },
-                "physics_step":      { "type": "number" },
-                "fps":               { "type": "number" },
-                "physics_send":      { "type": "number" },
-                "physics_receive":   { "type": "number" },
-                "instances":         { "type": "number" },
-                "moving_primitives": { "type": "number" },
-                "heartbeat":         { "type": "number" },
-                "primitives":        { "type": "number" },
-                "data_receive":      { "type": "number" }
-            },
-            "required": ["memory", "data_send", "physics_step", "fps", "physics_send", "physics_receive", "instances", "moving_primitives", "heartbeat", "primitives", "data_receive"],
-            "additionalProperties": false
-        },
-        "social": {
-            "type": "object",
-            "properties": {
-                "friends_playing": { "type": "integer" },
-                "chats":           { "type": "integer" }
-            },
-            "required": ["friends_playing", "chats"],
-            "additionalProperties": false
-        },
-        "players": {
-            "type": "object",
-            "properties": {
-                "active":    { "type": "integer" },
-                "new":       { "type": "integer" },
-                "returning": { "type": "integer" },
-                "premium":   { "type": "integer" },
-                "average_session_duration": { "type": "number" },
-                "demographics": {
-                    "type": "object",
-                    "properties": {
-                        "regions": { "type": "object" },
-                        "average_account_age": { "type": "number" }
-                    },
-                    "required": ["regions", "average_account_age"],
-                    "additionalProperties": false
-                }
-            },
-            "required": ["active", "new", "returning", "premium", "average_session_duration", "demographics"],
-            "additionalProperties": false
-        },
-        "metadata": {
-            "type": "object",
-            "properties": {
-                "uptime":    { "type": "integer" },
-                "timestamp": { "type": "number" },
-                "creator": {
-                    "type": "object",
-                    "properties": {
-                        "id":   { "type": "integer" },
-                        "type": { "type": "string" }
-                    },
-                    "required": ["id", "type"],
-                    "additionalProperties": false
-                },
-                "place": {
-                    "type": "object",
-                    "properties": {
-                        "id":      { "type": "integer" },
-                        "name":    { "type": "string" },
-                        "version": { "type": "integer" }
-                    },
-                    "required": ["id", "name", "version"],
-                    "additionalProperties": false
-                },
-                "experience": {
-                    "type": "object",
-                    "properties": {
-                        "id":   { "type": "integer" },
-                        "name": { "type": "string" }
-                    },
-                    "required": ["id", "name"],
-                    "additionalProperties": false
-                },
-                "server": {
-                    "type": "object",
-                    "properties": {
-                        "id":   { "type": "string" },
-                        "type": { "type": "string" },
-                        "size": { "type": "integer" }
-                    },
-                    "required": ["id", "type", "size"],
-                    "additionalProperties": false
-                },
-                "geo": {
-                    "type": "object",
-                    "properties": {
-                        "user_agent":  {
-                            "type": "object",
-                            "properties": {
-                                "comment": { "type": "string" },
-                                "product": { "type": "string" },
-                                "raw_value": { "type": "string" }
-                            },
-                            "required": [],
-                            "additionalProperties": false
-                        },
-                        "hostname":    { "type": "string" },
-                        "longitude":   { "type": "number" },
-                        "asn_org":     { "type": "string" },
-                        "country":     { "type": "string" },
-                        "time_zone":   { "type": "string" },
-                        "ip_decimal":  { "type": "integer" },
-                        "metro_code":  { "type": "integer" },
-                        "ip":          { "type": "string" },
-                        "asn":         { "type": "string" },
-                        "latitude":    { "type": "number" },
-                        "city":        { "type": "string" },
-                        "zip_code":    { "type": "string" },
-                        "region_name": { "type": "string" },
-                        "country_eu":  { "type": "boolean" },
-                        "region_code": { "type": "string" },
-                        "country_iso": { "type": "string" }
-                    },
-                    "required": [],
-                    "additionalProperties": false
-                }
-            },
-            "required": ["geo", "uptime", "creator", "place", "timestamp", "experience", "server"],
-            "additionalProperties": false
-        }
+  "type": "object",
+  "properties": {
+    "purchases": {
+      "type": "object",
+      "properties": {
+        "passes": { "type": "integer" },
+        "developer_products": { "type": "integer" },
+        "subscriptions": { "type": "integer" }
+      },
+      "required": ["passes", "developer_products", "subscriptions"],
+      "additionalProperties": false
     },
-    "required": ["purchases", "performance", "social", "players", "metadata"],
-    "additionalProperties": false
+    "performance": {
+      "type": "object",
+      "properties": {
+        "memory": { "type": "number" },
+        "data_send": { "type": "number" },
+        "physics_step": { "type": "number" },
+        "fps": { "type": "number" },
+        "physics_send": { "type": "number" },
+        "physics_receive": { "type": "number" },
+        "instances": { "type": "number" },
+        "moving_primitives": { "type": "number" },
+        "heartbeat": { "type": "number" },
+        "primitives": { "type": "number" },
+        "data_receive": { "type": "number" }
+      },
+      "required": [
+        "memory",
+        "data_send",
+        "physics_step",
+        "fps",
+        "physics_send",
+        "physics_receive",
+        "instances",
+        "moving_primitives",
+        "heartbeat",
+        "primitives",
+        "data_receive"
+      ],
+      "additionalProperties": false
+    },
+    "social": {
+      "type": "object",
+      "properties": {
+        "friends_playing": { "type": "integer" },
+        "chats": { "type": "integer" }
+      },
+      "required": ["friends_playing", "chats"],
+      "additionalProperties": false
+    },
+    "players": {
+      "type": "object",
+      "properties": {
+        "active": { "type": "integer" },
+        "new": { "type": "integer" },
+        "returning": { "type": "integer" },
+        "premium": { "type": "integer" },
+        "average_session_duration": { "type": "number" },
+        "demographics": {
+          "type": "object",
+          "properties": {
+            "regions": { "type": "object" },
+            "average_account_age": { "type": "number" }
+          },
+          "required": ["regions", "average_account_age"],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "active",
+        "new",
+        "returning",
+        "premium",
+        "average_session_duration",
+        "demographics"
+      ],
+      "additionalProperties": false
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "uptime": { "type": "integer" },
+        "timestamp": { "type": "number" },
+        "creator": {
+          "type": "object",
+          "properties": {
+            "id": { "type": "string" },
+            "type": { "type": "string" }
+          },
+          "required": ["id", "type"],
+          "additionalProperties": false
+        },
+        "place": {
+          "type": "object",
+          "properties": {
+            "id": { "type": "string" },
+            "name": { "type": "string" },
+            "version": { "type": "integer" }
+          },
+          "required": ["id", "name", "version"],
+          "additionalProperties": false
+        },
+        "experience": {
+          "type": "object",
+          "properties": {
+            "id": { "type": "string" },
+            "name": { "type": "string" }
+          },
+          "required": ["id", "name"],
+          "additionalProperties": false
+        },
+        "server": {
+          "type": "object",
+          "properties": {
+            "id": { "type": "string" },
+            "type": { "type": "string" },
+            "size": { "type": "integer" }
+          },
+          "required": ["id", "type", "size"],
+          "additionalProperties": false
+        },
+        "geo": {
+          "type": "object",
+          "properties": {
+            "user_agent": {
+              "type": "object",
+              "properties": {
+                "comment": { "type": "string" },
+                "product": { "type": "string" },
+                "raw_value": { "type": "string" }
+              },
+              "required": [],
+              "additionalProperties": false
+            },
+            "hostname": { "type": "string" },
+            "longitude": { "type": "number" },
+            "asn_org": { "type": "string" },
+            "country": { "type": "string" },
+            "time_zone": { "type": "string" },
+            "ip_decimal": { "type": "integer" },
+            "metro_code": { "type": "integer" },
+            "ip": { "type": "string" },
+            "asn": { "type": "string" },
+            "latitude": { "type": "number" },
+            "city": { "type": "string" },
+            "zip_code": { "type": "string" },
+            "region_name": { "type": "string" },
+            "country_eu": { "type": "boolean" },
+            "region_code": { "type": "string" },
+            "country_iso": { "type": "string" }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "geo",
+        "uptime",
+        "creator",
+        "place",
+        "timestamp",
+        "experience",
+        "server"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": ["purchases", "performance", "social", "players", "metadata"],
+  "additionalProperties": false
 }
