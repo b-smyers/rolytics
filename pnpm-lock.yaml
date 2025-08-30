@@ -746,7 +746,7 @@ packages:
 
   '@rolldown/pluginutils@1.0.0-beta.27':
     resolution: {integrity: sha512-+d0F4MKMCbeVUJwG96uQ4SgAznZNSq93I3V+9NHA4OpvqG8mRCpGdKmK8l/dl02h2CCDHwW2FqilnTyDcAnqjA==}
-
+    
   '@rollup/rollup-android-arm-eabi@4.46.2':
     resolution: {integrity: sha512-Zj3Hl6sN34xJtMv7Anwb5Gu01yujyE/cLBDB2gnHTAHaWS1Z38L7kuSG+oAh0giZMqG060f/YBStXtMH6FvPMA==}
     cpu: [arm]
@@ -1210,7 +1210,7 @@ packages:
   acorn-walk@8.3.4:
     resolution: {integrity: sha512-ueEepnujpqee2o5aIYnvHU6C0A42MNdsIDeqy5BydrkuC5R1ZuUFnm27EeFJGoEHJQgn3uleRvmTXaJgfXbt4g==}
     engines: {node: '>=0.4.0'}
-
+    
   acorn@8.15.0:
     resolution: {integrity: sha512-NZyJarBfL7nWwIq+FDL6Zp/yHEhePMNnnJ0y3qfieCrmNvYct8uvtiV41UvlSe6apAfk0fY1FbWx+NwfmpvtTg==}
     engines: {node: '>=0.4.0'}
@@ -3695,7 +3695,7 @@ snapshots:
     dependencies:
       '@babel/template': 7.27.2
       '@babel/types': 7.28.2
-
+      
   '@babel/parser@7.28.0':
     dependencies:
       '@babel/types': 7.28.2
@@ -4004,6 +4004,7 @@ snapshots:
       slash: 3.0.0
 
   '@jest/core@30.0.5(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))':
+
     dependencies:
       '@jest/console': 30.0.5
       '@jest/pattern': 30.0.1
@@ -4019,6 +4020,7 @@ snapshots:
       graceful-fs: 4.2.11
       jest-changed-files: 30.0.5
       jest-config: 30.0.5(@types/node@24.1.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))
+
       jest-haste-map: 30.0.5
       jest-message-util: 30.0.5
       jest-regex-util: 30.0.1
@@ -4188,6 +4190,7 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.5.4
 
   '@jridgewell/trace-mapping@0.3.9':
+
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.4
@@ -4909,7 +4912,7 @@ snapshots:
 
   braces@3.0.3:
     dependencies:
-      fill-range: 7.1.1
+      balanced-match: 1.0.2
 
   browserslist@4.25.1:
     dependencies:
@@ -5049,7 +5052,6 @@ snapshots:
   cookiejar@2.1.4: {}
 
   create-require@1.1.1: {}
-
   cross-spawn@7.0.6:
     dependencies:
       path-key: 3.1.1
@@ -5164,7 +5166,6 @@ snapshots:
       wrappy: 1.0.2
 
   diff@4.0.2: {}
-
   doctrine@2.1.0:
     dependencies:
       esutils: 2.0.3
@@ -5180,7 +5181,6 @@ snapshots:
   dynamic-dedupe@0.3.0:
     dependencies:
       xtend: 4.0.2
-
   eastasianwidth@0.2.0: {}
 
   ecdsa-sig-formatter@1.0.11:
@@ -5192,7 +5192,6 @@ snapshots:
   ejs@3.1.10:
     dependencies:
       jake: 10.9.2
-
   electron-to-chromium@1.5.192: {}
 
   emittery@0.13.1: {}
@@ -5560,7 +5559,6 @@ snapshots:
       glob-parent: 5.1.2
       merge2: 1.4.1
       micromatch: 4.0.8
-
   fast-json-stable-stringify@2.1.0: {}
 
   fast-levenshtein@2.0.6: {}
@@ -5794,7 +5792,6 @@ snapshots:
   ignore@5.3.2: {}
 
   ignore@7.0.5: {}
-
   immer@10.1.1: {}
 
   import-fresh@3.3.1:
@@ -6479,7 +6476,6 @@ snapshots:
   minimatch@5.1.6:
     dependencies:
       brace-expansion: 2.0.2
-
   minimatch@9.0.5:
     dependencies:
       brace-expansion: 2.0.2
@@ -6692,7 +6688,6 @@ snapshots:
   prelude-ls@1.2.1: {}
 
   prettier@3.6.2: {}
-
   pretty-format@30.0.5:
     dependencies:
       '@jest/schemas': 30.0.5
@@ -6872,7 +6867,6 @@ snapshots:
   rimraf@2.7.1:
     dependencies:
       glob: 7.2.3
-
   rollup@4.46.2:
     dependencies:
       '@types/estree': 1.0.8
@@ -7154,7 +7148,6 @@ snapshots:
       ansi-regex: 6.1.0
 
   strip-bom@3.0.0: {}
-
   strip-bom@4.0.0: {}
 
   strip-final-newline@2.0.0: {}
@@ -7542,7 +7535,6 @@ snapshots:
     dependencies:
       imurmurhash: 0.1.4
       signal-exit: 4.1.0
-
   xtend@4.0.2: {}
 
   y18n@5.0.8: {}
