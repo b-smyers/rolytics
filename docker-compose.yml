@@ -1,7 +1,12 @@
+version: "3.9"
+
 services:
-  nginx:
+  proxy:
     container_name: proxy
     image: bsmyers/proxy:latest
+    build:
+      context: .
+      dockerfile: ./packages/proxy/Dockerfile
     ports:
       - 80:80
       - 443:443
@@ -28,15 +33,20 @@ services:
   api:
     container_name: api
     image: bsmyers/api:latest
+    build:
+      context: .
+      dockerfile: ./packages/api/Dockerfile
+      args:
+        NODE_VERSION: 22
     environment:
-      - NODE_ENV=production
-      - HTTP_PORT=5000
-      - EXPERIENCE_STALE_TIME=0
-      - PLACE_STALE_TIME=0
-      - METRICS_MAX_AGE=259200000
-      - METRIC_CLEANUP_CRON=0 0 * * *
-      - SESSION_SECRET={SESSION_SECRET}
-      - JWT_API_KEY_SECRET={JWT_API_KEY_SECRET}
+      NODE_ENV: production
+      HTTP_PORT: 5000
+      EXPERIENCE_STALE_TIME: 0
+      PLACE_STALE_TIME: 0
+      METRICS_MAX_AGE: 259200000
+      METRIC_CLEANUP_CRON: "0 0 * * *"
+      SESSION_SECRET: ${SESSION_SECRET}
+      JWT_API_KEY_SECRET: ${JWT_API_KEY_SECRET}
     ports:
       - 5000:5000
     volumes:
@@ -57,8 +67,13 @@ services:
   ui:
     container_name: ui
     image: bsmyers/ui:latest
+    build:
+      context: .
+      dockerfile: ./packages/ui/Dockerfile
+      args:
+        NODE_VERSION: 22
     environment:
-      - NODE_ENV=production
+      NODE_ENV: production
     ports:
       - 3000:3000
     depends_on:
@@ -67,7 +82,6 @@ services:
     networks:
       - proxy_network
 
-# Allows containers to talk to each other
 networks:
   proxy_network:
     driver: bridge

@@ -1,0 +1,35 @@
+name: build
+
+on:
+  workflow_run:
+    workflows: ["test"]
+    branches: [main]
+    types: [completed]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [proxy, ui, api]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Docker login
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+      - name: Set Node version
+        if: matrix.service != 'proxy'
+        run: |
+          FULL_NODE_VERSION=$(cat .nvmrc)
+          NODE_MAJOR_VERSION=$(echo $FULL_NODE_VERSION | sed 's/^v\([0-9]*\).*/\1/')
+          echo "Node version from .nvmrc: $FULL_NODE_VERSION"
+          echo "Using major version for Docker: $NODE_MAJOR_VERSION"
+          echo "NODE_VERSION=$NODE_MAJOR_VERSION" >> $GITHUB_ENV
+      - name: Build & Push
+        run: |
+          if [ "${{ matrix.service }}" = "proxy" ]; then
+            docker build -t bsmyers/proxy:latest -f ./packages/proxy/Dockerfile .
+            docker push bsmyers/proxy:latest
+          else
+            docker build --build-arg NODE_VERSION=${NODE_VERSION} -t bsmyers/${{ matrix.service }}:latest -f ./packages/${{ matrix.service }}/Dockerfile .
+            docker push bsmyers/${{ matrix.service }}:latest
+          fi
