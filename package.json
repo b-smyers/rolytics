@@ -23,11 +23,11 @@
     "test": "pnpm concurrently \"pnpm test:api\" \"pnpm test:ui\""
   },
   "devDependencies": {
-    "concurrently": "^9.2.0",
-    "eslint": "^9.32.0",
+    "concurrently": "^9.2.1",
+    "eslint": "^9.35.0",
     "eslint-plugin-node": "^11.1.0"
   },
   "dependencies": {
-    "axios": "^1.11.0"
+    "axios": "^1.12.2"
   }
 }
